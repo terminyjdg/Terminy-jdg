@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>TerminyJDG.pl – nie przegap terminów ZUS, PIT i VAT</title>
+        <style>
+            body { font-family: system-ui, sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; text-align: center; background: #f9fafb; }
+                h1 { color: #1f2937; font-size: 28px; }
+                    p { color: #4b5563; font-size: 17px; }
+                        input { width: 100%; padding: 14px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 8px; margin: 16px 0; box-sizing: border-box; }
+                            button { width: 100%; padding: 14px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
+                                button:disabled { background: #9ca3af; }
+                                    #msg { margin-top: 16px; font-weight: 600; }
+                                        .ok { color: #16a34a; }
+                                            .err { color: #dc2626; }
+                                              </style>
+                                              </head>
+                                              <body>
+                                                <h1>TerminyJDG.pl</h1>
+                                                  <p>Nie przegap terminów ZUS, PIT i VAT. Zapisz się na listę oczekujących – damy Ci znać, gdy aplikacja będzie gotowa.</p>
+                                                    <input type="email" id="email" placeholder="twój@email.pl" />
+                                                      <button id="btn" onclick="zapisz()">Zapisz mnie</button>
+                                                        <div id="msg"></div>
+
+                                                          <script type="module" src="/src/main.js"></script>
+                                                          </body>
+                                                          </html>
