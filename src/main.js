@@ -1,10 +1,15 @@
-// --- PAYWALL (BLOKADA PREMIUM) ---
-window.pokazPaywall = function() {
-  document.getElementById('paywall-modal').style.display = 'flex';
+// --- NAWIGACJA MIĘDZY STRONAMI ---
+window.pokazAplikacje = function() {
+  document.getElementById('landing-view').style.display = 'none';
+  document.getElementById('app-view').style.display = 'block';
+  window.scrollTo(0, 0);
+  odswiezDaty(); // Odświeżamy daty przy wejściu
 };
 
-window.zamknijPaywall = function() {
-  document.getElementById('paywall-modal').style.display = 'none';
+window.pokazLanding = function() {
+  document.getElementById('app-view').style.display = 'none';
+  document.getElementById('landing-view').style.display = 'block';
+  window.scrollTo(0, 0);
 };
 
 // --- INTELIGENTNE POWIADOMIENIA ---
@@ -15,67 +20,15 @@ function sprawdzOstrzezenia() {
   const banner = document.getElementById('alert-banner');
   let ostrzezenie = '';
 
-  if (dZus <= 3 && dZus > 0) {
-    ostrzezenie = `⚠️ Uwaga! Do opłacenia ZUS zostały ${dZus} dni!`;
-  } else if (dPit <= 3 && dPit > 0) {
-    ostrzezenie = `⚠️ Uwaga! Do opłacenia PIT zostały ${dPit} dni!`;
-  } else if (dVat <= 3 && dVat > 0) {
-    ostrzezenie = `⚠️ Uwaga! Do opłacenia VAT zostały ${dVat} dni!`;
-  }
+  if (dZus <= 3 && dZus > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia ZUS zostały ${dZus} dni!`;
+  else if (dPit <= 3 && dPit > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia PIT zostały ${dPit} dni!`;
+  else if (dVat <= 3 && dVat > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia VAT zostały ${dVat} dni!`;
 
   if (ostrzezenie) {
     banner.textContent = ostrzezenie;
     banner.style.display = 'block';
   }
 }
-
-// --- NAWIGACJA ---
-window.pokazFaktury = function() {
-  document.getElementById('main-view').style.display = 'none';
-  document.getElementById('invoice-view').style.display = 'block';
-  window.scrollTo(0, 0);
-};
-
-window.pokazGlowna = function() {
-  document.getElementById('invoice-view').style.display = 'none';
-  document.getElementById('main-view').style.display = 'block';
-  window.scrollTo(0, 0);
-};
-
-// --- GENERATOR FAKTUR (Z PAYWALLEM) ---
-window.generujFakture = function() {
-  // Zamiast generować od razu, pokazujemy okienko Premium
-  window.pokazPaywall();
-  
-  /* 
-  // Prawdziwa logika faktury (zakomentowana, bo mamy Paywall)
-  const buyer = document.getElementById('inv-buyer').value || 'Brak nazwy';
-  const nip = document.getElementById('inv-nip').value || 'Brak NIP';
-  const service = document.getElementById('inv-service').value || 'Brak opisu';
-  const amountInput = document.getElementById('inv-amount').value;
-  const amount = parseFloat(amountInput);
-  
-  if (isNaN(amount) || amount <= 0) {
-    alert('Proszę podać poprawną kwotę netto.');
-    return;
-  }
-
-  const vat = amount * 0.23;
-  const gross = amount + vat;
-  const dzisiaj = new Date().toLocaleDateString('pl-PL');
-
-  document.getElementById('prev-date').textContent = dzisiaj;
-  document.getElementById('prev-buyer').textContent = buyer;
-  document.getElementById('prev-nip').textContent = nip;
-  document.getElementById('prev-service').textContent = service;
-  document.getElementById('prev-net').textContent = amount.toFixed(2) + ' zł';
-  document.getElementById('prev-vat').textContent = vat.toFixed(2) + ' zł';
-  document.getElementById('prev-gross').textContent = gross.toFixed(2) + ' zł';
-
-  document.getElementById('invoice-preview').style.display = 'block';
-  document.getElementById('invoice-preview').scrollIntoView({ behavior: 'smooth' });
-  */
-};
 
 // --- RESZTA (Tracker, Kalkulator, Ustawienia) ---
 function zapiszStan() {
@@ -170,7 +123,6 @@ window.obliczPodatki = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
   wczytajStan();
-  odswiezDaty();
   sprawdzOstrzezenia();
   
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
