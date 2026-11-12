@@ -1,13 +1,10 @@
-limport { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
-// UWAGA: Upewnij się, że URL jest poprawny (kończy się na .supabase.co)
 const supabaseUrl = 'https://ievdkkjijcvkaeg.supabase.co'
-// UWAGA: Upewnij się, że klucz jest poprawny (zaczyna się od sb_publishable_)
 const supabaseKey = 'sb_publishable_Z6yw9Yc5t0dQ9tgPpLDqMg_9zvA2biD'
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// --- NAWIGACJA ---
 window.pokazLanding = function() {
   document.querySelectorAll('#app-view, #auth-login-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
   document.getElementById('landing-view').style.display = 'block';
@@ -45,7 +42,6 @@ window.pokazGlowna = function() {
   window.scrollTo(0, 0);
 };
 
-// --- LOGOWANIE I REJESTRACJA ---
 window.obsluzRejestracje = async function() {
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
@@ -86,7 +82,6 @@ window.wyloguj = async function() {
   pokazLanding();
 };
 
-// Sprawdzanie przy starcie
 async function sprawdzSesje() {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
@@ -94,7 +89,6 @@ async function sprawdzSesje() {
   }
 }
 
-// --- PAYWALL ---
 window.pokazPaywall = function(funkcja) {
   const textElem = document.getElementById('paywall-text');
   if (funkcja === "Generator Faktur") textElem.textContent = "Generator Faktur jest dostępny w planie PRO.";
@@ -105,7 +99,6 @@ window.pokazPaywall = function(funkcja) {
 window.zamknijPaywall = function() { document.getElementById('paywall-modal').style.display = 'none'; };
 window.generujFakture = function() { window.pokazPaywall("Generator Faktur"); };
 
-// --- RESZTA ---
 function obliczDni(dzien) {
   const dzisiaj = new Date();
   let termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth(), dzien);
