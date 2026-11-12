@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -56,13 +56,24 @@ window.pokazGlowna = function() {
 window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
   try {
-    const result = await signInWithPopup(auth, provider);
-    document.getElementById('user-email-display').textContent = result.user.email;
-    pokazAplikacje();
+    // Używamy przekierowania zamiast wyskakującego okienka
+    await signInWithRedirect(auth, provider);
   } catch (error) {
     alert("Błąd logowania Google: " + error.message);
   }
 };
+
+// Sprawdzanie, czy wróciliśmy z logowania Google
+getRedirectResult(auth)
+  .then((result) => {
+    if (result && result.user) {
+      document.getElementById('user-email-display').textContent = result.user.email;
+      pokazAplikacje();
+    }
+  })
+  .catch((error) => {
+    console.error("Błąd przekierowania:", error);
+  });
 
 window.obsluzRejestracje = async function() {
   const email = document.getElementById('register-email').value;
