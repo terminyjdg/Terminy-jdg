@@ -14,7 +14,6 @@ window.pokazLanding = function() {
   window.scrollTo(0, 0);
 };
 
-// --- WIDOK GENERATORA FAKTUR ---
 window.pokazFaktury = function() {
   document.getElementById('landing-view').style.display = 'none';
   document.getElementById('app-view').style.display = 'none';
@@ -22,20 +21,22 @@ window.pokazFaktury = function() {
   window.scrollTo(0, 0);
 };
 
-window.pokazGlowna = function() {
-  document.getElementById('invoice-view').style.display = 'none';
-  document.getElementById('landing-view').style.display = 'block';
-  window.scrollTo(0, 0);
-};
-
-// --- GENERATOR FAKTUR (PAYWALL) ---
-window.generujFakture = function() {
-  // Zamiast generować, pokazujemy okienko Premium
-  window.pokazPaywall();
-};
-
-// --- PAYWALL (OKIENKO PREMIUM) ---
-window.pokazPaywall = function() {
+// --- PAYWALL (DYNAMICZNE OKIENKO) ---
+window.pokazPaywall = function(typ) {
+  const title = document.getElementById('paywall-title');
+  const text = document.getElementById('paywall-text');
+  
+  if (typ === 'push') {
+    title.textContent = 'Powiadomienia Push (PRO)';
+    text.textContent = 'Powiadomienia Push są dostępne w planie PRO. Odblokuj je, aby mieć 100% pewności, że nie przegapisz terminu.';
+  } else if (typ === 'faktura') {
+    title.textContent = 'Generator Faktur (PRO)';
+    text.textContent = 'Wystawianie faktur jest dostępne w planie PRO. Odblokuj tę funkcję, aby generować nieograniczoną liczbę dokumentów.';
+  } else {
+    title.textContent = 'Funkcja Premium';
+    text.textContent = 'Odblokuj pełnię możliwości w planie PRO.';
+  }
+  
   document.getElementById('paywall-modal').style.display = 'flex';
 };
 
