@@ -31,10 +31,20 @@
     
     .marketing-section { margin-top: 40px; text-align: center; }
     .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
+    
     .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
     .feature-item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 4px solid #2563eb; }
     .feature-item h3 { font-size: 18px; color: #111827; margin-bottom: 5px; }
     .feature-item p { font-size: 14px; color: #6b7280; }
+
+    /* NOWA SEKCJA POWIADOMIEŃ */
+    .notif-box { background: white; border: 2px solid #10b981; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1); }
+    .notif-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
+    .notif-box p { font-size: 15px; color: #4b5563; margin-bottom: 20px; }
+    .notif-icons { display: flex; justify-content: center; gap: 20px; }
+    .notif-icon-item { background: #f0fdf4; padding: 15px; border-radius: 12px; flex: 1; border: 1px solid #bbf7d0; }
+    .notif-icon-item span { display: block; font-size: 24px; margin-bottom: 5px; }
+    .notif-icon-item strong { display: block; color: #166534; font-size: 14px; }
     
     .premium-box { background: #1e3a8a; padding: 30px 20px; border-radius: 16px; color: white; text-align: center; margin-bottom: 40px; }
     .premium-box h2 { font-size: 22px; margin-bottom: 10px; }
@@ -103,6 +113,25 @@
             <h3>💰 Wiesz, ile zostanie Ci w kieszeni</h3>
             <p>Nasz kalkulator na bieżąco wylicza podatki i składki, pokazując realny zysk z Twojej firmy.</p>
           </div>
+        </div>
+
+        <!-- NOWA SEKCJA: POWIADOMIENIA SMS I EMAIL -->
+        <div class="notif-box">
+          <h3>Nigdy więcej nie zapomnij o terminie</h3>
+          <p>Wyślemy Ci przypomnienie, zanim będzie za późno. Otrzymasz powiadomienia na dwa sposoby:</p>
+          <div class="notif-icons">
+            <div class="notif-icon-item">
+              <span>📱</span>
+              <strong>Powiadomienia SMS</strong>
+            </div>
+            <div class="notif-icon-item">
+              <span>✉️</span>
+              <strong>Wiadomości E-mail</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-grid">
           <div class="feature-item">
             <h3>📄 Gotowy na KSeF</h3>
             <p>Interaktywna lista kontrolna krok po kroku przygotuje Cię do obowiązkowego systemu e-faktur w 2026 roku.</p>
@@ -111,7 +140,7 @@
 
         <div class="premium-box">
           <h2>Odblokuj pełnię możliwości</h2>
-          <p>Wersja PRO daje dostęp do Generatora Faktur bez limitów oraz priorytetowego wsparcia.</p>
+          <p>Wersja PRO daje dostęp do Generatora Faktur bez limitów, powiadomień SMS oraz priorytetowego wsparcia.</p>
           <div class="premium-price">19 zł <span style="font-size:16px; color:#bfdbfe; font-weight:400;">/ mies.</span></div>
           <button class="main-cta" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
         </div>
