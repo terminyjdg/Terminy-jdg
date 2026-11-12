@@ -22,6 +22,12 @@
     .app-container { max-width: 600px; margin: 20px auto 40px; padding: 0 15px; }
     .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
     
+    /* Ustawienia */
+    .settings-section { background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+    .settings-title { font-size: 14px; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .settings-label { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #1e3a8a; }
+    .settings-label input { width: 20px; height: 20px; accent-color: #2563eb; }
+
     /* Tracker */
     .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .termin-card strong { color: #1e3a8a; display: block; font-size: 16px; margin-bottom: 4px; }
@@ -44,7 +50,7 @@
     .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
     .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
 
-    /* LANDING PAGE (Sekcja Marketingowa) */
+    /* LANDING PAGE */
     .marketing-section { margin-top: 40px; text-align: center; }
     .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
     
@@ -64,7 +70,6 @@
 </head>
 <body>
 
-  <!-- Pasek Beta -->
   <div class="beta-bar">🚀 Wersja Beta – testujemy nowe funkcje!</div>
 
   <nav>
@@ -77,8 +82,18 @@
   </div>
 
   <div class="app-container">
-    <!-- Tracker -->
+    <!-- Tracker i Ustawienia -->
     <div class="card">
+      
+      <!-- NOWA SEKCJA: USTAWIENIA -->
+      <div class="settings-section">
+        <div class="settings-title">Dostosuj aplikację</div>
+        <label class="settings-label">
+          <input type="checkbox" id="setting-vat" checked />
+          Jestem podatnikiem VAT
+        </label>
+      </div>
+
       <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
       
       <div class="termin-card">
@@ -91,7 +106,8 @@
         <input type="checkbox" class="tracker-check" id="cb-pit" />
       </div>
 
-      <div class="termin-card">
+      <!-- Karta VAT (będzie ukrywana) -->
+      <div class="termin-card" id="karta-vat">
         <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
         <input type="checkbox" class="tracker-check" id="cb-vat" />
       </div>
@@ -129,7 +145,7 @@
       </div>
     </div>
 
-    <!-- SEKCJA MARKETINGOWA (Landing Page) -->
+    <!-- SEKCJA MARKETINGOWA -->
     <div class="marketing-section">
       <h2>Dlaczego TerminyJDG.pl?</h2>
       
