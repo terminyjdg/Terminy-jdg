@@ -1,4 +1,50 @@
-// --- LOGIKA ZAPISU STANU ---
+// --- NAWIGACJA ---
+window.pokazFaktury = function() {
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('invoice-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+window.pokazGlowna = function() {
+  document.getElementById('invoice-view').style.display = 'none';
+  document.getElementById('main-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+// --- GENERATOR FAKTUR ---
+window.generujFakture = function() {
+  const buyer = document.getElementById('inv-buyer').value || 'Brak nazwy';
+  const nip = document.getElementById('inv-nip').value || 'Brak NIP';
+  const service = document.getElementById('inv-service').value || 'Brak opisu';
+  const amountInput = document.getElementById('inv-amount').value;
+  
+  const amount = parseFloat(amountInput);
+  
+  if (isNaN(amount) || amount <= 0) {
+    alert('Proszę podać poprawną kwotę netto.');
+    return;
+  }
+
+  // Obliczenia (VAT 23%)
+  const vat = amount * 0.23;
+  const gross = amount + vat;
+  const dzisiaj = new Date().toLocaleDateString('pl-PL');
+
+  // Wstawianie danych do podglądu
+  document.getElementById('prev-date').textContent = dzisiaj;
+  document.getElementById('prev-buyer').textContent = buyer;
+  document.getElementById('prev-nip').textContent = nip;
+  document.getElementById('prev-service').textContent = service;
+  document.getElementById('prev-net').textContent = amount.toFixed(2) + ' zł';
+  document.getElementById('prev-vat').textContent = vat.toFixed(2) + ' zł';
+  document.getElementById('prev-gross').textContent = gross.toFixed(2) + ' zł';
+
+  // Pokazanie podglądu
+  document.getElementById('invoice-preview').style.display = 'block';
+  document.getElementById('invoice-preview').scrollIntoView({ behavior: 'smooth' });
+};
+
+// --- RESZTA (Tracker, Kalkulator, Ustawienia) ---
 function zapiszStan() {
   const stan = {
     zus: document.getElementById('cb-zus')?.checked || false,
@@ -16,7 +62,6 @@ function wczytajStan() {
   const dane = localStorage.getItem('terminy_jdg_dane');
   if (!dane) return;
   const stan = JSON.parse(dane);
-  
   if (document.getElementById('cb-zus')) document.getElementById('cb-zus').checked = stan.zus;
   if (document.getElementById('cb-pit')) document.getElementById('cb-pit').checked = stan.pit;
   if (document.getElementById('cb-vat')) document.getElementById('cb-vat').checked = stan.vat;
@@ -24,7 +69,6 @@ function wczytajStan() {
   if (document.getElementById('ksef-2')) document.getElementById('ksef-2').checked = stan.ksef2;
   if (document.getElementById('ksef-3')) document.getElementById('ksef-3').checked = stan.ksef3;
   
-  // Ustawiamy stan checkboxa VAT
   const settingVat = document.getElementById('setting-vat');
   if (settingVat && stan.isVatPayer !== undefined) {
     settingVat.checked = stan.isVatPayer;
@@ -32,15 +76,11 @@ function wczytajStan() {
   }
 }
 
-// --- UKRYWANIE/POKAZYWANIE KARTY VAT ---
 function przelaczWidocznoscVat(jestPodatnikiem) {
   const kartaVat = document.getElementById('karta-vat');
-  if (kartaVat) {
-    kartaVat.style.display = jestPodatnikiem ? 'flex' : 'none';
-  }
+  if (kartaVat) kartaVat.style.display = jestPodatnikiem ? 'flex' : 'none';
 }
 
-// --- DATY ---
 function obliczDni(dzien) {
   const dzisiaj = new Date();
   let termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth(), dzien);
@@ -60,12 +100,10 @@ function odswiezDaty() {
   }
 }
 
-// --- KALKULATOR PODATKOWY ---
 window.obliczPodatki = function() {
   const incomeInput = document.getElementById('calc-income');
   const type = document.getElementById('calc-type').value;
   const resultBox = document.getElementById('calc-result');
-
   const income = parseFloat(incomeInput.value);
 
   if (isNaN(income) || income <= 0) {
@@ -74,7 +112,6 @@ window.obliczPodatki = function() {
   }
 
   resultBox.style.display = 'block';
-
   const zus = 1600; 
   let tax = 0;
   let net = 0;
@@ -82,12 +119,10 @@ window.obliczPodatki = function() {
   if (type === 'liniowy') {
     tax = (income - zus) * 0.19;
     net = income - zus - tax;
-  } 
-  else if (type === 'ryczalt') {
+  } else if (type === 'ryczalt') {
     tax = income * 0.12;
     net = income - zus - tax;
-  } 
-  else {
+  } else {
     tax = (income - zus) * 0.12;
     net = income - zus - tax;
   }
@@ -100,18 +135,13 @@ window.obliczPodatki = function() {
   document.getElementById('res-net').textContent = Math.round(net).toLocaleString('pl-PL') + ' zł';
 };
 
-// --- INICJALIZACJA ---
 document.addEventListener('DOMContentLoaded', () => {
   wczytajStan();
   odswiezDaty();
   
-  // Obsługa zapisu dla wszystkich checkboxów
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', () => {
-      // Jeśli zmieniono ustawienie VAT, natychmiast ukryj/pokaż kartę
-      if (cb.id === 'setting-vat') {
-        przelaczWidocznoscVat(cb.checked);
-      }
+      if (cb.id === 'setting-vat') przelaczWidocznoscVat(cb.checked);
       zapiszStan();
     });
   });
