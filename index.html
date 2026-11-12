@@ -5,62 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TerminyJDG.pl – Twój osobisty asystent podatkowy</title>
   <style>
-    /* Nowoczesne fonty i reset */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', system-ui, sans-serif; background-color: #f3f4f6; color: #1f2937; line-height: 1.5; }
     
-    /* Górny pasek nawigacji */
-    nav { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 10; }
+    nav { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
-    .nav-links a { color: #6b7280; text-decoration: none; font-weight: 600; font-size: 14px; margin-left: 15px; }
+    .nav-links a { color: #6b7280; text-decoration: none; font-weight: 600; font-size: 14px; }
 
-    /* Sekcja Hero */
-    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2); }
-    .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px; }
-    .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 15px; }
+    .hero p { font-size: 15px; color: #bfdbfe; margin-bottom: 25px; }
     
-    /* Formularz w sekcji Hero */
     .form-container { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
-    input[type="email"] { width: 100%; padding: 16px; font-size: 16px; border: none; border-radius: 12px; outline: none; font-family: inherit; }
-    #btn { width: 100%; padding: 16px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-    #btn:hover { background: #059669; }
-    #btn:disabled { background: #9ca3af; }
+    input[type="email"] { width: 100%; padding: 15px; font-size: 16px; border: none; border-radius: 10px; outline: none; }
+    #btn { width: 100%; padding: 15px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
     #msg { margin-top: 15px; font-weight: 600; font-size: 14px; color: #fca5a5; }
 
-    /* Sekcja Aplikacji (Tracker) */
-    .app-container { max-width: 600px; margin: -30px auto 40px; padding: 0 20px; position: relative; z-index: 5; }
-    #app-section { display: none; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
-    #app-section h2 { font-size: 22px; font-weight: 800; margin-bottom: 10px; color: #111827; }
-    .app-desc { font-size: 15px; color: #6b7280; margin-bottom: 25px; }
+    .app-container { max-width: 600px; margin: -20px auto 40px; padding: 0 15px; }
+    #app-section { display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     
-    /* Karty terminów */
-    .termin-card { border: 1px solid #e5e7eb; padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; transition: transform 0.2s, box-shadow 0.2s; }
-    .termin-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .termin-card strong { color: #1e3a8a; display: block; font-size: 18px; margin-bottom: 4px; }
-    .termin-card span { font-size: 14px; color: #4b5563; display: block; }
-    .termin-card input[type="checkbox"] { width: 28px; height: 28px; accent-color: #2563eb; cursor: pointer; }
+    .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .termin-card strong { color: #1e3a8a; display: block; font-size: 16px; margin-bottom: 4px; }
+    .termin-data { font-size: 14px; color: #4b5563; display: block; }
+    .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
     
-    /* Przycisk zapisu postępu */
-    #btn-save-progress { width: 100%; padding: 16px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: background 0.2s; }
-    #btn-save-progress:hover { background: #1d4ed8; }
+    /* Sekcja KSeF */
+    .ksef-section { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
+    .ksef-title { font-size: 16px; color: #1e3a8a; margin-bottom: 10px; font-weight: bold; }
+    .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; cursor: pointer; }
+    .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; flex-shrink: 0; }
+
+    #btn-save-progress { width: 100%; padding: 15px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; margin-top: 20px; }
   </style>
 </head>
 <body>
 
-  <!-- Nawigacja -->
   <nav>
     <a href="#" class="logo">TerminyJDG.pl</a>
-    <div class="nav-links">
-      <a href="#">Zaloguj się</a>
-    </div>
+    <div class="nav-links"><a href="#">Zaloguj się</a></div>
   </nav>
 
-  <!-- Sekcja Hero -->
   <div class="hero">
     <h1>Koniec z karami za spóźnienia.</h1>
-    <p>Twój osobisty, inteligentny terminarz ZUS, PIT i VAT. Zapisz się na listę oczekujących i zyskaj spokój ducha.</p>
-    
+    <p>Twój osobisty terminarz ZUS, PIT i VAT. Zapisz się i zyskaj spokój ducha.</p>
     <div class="form-container">
       <input type="email" id="email" placeholder="twój@email.pl" />
       <button id="btn" onclick="zapisz()">Zapisz mnie</button>
@@ -68,54 +56,42 @@
     </div>
   </div>
 
-  <!-- Sekcja Aplikacji -->
   <div class="app-container">
     <div id="app-section">
-      <h2>Twój Terminarz</h2>
-      <p class="app-desc">Poniżej znajdziesz najbliższe terminy. Odhacz te, które są już opłacone.</p>
+      <h2 style="margin-bottom: 15px; color: #111827;">Twój Terminarz</h2>
       
       <div class="termin-card">
-        <div>
-          <strong>ZUS</strong>
-          <span class="termin-data">Termin: 10. dzień miesiąca</span>
-        </div>
-        <input type="checkbox" />
+        <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
+        <input type="checkbox" class="tracker-check" id="cb-zus" />
       </div>
 
       <div class="termin-card">
-        <div>
-          <strong>PIT (Zaliczka)</strong>
-          <span class="termin-data">Termin: 20. dzień miesiąca</span>
-        </div>
-        <input type="checkbox" />
+        <div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div>
+        <input type="checkbox" class="tracker-check" id="cb-pit" />
       </div>
 
       <div class="termin-card">
-        <div>
-          <strong>VAT</strong>
-          <span class="termin-data">Termin: 25. dzień miesiąca</span>
-        </div>
-        <input type="checkbox" />
+        <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
+        <input type="checkbox" class="tracker-check" id="cb-vat" />
       </div>
 
-      <!-- Nowa sekcja KSeF -->
-      <div style="margin-top: 30px; border-top: 2px dashed #e5e7eb; padding-top: 20px;">
-        <h3 style="font-size: 18px; color: #1e3a8a; margin-bottom: 10px;">Przygotowanie do KSeF (2026)</h3>
-        <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">Zaznacz kroki, które masz już za sobą:</p>
+      <!-- Sekcja KSeF - prosta lista -->
+      <div class="ksef-section">
+        <div class="ksef-title">Przygotowanie do KSeF (2026)</div>
         
-        <label style="display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; cursor: pointer; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
-          <input type="checkbox" class="ksef-check" style="width: 20px; height: 20px; margin-right: 12px; accent-color: #2563eb;" />
-          Sprawdziłem, czy mój program do fakturowania obsługuje KSeF
+        <label class="ksef-label">
+          <input type="checkbox" class="ksef-check" id="ksef-1" />
+          <span>Sprawdziłem program do fakturowania</span>
         </label>
-
-        <label style="display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; cursor: pointer; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
-          <input type="checkbox" class="ksef-check" style="width: 20px; height: 20px; margin-right: 12px; accent-color: #2563eb;" />
-          Wygenerowałem token autoryzacyjny w systemie
+        
+        <label class="ksef-label">
+          <input type="checkbox" class="ksef-check" id="ksef-2" />
+          <span>Wygenerowałem token autoryzacyjny</span>
         </label>
-
-        <label style="display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; cursor: pointer; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
-          <input type="checkbox" class="ksef-check" style="width: 20px; height: 20px; margin-right: 12px; accent-color: #2563eb;" />
-          Wiem, jak wystawić pierwszą fakturę w KSeF
+        
+        <label class="ksef-label">
+          <input type="checkbox" class="ksef-check" id="ksef-3" />
+          <span>Wiem, jak wystawić fakturę w KSeF</span>
         </label>
       </div>
       
