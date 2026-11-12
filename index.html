@@ -10,11 +10,15 @@
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; }
     
     .beta-bar { background: #f59e0b; color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
+    
+    /* NOWY BANER OSTRZEGAWCZY */
+    #alert-banner { display: none; background: #ef4444; color: white; text-align: center; padding: 12px; font-size: 15px; font-weight: 800; border-bottom: 2px solid #b91c1c; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+
     nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
     .nav-btn { background: #2563eb; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
 
-    /* Główna strona (Tracker i Kalkulator) */
     #main-view { display: block; }
     .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
@@ -58,16 +62,13 @@
     .cta-btn { display: inline-block; width: 100%; padding: 16px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; }
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; margin-top: 30px; }
 
-    /* --- EKRAN GENERATORA FAKTUR (ukryty domyślnie) --- */
     #invoice-view { display: none; padding: 20px; max-width: 800px; margin: 0 auto; }
     .invoice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .back-btn { background: #e5e7eb; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    
     .invoice-form { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
     .invoice-form h2 { font-size: 20px; margin-bottom: 15px; color: #1e3a8a; }
     .form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
     .form-row input { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
-    
     .invoice-preview { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; }
     .invoice-preview h1 { font-size: 24px; color: #1e3a8a; margin-bottom: 20px; text-align: center; }
     .preview-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
@@ -76,6 +77,9 @@
 </head>
 <body>
 
+  <!-- BANER OSTRZEGAWCZY (ukryty domyślnie) -->
+  <div id="alert-banner"></div>
+
   <div class="beta-bar">🚀 Wersja Beta – testujemy nowe funkcje!</div>
 
   <nav>
@@ -83,7 +87,6 @@
     <button class="nav-btn" onclick="pokazFaktury()">Wystaw Fakturę</button>
   </nav>
 
-  <!-- WIDOK GŁÓWNY -->
   <div id="main-view">
     <div class="hero">
       <h1>Twój osobisty asystent podatkowy</h1>
@@ -91,7 +94,6 @@
     </div>
 
     <div class="app-container">
-      <!-- Tracker i Ustawienia -->
       <div class="card">
         <div class="settings-section">
           <div class="settings-title">Dostosuj aplikację</div>
@@ -126,7 +128,6 @@
         </div>
       </div>
 
-      <!-- Kalkulator -->
       <div class="card">
         <div class="calc-title">Kalkulator Podatkowy</div>
         <div class="calc-group">
@@ -148,7 +149,6 @@
         </div>
       </div>
 
-      <!-- Marketing -->
       <div class="marketing-section">
         <h2>Dlaczego TerminyJDG.pl?</h2>
         <div class="feature-grid">
@@ -166,7 +166,6 @@
     <footer>&copy; 2026 TerminyJDG.pl</footer>
   </div>
 
-  <!-- WIDOK GENERATORA FAKTUR -->
   <div id="invoice-view">
     <div class="invoice-header">
       <button class="back-btn" onclick="pokazGlowna()">← Wróć</button>
@@ -175,26 +174,13 @@
 
     <div class="invoice-form">
       <h2>Wpisz dane do faktury</h2>
-      <div class="form-row">
-        <label>Nabywca (Nazwa firmy / Imię i nazwisko)</label>
-        <input type="text" id="inv-buyer" placeholder="np. Firma XYZ Sp. z o.o." />
-      </div>
-      <div class="form-row">
-        <label>NIP Nabywcy</label>
-        <input type="text" id="inv-nip" placeholder="np. 1234567890" />
-      </div>
-      <div class="form-row">
-        <label>Nazwa usługi / towaru</label>
-        <input type="text" id="inv-service" placeholder="np. Usługi programistyczne" />
-      </div>
-      <div class="form-row">
-        <label>Kwota netto (zł)</label>
-        <input type="number" id="inv-amount" placeholder="np. 5000" />
-      </div>
+      <div class="form-row"><label>Nabywca (Nazwa firmy / Imię i nazwisko)</label><input type="text" id="inv-buyer" placeholder="np. Firma XYZ Sp. z o.o." /></div>
+      <div class="form-row"><label>NIP Nabywcy</label><input type="text" id="inv-nip" placeholder="np. 1234567890" /></div>
+      <div class="form-row"><label>Nazwa usługi / towaru</label><input type="text" id="inv-service" placeholder="np. Usługi programistyczne" /></div>
+      <div class="form-row"><label>Kwota netto (zł)</label><input type="number" id="inv-amount" placeholder="np. 5000" /></div>
       <button class="cta-btn" onclick="generujFakture()" style="margin-top: 10px;">Wygeneruj Fakturę</button>
     </div>
 
-    <!-- Podgląd wygenerowanej faktury -->
     <div class="invoice-preview" id="invoice-preview">
       <h1>Faktura VAT</h1>
       <div class="preview-row"><span>Data wystawienia:</span> <span id="prev-date">-</span></div>
