@@ -88,8 +88,6 @@ async function sprawdzSesje() {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
     document.getElementById('user-email-display').textContent = session.user.email;
-    // Opcjonalnie: automatyczne przekierowanie do aplikacji
-    // pokazAplikacje(); 
   }
 }
 
