@@ -9,12 +9,13 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; }
     
-    /* Pasek Beta */
     .beta-bar { background: #f59e0b; color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
-
-    nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
+    .nav-btn { background: #2563eb; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
 
+    /* Główna strona (Tracker i Kalkulator) */
+    #main-view { display: block; }
     .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
     .hero p { font-size: 16px; color: #bfdbfe; max-width: 500px; margin: 0 auto; }
@@ -22,50 +23,55 @@
     .app-container { max-width: 600px; margin: 20px auto 40px; padding: 0 15px; }
     .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
     
-    /* Ustawienia */
     .settings-section { background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
-    .settings-title { font-size: 14px; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .settings-title { font-size: 14px; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; }
     .settings-label { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #1e3a8a; }
     .settings-label input { width: 20px; height: 20px; accent-color: #2563eb; }
 
-    /* Tracker */
     .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .termin-card strong { color: #1e3a8a; display: block; font-size: 16px; margin-bottom: 4px; }
     .termin-data { font-size: 14px; color: #4b5563; display: block; }
     .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
     
-    /* KSeF */
     .ksef-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
     .ksef-title { font-size: 16px; color: #1e3a8a; margin-bottom: 10px; font-weight: bold; }
     .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; cursor: pointer; }
     .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; flex-shrink: 0; }
 
-    /* KALKULATOR */
     .calc-title { font-size: 18px; color: #1e3a8a; margin-bottom: 15px; font-weight: 800; }
     .calc-group { margin-bottom: 15px; }
     .calc-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #475569; }
     .calc-group input, .calc-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; }
-    
     .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; display: none; }
     .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
     .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
 
-    /* LANDING PAGE */
     .marketing-section { margin-top: 40px; text-align: center; }
     .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
-    
     .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
     .feature-item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: left; border-left: 4px solid #2563eb; }
     .feature-item h3 { font-size: 16px; color: #111827; margin-bottom: 5px; }
     .feature-item p { font-size: 14px; color: #6b7280; }
-
-    .cta-box { background: #1e3a8a; padding: 30px 20px; border-radius: 16px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3); }
+    .cta-box { background: #1e3a8a; padding: 30px 20px; border-radius: 16px; color: white; text-align: center; }
     .cta-box h2 { font-size: 22px; margin-bottom: 10px; color: white; }
     .cta-box p { font-size: 15px; color: #bfdbfe; margin-bottom: 20px; }
-    .cta-btn { display: inline-block; width: 100%; padding: 16px; background: #10b981; color: white; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; transition: background 0.2s; }
-    .cta-btn:hover { background: #059669; }
-
+    .cta-btn { display: inline-block; width: 100%; padding: 16px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; }
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; margin-top: 30px; }
+
+    /* --- EKRAN GENERATORA FAKTUR (ukryty domyślnie) --- */
+    #invoice-view { display: none; padding: 20px; max-width: 800px; margin: 0 auto; }
+    .invoice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .back-btn { background: #e5e7eb; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    
+    .invoice-form { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .invoice-form h2 { font-size: 20px; margin-bottom: 15px; color: #1e3a8a; }
+    .form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .form-row input { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
+    
+    .invoice-preview { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; }
+    .invoice-preview h1 { font-size: 24px; color: #1e3a8a; margin-bottom: 20px; text-align: center; }
+    .preview-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .preview-total { font-weight: 800; font-size: 20px; color: #10b981; border-bottom: none; }
   </style>
 </head>
 <body>
@@ -74,108 +80,133 @@
 
   <nav>
     <a href="#" class="logo">TerminyJDG.pl</a>
+    <button class="nav-btn" onclick="pokazFaktury()">Wystaw Fakturę</button>
   </nav>
 
-  <div class="hero">
-    <h1>Twój osobisty asystent podatkowy</h1>
-    <p>Śledź terminy, przygotuj się do KSeF i oblicz swoje podatki w jednym miejscu.</p>
+  <!-- WIDOK GŁÓWNY -->
+  <div id="main-view">
+    <div class="hero">
+      <h1>Twój osobisty asystent podatkowy</h1>
+      <p>Śledź terminy, przygotuj się do KSeF i oblicz swoje podatki w jednym miejscu.</p>
+    </div>
+
+    <div class="app-container">
+      <!-- Tracker i Ustawienia -->
+      <div class="card">
+        <div class="settings-section">
+          <div class="settings-title">Dostosuj aplikację</div>
+          <label class="settings-label">
+            <input type="checkbox" id="setting-vat" checked />
+            Jestem podatnikiem VAT
+          </label>
+        </div>
+
+        <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
+        
+        <div class="termin-card">
+          <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
+          <input type="checkbox" class="tracker-check" id="cb-zus" />
+        </div>
+
+        <div class="termin-card">
+          <div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div>
+          <input type="checkbox" class="tracker-check" id="cb-pit" />
+        </div>
+
+        <div class="termin-card" id="karta-vat">
+          <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
+          <input type="checkbox" class="tracker-check" id="cb-vat" />
+        </div>
+
+        <div class="ksef-section">
+          <div class="ksef-title">Przygotowanie do KSeF (2026)</div>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Sprawdziłem program do fakturowania</span></label>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Wygenerowałem token autoryzacyjny</span></label>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Wiem, jak wystawić fakturę w KSeF</span></label>
+        </div>
+      </div>
+
+      <!-- Kalkulator -->
+      <div class="card">
+        <div class="calc-title">Kalkulator Podatkowy</div>
+        <div class="calc-group">
+          <label>Twój miesięczny przychód (zł)</label>
+          <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
+        </div>
+        <div class="calc-group">
+          <label>Forma opodatkowania</label>
+          <select id="calc-type" onchange="obliczPodatki()">
+            <option value="skala">Skala podatkowa (12% / 32%)</option>
+            <option value="liniowy">Podatek liniowy (19%)</option>
+            <option value="ryczalt">Ryczałt (12% dla IT)</option>
+          </select>
+        </div>
+        <div class="calc-result" id="calc-result">
+          <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
+          <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
+          <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
+        </div>
+      </div>
+
+      <!-- Marketing -->
+      <div class="marketing-section">
+        <h2>Dlaczego TerminyJDG.pl?</h2>
+        <div class="feature-grid">
+          <div class="feature-item"><h3>⏰ Koniec z karami</h3><p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT.</p></div>
+          <div class="feature-item"><h3>💰 Wiesz, ile zostanie Ci w kieszeni</h3><p>Kalkulator na bieżąco wylicza podatki i składki.</p></div>
+          <div class="feature-item"><h3>📄 Gotowy na KSeF</h3><p>Interaktywna lista kontrolna przygotuje Cię do 2026 roku.</p></div>
+        </div>
+        <div class="cta-box">
+          <h2>Chcesz mieć spokojną głowę?</h2>
+          <p>Zapisz się na listę oczekujących i jako pierwszy otrzymaj dostęp do pełnej wersji!</p>
+          <button class="cta-btn" onclick="alert('Dziękujemy! Wkrótce uruchomimy zapisy.')">Chcę to mieć!</button>
+        </div>
+      </div>
+    </div>
+    <footer>&copy; 2026 TerminyJDG.pl</footer>
   </div>
 
-  <div class="app-container">
-    <!-- Tracker i Ustawienia -->
-    <div class="card">
-      
-      <!-- NOWA SEKCJA: USTAWIENIA -->
-      <div class="settings-section">
-        <div class="settings-title">Dostosuj aplikację</div>
-        <label class="settings-label">
-          <input type="checkbox" id="setting-vat" checked />
-          Jestem podatnikiem VAT
-        </label>
-      </div>
-
-      <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
-      
-      <div class="termin-card">
-        <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
-        <input type="checkbox" class="tracker-check" id="cb-zus" />
-      </div>
-
-      <div class="termin-card">
-        <div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div>
-        <input type="checkbox" class="tracker-check" id="cb-pit" />
-      </div>
-
-      <!-- Karta VAT (będzie ukrywana) -->
-      <div class="termin-card" id="karta-vat">
-        <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
-        <input type="checkbox" class="tracker-check" id="cb-vat" />
-      </div>
-
-      <div class="ksef-section">
-        <div class="ksef-title">Przygotowanie do KSeF (2026)</div>
-        <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Sprawdziłem program do fakturowania</span></label>
-        <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Wygenerowałem token autoryzacyjny</span></label>
-        <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Wiem, jak wystawić fakturę w KSeF</span></label>
-      </div>
+  <!-- WIDOK GENERATORA FAKTUR -->
+  <div id="invoice-view">
+    <div class="invoice-header">
+      <button class="back-btn" onclick="pokazGlowna()">← Wróć</button>
+      <h2 style="color: #1e3a8a;">Generator Faktur</h2>
     </div>
 
-    <!-- Kalkulator -->
-    <div class="card">
-      <div class="calc-title">Kalkulator Podatkowy</div>
-      
-      <div class="calc-group">
-        <label>Twój miesięczny przychód (zł)</label>
-        <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
+    <div class="invoice-form">
+      <h2>Wpisz dane do faktury</h2>
+      <div class="form-row">
+        <label>Nabywca (Nazwa firmy / Imię i nazwisko)</label>
+        <input type="text" id="inv-buyer" placeholder="np. Firma XYZ Sp. z o.o." />
       </div>
-
-      <div class="calc-group">
-        <label>Forma opodatkowania</label>
-        <select id="calc-type" onchange="obliczPodatki()">
-          <option value="skala">Skala podatkowa (12% / 32%)</option>
-          <option value="liniowy">Podatek liniowy (19%)</option>
-          <option value="ryczalt">Ryczałt (12% dla IT)</option>
-        </select>
+      <div class="form-row">
+        <label>NIP Nabywcy</label>
+        <input type="text" id="inv-nip" placeholder="np. 1234567890" />
       </div>
-
-      <div class="calc-result" id="calc-result">
-        <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
-        <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
-        <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
+      <div class="form-row">
+        <label>Nazwa usługi / towaru</label>
+        <input type="text" id="inv-service" placeholder="np. Usługi programistyczne" />
       </div>
+      <div class="form-row">
+        <label>Kwota netto (zł)</label>
+        <input type="number" id="inv-amount" placeholder="np. 5000" />
+      </div>
+      <button class="cta-btn" onclick="generujFakture()" style="margin-top: 10px;">Wygeneruj Fakturę</button>
     </div>
 
-    <!-- SEKCJA MARKETINGOWA -->
-    <div class="marketing-section">
-      <h2>Dlaczego TerminyJDG.pl?</h2>
-      
-      <div class="feature-grid">
-        <div class="feature-item">
-          <h3>⏰ Koniec z karami</h3>
-          <p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p>
-        </div>
-        <div class="feature-item">
-          <h3>💰 Wiesz, ile zostanie Ci w kieszeni</h3>
-          <p>Nasz kalkulator na bieżąco wylicza podatki i składki, pokazując realny zysk z Twojej firmy.</p>
-        </div>
-        <div class="feature-item">
-          <h3>📄 Gotowy na KSeF</h3>
-          <p>Interaktywna lista kontrolna krok po kroku przygotuje Cię do obowiązkowego systemu e-faktur w 2026 roku.</p>
-        </div>
-      </div>
-
-      <div class="cta-box">
-        <h2>Chcesz mieć spokojną głowę?</h2>
-        <p>Zapisz się na listę oczekujących i jako pierwszy otrzymaj dostęp do pełnej wersji aplikacji!</p>
-        <button class="cta-btn" onclick="alert('Dziękujemy! Wkrótce uruchomimy zapisy.')">Chcę to mieć! (Wypróbuj za darmo)</button>
-      </div>
+    <!-- Podgląd wygenerowanej faktury -->
+    <div class="invoice-preview" id="invoice-preview">
+      <h1>Faktura VAT</h1>
+      <div class="preview-row"><span>Data wystawienia:</span> <span id="prev-date">-</span></div>
+      <div class="preview-row"><span>Nabywca:</span> <span id="prev-buyer">-</span></div>
+      <div class="preview-row"><span>NIP:</span> <span id="prev-nip">-</span></div>
+      <div class="preview-row"><span>Usługa:</span> <span id="prev-service">-</span></div>
+      <div class="preview-row"><span>Kwota netto:</span> <span id="prev-net">-</span></div>
+      <div class="preview-row"><span>VAT (23%):</span> <span id="prev-vat">-</span></div>
+      <div class="preview-row preview-total"><span>Do zapłaty (brutto):</span> <span id="prev-gross">-</span></div>
+      <button class="cta-btn" onclick="window.print()" style="margin-top: 20px; background: #2563eb;">Wydrukuj / Zapisz jako PDF</button>
     </div>
-
   </div>
-
-  <footer>
-    &copy; 2026 TerminyJDG.pl. Wszelkie prawa zastrzeżone.
-  </footer>
 
   <script type="module" src="/src/main.js"></script>
 </body>
