@@ -26,7 +26,11 @@
     .hero-form-box { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 450px; margin: 0 auto; text-align: center; }
     .hero-form-box h3 { color: #1e3a8a; font-size: 20px; margin-bottom: 10px; font-weight: 800; }
     .hero-form-box p { color: #4b5563; font-size: 14px; margin-bottom: 20px; }
-    
+    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
+    .waitlist-form input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; background: #f8fafc; }
+    .waitlist-form input:focus { border-color: #2563eb; }
+    .waitlist-form button { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+
     .app-preview-btn { display: inline-block; margin-top: 30px; background: transparent; color: #bfdbfe; border: 1px solid #bfdbfe; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; }
 
     .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
@@ -144,10 +148,15 @@
       <h1>Twój osobisty asystent podatkowy</h1>
       <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i oblicz swoje podatki w jednym miejscu.</p>
       
+      <!-- PRZYWRÓCONY FORMULARZ E-MAILI -->
       <div class="hero-form-box">
-        <h3>Załóż darmowe konto</h3>
-        <p>Dołącz do wersji Beta i zapisz swoje dane w chmurze. Otrzymasz powiadomienia, zanim będzie za późno.</p>
-        <button class="main-cta" onclick="pokazLogowanie()">Zarejestruj się / Zaloguj</button>
+        <h3>Zapisz się na listę oczekujących</h3>
+        <p>Uruchamiamy wersję Beta! Zostaw swój e-mail, aby jako pierwszy otrzymać dostęp do aplikacji.</p>
+        
+        <form action="https://formspree.io/f/mrpqgrpy" method="POST" class="waitlist-form">
+          <input type="email" name="email" placeholder="twój@email.pl" required />
+          <button type="submit">Zapisz mnie na listę</button>
+        </form>
       </div>
 
       <button class="app-preview-btn" onclick="pokazAplikacje()">Zobacz podgląd aplikacji →</button>
