@@ -15,7 +15,7 @@
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
     .nav-links a { color: #6b7280; text-decoration: none; font-weight: 600; font-size: 14px; margin-left: 15px; }
 
-    /* Sekcja Hero (zaproszenie do zapisu) */
+    /* Sekcja Hero */
     .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2); }
     .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px; }
     .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
@@ -96,6 +96,27 @@
           <span class="termin-data">Termin: 25. dzień miesiąca</span>
         </div>
         <input type="checkbox" />
+      </div>
+
+      <!-- Nowa sekcja KSeF -->
+      <div style="margin-top: 30px; border-top: 2px dashed #e5e7eb; padding-top: 20px;">
+        <h3 style="font-size: 18px; color: #1e3a8a; margin-bottom: 10px;">Przygotowanie do KSeF (2026)</h3>
+        <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">Zaznacz kroki, które masz już za sobą:</p>
+        
+        <label style="display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; cursor: pointer; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
+          <input type="checkbox" class="ksef-check" style="width: 20px; height: 20px; margin-right: 12px; accent-color: #2563eb;" />
+          Sprawdziłem, czy mój program do fakturowania obsługuje KSeF
+        </label>
+
+        <label style="display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; cursor: pointer; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
+          <input type="checkbox" class="ksef-check" style="width: 20px; height: 20px; margin-right: 12px; accent-color: #2563eb;" />
+          Wygenerowałem token autoryzacyjny w systemie
+        </label>
+
+        <label style="display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; cursor: pointer; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
+          <input type="checkbox" class="ksef-check" style="width: 20px; height: 20px; margin-right: 12px; accent-color: #2563eb;" />
+          Wiem, jak wystawić pierwszą fakturę w KSeF
+        </label>
       </div>
       
       <button id="btn-save-progress">Zapisz postęp</button>
