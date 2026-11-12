@@ -1,3 +1,28 @@
+// --- INTELIGENTNE POWIADOMIENIA ---
+function sprawdzOstrzezenia() {
+  const dZus = obliczDni(10);
+  const dPit = obliczDni(20);
+  const dVat = obliczDni(25);
+  const banner = document.getElementById('alert-banner');
+
+  let ostrzezenie = '';
+
+  // Sprawdzamy, czy termin jest blisko (np. 3 dni lub mniej)
+  if (dZus <= 3 && dZus > 0) {
+    ostrzezenie = `⚠️ Uwaga! Do opłacenia ZUS zostały ${dZus} dni!`;
+  } else if (dPit <= 3 && dPit > 0) {
+    ostrzezenie = `⚠️ Uwaga! Do opłacenia PIT zostały ${dPit} dni!`;
+  } else if (dVat <= 3 && dVat > 0) {
+    ostrzezenie = `⚠️ Uwaga! Do opłacenia VAT zostały ${dVat} dni!`;
+  }
+
+  // Jeśli jest ostrzeżenie, pokazujemy baner
+  if (ostrzezenie) {
+    banner.textContent = ostrzezenie;
+    banner.style.display = 'block';
+  }
+}
+
 // --- NAWIGACJA ---
 window.pokazFaktury = function() {
   document.getElementById('main-view').style.display = 'none';
@@ -17,7 +42,6 @@ window.generujFakture = function() {
   const nip = document.getElementById('inv-nip').value || 'Brak NIP';
   const service = document.getElementById('inv-service').value || 'Brak opisu';
   const amountInput = document.getElementById('inv-amount').value;
-  
   const amount = parseFloat(amountInput);
   
   if (isNaN(amount) || amount <= 0) {
@@ -25,12 +49,10 @@ window.generujFakture = function() {
     return;
   }
 
-  // Obliczenia (VAT 23%)
   const vat = amount * 0.23;
   const gross = amount + vat;
   const dzisiaj = new Date().toLocaleDateString('pl-PL');
 
-  // Wstawianie danych do podglądu
   document.getElementById('prev-date').textContent = dzisiaj;
   document.getElementById('prev-buyer').textContent = buyer;
   document.getElementById('prev-nip').textContent = nip;
@@ -39,7 +61,6 @@ window.generujFakture = function() {
   document.getElementById('prev-vat').textContent = vat.toFixed(2) + ' zł';
   document.getElementById('prev-gross').textContent = gross.toFixed(2) + ' zł';
 
-  // Pokazanie podglądu
   document.getElementById('invoice-preview').style.display = 'block';
   document.getElementById('invoice-preview').scrollIntoView({ behavior: 'smooth' });
 };
@@ -138,6 +159,7 @@ window.obliczPodatki = function() {
 document.addEventListener('DOMContentLoaded', () => {
   wczytajStan();
   odswiezDaty();
+  sprawdzOstrzezenia(); // Uruchamiamy sprawdzanie powiadomień przy starcie
   
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', () => {
