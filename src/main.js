@@ -90,7 +90,6 @@ window.obliczPodatki = function() {
   } 
   else if (type === 'ryczalt') {
     // Ryczałt 12% od przychodu (dla branży IT)
-    // Uwaga: przy ryczałcie zdrowotna liczona jest od przychodu, ale dla uproszczenia kalkulatora używamy stałej kwoty ZUS
     tax = income * 0.12;
     net = income - zus - tax;
   } 
