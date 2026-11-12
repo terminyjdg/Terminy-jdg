@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Adres przepisany przez Vercel, który omija blokadę
-const supabaseUrl = 'https://terminyjdg.pl/api/supabase'
+const supabaseUrl = '/api'
 const supabaseKey = 'sb_publishable_Z6yw9Yc5t0dQ9tgPpLDqMg_9zvA2biD'
 
 const supabase = createClient(supabaseUrl, supabaseKey)
