@@ -12,6 +12,15 @@ window.pokazLanding = function() {
   window.scrollTo(0, 0);
 };
 
+// --- PAYWALL (OKIENKO PREMIUM) ---
+window.pokazPaywall = function() {
+  document.getElementById('paywall-modal').style.display = 'flex';
+};
+
+window.zamknijPaywall = function() {
+  document.getElementById('paywall-modal').style.display = 'none';
+};
+
 // --- INTELIGENTNE POWIADOMIENIA (BANER) ---
 function sprawdzOstrzezenia() {
   const dZus = obliczDni(10);
@@ -40,7 +49,6 @@ window.obliczPoduszke = function() {
     return;
   }
 
-  // Wyliczamy podatek i ZUS (uproszczone dla skali 12% i stałego ZUS 1600)
   const zus = 1600;
   const tax = (income - zus) > 0 ? (income - zus) * 0.12 : 0;
   const totalTax = zus + tax;
