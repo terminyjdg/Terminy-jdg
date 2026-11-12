@@ -1,23 +1,37 @@
-// --- NAWIGACJA MIĘDZY STRONAMI ---
-window.pokazAplikacje = function() {
-  document.getElementById('landing-view').style.display = 'none';
-  document.getElementById('invoice-view').style.display = 'none';
-  document.getElementById('app-view').style.display = 'block';
-  window.scrollTo(0, 0);
-  odswiezDaty(); 
-};
+import { createClient } from '@supabase/supabase-js'
 
+const supabaseUrl = 'https://ievdkkjijcvkaeg.supabase.co'
+const supabaseKey = 'sb_publishable_Z6yw9Yc5t0dQ9tgPpLDqMg_9zvA2biD'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+// --- NAWIGACJA ---
 window.pokazLanding = function() {
-  document.getElementById('app-view').style.display = 'none';
-  document.getElementById('invoice-view').style.display = 'none';
+  document.querySelectorAll('#app-view, #auth-login-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
   document.getElementById('landing-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
 
-// --- WIDOK GENERATORA FAKTUR ---
+window.pokazAplikacje = function() {
+  document.querySelectorAll('#landing-view, #auth-login-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
+  document.getElementById('app-view').style.display = 'block';
+  window.scrollTo(0, 0);
+  odswiezDaty();
+};
+
+window.pokazLogowanie = function() {
+  document.querySelectorAll('#landing-view, #app-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
+  document.getElementById('auth-login-view').style.display = 'flex';
+  window.scrollTo(0, 0);
+};
+
+window.pokazRejestracje = function() {
+  document.querySelectorAll('#landing-view, #app-view, #auth-login-view, #invoice-view').forEach(el => el.style.display = 'none');
+  document.getElementById('auth-register-view').style.display = 'flex';
+  window.scrollTo(0, 0);
+};
+
 window.pokazFaktury = function() {
-  document.getElementById('landing-view').style.display = 'none';
-  document.getElementById('app-view').style.display = 'none';
+  document.querySelectorAll('#landing-view, #app-view, #auth-login-view, #auth-register-view').forEach(el => el.style.display = 'none');
   document.getElementById('invoice-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
@@ -28,105 +42,69 @@ window.pokazGlowna = function() {
   window.scrollTo(0, 0);
 };
 
-// --- GENERATOR FAKTUR (BLOKADA PAYWALL) ---
-window.generujFakture = function() {
-  // Zamiast generować fakturę, pokazujemy okienko Premium
-  window.pokazPaywall("Generator Faktur");
+// --- LOGOWANIE I REJESTRACJA ---
+window.obsluzRejestracje = async function() {
+  const email = document.getElementById('register-email').value;
+  const password = document.getElementById('register-password').value;
+  const msg = document.getElementById('register-msg');
+  
+  msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
+
+  const { error } = await supabase.auth.signUp({ email, password });
+
+  if (error) {
+    msg.textContent = error.message; msg.style.color = '#dc2626';
+  } else {
+    msg.textContent = 'Konto utworzone! Możesz się zalogować.'; msg.style.color = '#16a34a';
+    setTimeout(() => pokazLogowanie(), 2000);
+  }
 };
 
-// --- PAYWALL (OKIENKO PREMIUM Z DYNAMICZNYM TEKSTEM) ---
+window.obsluzLogowanie = async function() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+
+  msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    msg.textContent = error.message; msg.style.color = '#dc2626';
+  } else {
+    document.getElementById('user-email-display').textContent = data.user.email;
+    pokazAplikacje();
+  }
+};
+
+window.wyloguj = async function() {
+  await supabase.auth.signOut();
+  document.getElementById('user-email-display').textContent = 'Niezalogowany';
+  pokazLanding();
+};
+
+// Sprawdzanie przy starcie
+async function sprawdzSesje() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    document.getElementById('user-email-display').textContent = session.user.email;
+    // Opcjonalnie: automatyczne przekierowanie do aplikacji
+    // pokazAplikacje(); 
+  }
+}
+
+// --- PAYWALL ---
 window.pokazPaywall = function(funkcja) {
   const textElem = document.getElementById('paywall-text');
-  if (funkcja === "Generator Faktur") {
-    textElem.textContent = "Generator Faktur jest dostępny w planie PRO. Odblokuj go, aby wystawiać nieograniczoną liczbę faktur.";
-  } else if (funkcja === "Powiadomienia Push") {
-    textElem.textContent = "Powiadomienia Push są dostępne w planie PRO. Odblokuj je, aby mieć 100% pewności, że nie przegapisz terminu.";
-  } else {
-    textElem.textContent = "Ta funkcja jest dostępna w planie PRO.";
-  }
+  if (funkcja === "Generator Faktur") textElem.textContent = "Generator Faktur jest dostępny w planie PRO.";
+  else if (funkcja === "Powiadomienia Push") textElem.textContent = "Powiadomienia Push są dostępne w planie PRO.";
+  else textElem.textContent = "Ta funkcja jest dostępna w planie PRO.";
   document.getElementById('paywall-modal').style.display = 'flex';
 };
+window.zamknijPaywall = function() { document.getElementById('paywall-modal').style.display = 'none'; };
+window.generujFakture = function() { window.pokazPaywall("Generator Faktur"); };
 
-window.zamknijPaywall = function() {
-  document.getElementById('paywall-modal').style.display = 'none';
-};
-
-// --- INTELIGENTNE POWIADOMIENIA (BANER) ---
-function sprawdzOstrzezenia() {
-  const dZus = obliczDni(10);
-  const dPit = obliczDni(20);
-  const dVat = obliczDni(25);
-  const banner = document.getElementById('alert-banner');
-  let ostrzezenie = '';
-
-  if (dZus <= 3 && dZus > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia ZUS zostały ${dZus} dni!`;
-  else if (dPit <= 3 && dPit > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia PIT zostały ${dPit} dni!`;
-  else if (dVat <= 3 && dVat > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia VAT zostały ${dVat} dni!`;
-
-  if (ostrzezenie) {
-    banner.textContent = ostrzezenie;
-    banner.style.display = 'block';
-  }
-}
-
-// --- PODUSZKA FINANSOWA ---
-window.obliczPoduszke = function() {
-  const income = parseFloat(document.getElementById('pillow-income').value);
-  const resultBox = document.getElementById('pillow-result');
-
-  if (isNaN(income) || income <= 0) {
-    resultBox.style.display = 'none';
-    return;
-  }
-
-  const zus = 1600;
-  const tax = (income - zus) > 0 ? (income - zus) * 0.12 : 0;
-  const totalTax = zus + tax;
-  const safeToSpend = income - totalTax;
-
-  document.getElementById('pillow-tax').textContent = Math.round(totalTax).toLocaleString('pl-PL') + ' zł';
-  document.getElementById('pillow-safe').textContent = Math.round(safeToSpend).toLocaleString('pl-PL') + ' zł';
-  
-  resultBox.style.display = 'block';
-};
-
-// --- RESZTA (Tracker, Kalkulator, Ustawienia) ---
-function zapiszStan() {
-  const stan = {
-    zus: document.getElementById('cb-zus')?.checked || false,
-    pit: document.getElementById('cb-pit')?.checked || false,
-    vat: document.getElementById('cb-vat')?.checked || false,
-    ksef1: document.getElementById('ksef-1')?.checked || false,
-    ksef2: document.getElementById('ksef-2')?.checked || false,
-    ksef3: document.getElementById('ksef-3')?.checked || false,
-    isVatPayer: document.getElementById('setting-vat')?.checked || false
-  };
-  localStorage.setItem('terminy_jdg_dane', JSON.stringify(stan));
-}
-
-function wczytajStan() {
-  const dane = localStorage.getItem('terminy_jdg_dane');
-  if (!dane) return;
-  const stan = JSON.parse(dane);
-  if (document.getElementById('cb-zus')) document.getElementById('cb-zus').checked = stan.zus;
-  if (document.getElementById('cb-pit')) document.getElementById('cb-pit').checked = stan.pit;
-  if (document.getElementById('cb-vat')) document.getElementById('cb-vat').checked = stan.vat;
-  if (document.getElementById('ksef-1')) document.getElementById('ksef-1').checked = stan.ksef1;
-  if (document.getElementById('ksef-2')) document.getElementById('ksef-2').checked = stan.ksef2;
-  if (document.getElementById('ksef-3')) document.getElementById('ksef-3').checked = stan.ksef3;
-  
-  const settingVat = document.getElementById('setting-vat');
-  if (settingVat && stan.isVatPayer !== undefined) {
-    settingVat.checked = stan.isVatPayer;
-    przelaczWidocznoscVat(stan.isVatPayer);
-  }
-}
-
-function przelaczWidocznoscVat(jestPodatnikiem) {
-  const kartaVat = document.getElementById('karta-vat');
-  if (kartaVat) kartaVat.style.display = jestPodatnikiem ? 'flex' : 'none';
-}
-
+// --- RESZTA ---
 function obliczDni(dzien) {
   const dzisiaj = new Date();
   let termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth(), dzien);
@@ -135,9 +113,7 @@ function obliczDni(dzien) {
 }
 
 function odswiezDaty() {
-  const dZus = obliczDni(10);
-  const dPit = obliczDni(20);
-  const dVat = obliczDni(25);
+  const dZus = obliczDni(10), dPit = obliczDni(20), dVat = obliczDni(25);
   const datas = document.querySelectorAll('.termin-data');
   if (datas.length >= 3) {
     datas[0].innerHTML = `Termin: 10. dzień <br><strong style="color:${dZus <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dZus} dni!</strong>`;
@@ -147,48 +123,32 @@ function odswiezDaty() {
 }
 
 window.obliczPodatki = function() {
-  const incomeInput = document.getElementById('calc-income');
+  const income = parseFloat(document.getElementById('calc-income').value);
   const type = document.getElementById('calc-type').value;
   const resultBox = document.getElementById('calc-result');
-  const income = parseFloat(incomeInput.value);
-
-  if (isNaN(income) || income <= 0) {
-    resultBox.style.display = 'none';
-    return;
-  }
-
+  if (isNaN(income) || income <= 0) { resultBox.style.display = 'none'; return; }
   resultBox.style.display = 'block';
-  const zus = 1600; 
-  let tax = 0;
-  let net = 0;
-
-  if (type === 'liniowy') {
-    tax = (income - zus) * 0.19;
-    net = income - zus - tax;
-  } else if (type === 'ryczalt') {
-    tax = income * 0.12;
-    net = income - zus - tax;
-  } else {
-    tax = (income - zus) * 0.12;
-    net = income - zus - tax;
-  }
-
-  if (tax < 0) tax = 0;
-  if (net < 0) net = 0;
-
+  const zus = 1600; let tax = 0, net = 0;
+  if (type === 'liniowy') { tax = (income - zus) * 0.19; net = income - zus - tax; }
+  else if (type === 'ryczalt') { tax = income * 0.12; net = income - zus - tax; }
+  else { tax = (income - zus) * 0.12; net = income - zus - tax; }
+  if (tax < 0) tax = 0; if (net < 0) net = 0;
   document.getElementById('res-zus').textContent = zus.toLocaleString('pl-PL') + ' zł';
   document.getElementById('res-tax').textContent = Math.round(tax).toLocaleString('pl-PL') + ' zł';
   document.getElementById('res-net').textContent = Math.round(net).toLocaleString('pl-PL') + ' zł';
 };
 
+window.obliczPoduszke = function() {
+  const income = parseFloat(document.getElementById('pillow-income').value);
+  const resultBox = document.getElementById('pillow-result');
+  if (isNaN(income) || income <= 0) { resultBox.style.display = 'none'; return; }
+  const zus = 1600; const tax = (income - zus) > 0 ? (income - zus) * 0.12 : 0;
+  const totalTax = zus + tax;
+  document.getElementById('pillow-tax').textContent = Math.round(totalTax).toLocaleString('pl-PL') + ' zł';
+  document.getElementById('pillow-safe').textContent = Math.round(income - totalTax).toLocaleString('pl-PL') + ' zł';
+  resultBox.style.display = 'block';
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-  wczytajStan();
-  sprawdzOstrzezenia();
-  
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      if (cb.id === 'setting-vat') przelaczWidocznoscVat(cb.checked);
-      zapiszStan();
-    });
-  });
+  sprawdzSesje();
 });
