@@ -1,7 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+limport { createClient } from '@supabase/supabase-js'
 
+// UWAGA: Upewnij się, że URL jest poprawny (kończy się na .supabase.co)
 const supabaseUrl = 'https://ievdkkjijcvkaeg.supabase.co'
+// UWAGA: Upewnij się, że klucz jest poprawny (zaczyna się od sb_publishable_)
 const supabaseKey = 'sb_publishable_Z6yw9Yc5t0dQ9tgPpLDqMg_9zvA2biD'
+
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 // --- NAWIGACJA ---
