@@ -2,79 +2,6 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>TerminyJDG.pl – nie przegap terminów ZUS, PIT i VAT</title>
-        <style>
-            body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f9fafb; color: #1f2937; }
-                
-                    /* Styl dla sekcji zapisu */
-                        .zapis-sekcja { text-align: center; margin-bottom: 40px; }
-                            h1 { font-size: 28px; margin-bottom: 10px; }
-                                p { color: #4b5563; font-size: 16px; }
-                                    input[type="email"] { width: 100%; padding: 14px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 8px; margin: 16px 0; box-sizing: border-box; }
-                                        #btn { width: 100%; padding: 14px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-                                            #btn:disabled { background: #9ca3af; }
-                                                #msg { margin-top: 10px; font-weight: 600; font-size: 14px; }
-                                                    .ok { color: #16a34a; }
-                                                        .err { color: #dc2626; }
-
-                                                            /* Styl dla sekcji trackera */
-                                                                #app-section { display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; margin-top: 20px; }
-                                                                    #app-section h2 { font-size: 20px; margin-top: 0; }
-                                                                        .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; }
-                                                                            .termin-card strong { color: #2563eb; display: block; font-size: 16px; margin-bottom: 4px; }
-                                                                                .termin-card span { font-size: 14px; color: #6b7280; }
-                                                                                    .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
-                                                                                        #btn-save-progress { width: 100%; padding: 14px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-                                                                                          </style>
-                                                                                          </head>
-                                                                                          <body>
-
-                                                                                            <div class="zapis-sekcja">
-                                                                                                <h1>TerminyJDG.pl</h1>
-                                                                                                    <p>Nie przegap terminów ZUS, PIT i VAT. Zapisz się na listę oczekujących – damy Ci znać, gdy aplikacja będzie gotowa.</p>
-                                                                                                        <input type="email" id="email" placeholder="twój@email.pl" />
-                                                                                                            <button id="btn">Zapisz mnie</button>
-                                                                                                                <div id="msg"></div>
-                                                                                                                  </div>
-
-                                                                                                                    <div id="app-section">
-                                                                                                                        <h2>Twój Terminarz (Podgląd)</h2>
-                                                                                                                            <p style="margin-bottom: 20px;">Poniżej znajdziesz najbliższe terminy. Zaznacz te, które już opłaciłeś.</p>
-                                                                                                                                
-                                                                                                                                    <div class="termin-card">
-                                                                                                                                          <div>
-                                                                                                                                                  <strong>ZUS</strong>
-                                                                                                                                                          <span>Termin: 10. dzień miesiąca</span>
-                                                                                                                                                                </div>
-                                                                                                                                                                      <input type="checkbox" />
-                                                                                                                                                                          </div>
-
-                                                                                                                                                                              <div class="termin-card">
-                                                                                                                                                                                    <div>
-                                                                                                                                                                                            <strong>PIT (Zaliczka)</strong>
-                                                                                                                                                                                                    <span>Termin: 20. dzień miesiąca</span>
-                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                                <input type="checkbox" />
-                                                                                                                                                                                                                    </div>
-
-                                                                                                                                                                                                                        <div class="termin-card">
-                                                                                                                                                                                                                              <div>
-                                                                                                                                                                                                                                      <strong>VAT</strong>
-                                                                                                                                                                                                                                              <span>Termin: 25. dzień miesiąca</span>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                          <input type="checkbox" />
-                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                  
-                                                                                                                                                                                                                                                                      <button id="btn-save-progress">Zapisz postęp</button>
-                                                                                                                                                                                                                                                                        </div>
-
-                                                                                                                                                                                                                                                                          <script type="module" src="/src/main.js"></script>
-                                                                                                                                                                                                                                                                          </body>
-                                                                                                                                                                                                                                                                          </html><!DOCTYPE html>
-<html lang="pl">
-<head>
-  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TerminyJDG.pl – nie przegap terminów ZUS, PIT i VAT</title>
   <style>
@@ -107,7 +34,7 @@
     <h1>TerminyJDG.pl</h1>
     <p>Nie przegap terminów ZUS, PIT i VAT. Zapisz się na listę oczekujących – damy Ci znać, gdy aplikacja będzie gotowa.</p>
     <input type="email" id="email" placeholder="twój@email.pl" />
-    <button id="btn">Zapisz mnie</button>
+    <button id="btn" onclick="zapisz()">Zapisz mnie</button>
     <div id="msg"></div>
   </div>
 
