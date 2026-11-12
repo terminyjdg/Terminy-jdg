@@ -1,134 +1,226 @@
-// --- NAWIGACJA MIĘDZY STRONAMI ---
-window.pokazAplikacje = function() {
-  document.getElementById('landing-view').style.display = 'none';
-  document.getElementById('app-view').style.display = 'block';
-  window.scrollTo(0, 0);
-  odswiezDaty(); // Odświeżamy daty przy wejściu
-};
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TerminyJDG.pl – Twój asystent podatkowy</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; scroll-behavior: smooth; }
+    
+    .beta-bar { background: #f59e0b; color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
+    #alert-banner { display: none; background: #ef4444; color: white; text-align: center; padding: 12px; font-size: 15px; font-weight: 800; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
-window.pokazLanding = function() {
-  document.getElementById('app-view').style.display = 'none';
-  document.getElementById('landing-view').style.display = 'block';
-  window.scrollTo(0, 0);
-};
+    nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+    .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
+    .nav-btn { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
 
-// --- INTELIGENTNE POWIADOMIENIA ---
-function sprawdzOstrzezenia() {
-  const dZus = obliczDni(10);
-  const dPit = obliczDni(20);
-  const dVat = obliczDni(25);
-  const banner = document.getElementById('alert-banner');
-  let ostrzezenie = '';
+    /* --- STRONA GŁÓWNA (LANDING PAGE) --- */
+    #landing-view { display: block; }
+    
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
+    .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    
+    .main-cta { display: inline-block; width: 100%; max-width: 350px; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 20px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; }
+    .main-cta:hover { transform: translateY(-2px); }
 
-  if (dZus <= 3 && dZus > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia ZUS zostały ${dZus} dni!`;
-  else if (dPit <= 3 && dPit > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia PIT zostały ${dPit} dni!`;
-  else if (dVat <= 3 && dVat > 0) ostrzezenie = `⚠️ Uwaga! Do opłacenia VAT zostały ${dVat} dni!`;
+    .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+    
+    .marketing-section { margin-top: 40px; text-align: center; }
+    .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
+    
+    .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+    .feature-item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 4px solid #2563eb; }
+    .feature-item h3 { font-size: 18px; color: #111827; margin-bottom: 5px; }
+    .feature-item p { font-size: 14px; color: #6b7280; }
 
-  if (ostrzezenie) {
-    banner.textContent = ostrzezenie;
-    banner.style.display = 'block';
-  }
-}
+    /* NOWA SEKCJA POWIADOMIEŃ */
+    .notif-box { background: white; border: 2px solid #10b981; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1); }
+    .notif-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
+    .notif-box p { font-size: 15px; color: #4b5563; margin-bottom: 20px; }
+    .notif-icons { display: flex; justify-content: center; gap: 20px; }
+    .notif-icon-item { background: #f0fdf4; padding: 15px; border-radius: 12px; flex: 1; border: 1px solid #bbf7d0; }
+    .notif-icon-item span { display: block; font-size: 24px; margin-bottom: 5px; }
+    .notif-icon-item strong { display: block; color: #166534; font-size: 14px; }
+    
+    .premium-box { background: #1e3a8a; padding: 30px 20px; border-radius: 16px; color: white; text-align: center; margin-bottom: 40px; }
+    .premium-box h2 { font-size: 22px; margin-bottom: 10px; }
+    .premium-box p { font-size: 15px; color: #bfdbfe; margin-bottom: 20px; }
+    .premium-price { font-size: 28px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
 
-// --- RESZTA (Tracker, Kalkulator, Ustawienia) ---
-function zapiszStan() {
-  const stan = {
-    zus: document.getElementById('cb-zus')?.checked || false,
-    pit: document.getElementById('cb-pit')?.checked || false,
-    vat: document.getElementById('cb-vat')?.checked || false,
-    ksef1: document.getElementById('ksef-1')?.checked || false,
-    ksef2: document.getElementById('ksef-2')?.checked || false,
-    ksef3: document.getElementById('ksef-3')?.checked || false,
-    isVatPayer: document.getElementById('setting-vat')?.checked || false
-  };
-  localStorage.setItem('terminy_jdg_dane', JSON.stringify(stan));
-}
+    /* --- APLIKACJA (UKRYTA) --- */
+    #app-view { display: none; background: #f3f4f6; padding-bottom: 40px; }
+    .app-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .back-btn { background: #e5e7eb; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .settings-section { background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+    .settings-title { font-size: 14px; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; }
+    .settings-label { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #1e3a8a; }
+    .settings-label input { width: 20px; height: 20px; accent-color: #2563eb; }
 
-function wczytajStan() {
-  const dane = localStorage.getItem('terminy_jdg_dane');
-  if (!dane) return;
-  const stan = JSON.parse(dane);
-  if (document.getElementById('cb-zus')) document.getElementById('cb-zus').checked = stan.zus;
-  if (document.getElementById('cb-pit')) document.getElementById('cb-pit').checked = stan.pit;
-  if (document.getElementById('cb-vat')) document.getElementById('cb-vat').checked = stan.vat;
-  if (document.getElementById('ksef-1')) document.getElementById('ksef-1').checked = stan.ksef1;
-  if (document.getElementById('ksef-2')) document.getElementById('ksef-2').checked = stan.ksef2;
-  if (document.getElementById('ksef-3')) document.getElementById('ksef-3').checked = stan.ksef3;
-  
-  const settingVat = document.getElementById('setting-vat');
-  if (settingVat && stan.isVatPayer !== undefined) {
-    settingVat.checked = stan.isVatPayer;
-    przelaczWidocznoscVat(stan.isVatPayer);
-  }
-}
+    .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .termin-card strong { color: #1e3a8a; display: block; font-size: 16px; margin-bottom: 4px; }
+    .termin-data { font-size: 14px; color: #4b5563; display: block; }
+    .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
+    
+    .ksef-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
+    .ksef-title { font-size: 16px; color: #1e3a8a; margin-bottom: 10px; font-weight: bold; }
+    .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; cursor: pointer; }
+    .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; flex-shrink: 0; }
 
-function przelaczWidocznoscVat(jestPodatnikiem) {
-  const kartaVat = document.getElementById('karta-vat');
-  if (kartaVat) kartaVat.style.display = jestPodatnikiem ? 'flex' : 'none';
-}
+    .calc-title { font-size: 18px; color: #1e3a8a; margin-bottom: 15px; font-weight: 800; }
+    .calc-group { margin-bottom: 15px; }
+    .calc-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+    .calc-group input, .calc-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; }
+    .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; display: none; }
+    .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
+    .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
 
-function obliczDni(dzien) {
-  const dzisiaj = new Date();
-  let termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth(), dzien);
-  if (dzisiaj > termin) termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth() + 1, dzien);
-  return Math.ceil((termin - dzisiaj) / (1000 * 60 * 60 * 24));
-}
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; display: flex; flex-direction: column; gap: 10px; }
+    footer a { color: #6b7280; text-decoration: none; margin: 0 10px; }
+  </style>
+</head>
+<body>
 
-function odswiezDaty() {
-  const dZus = obliczDni(10);
-  const dPit = obliczDni(20);
-  const dVat = obliczDni(25);
-  const datas = document.querySelectorAll('.termin-data');
-  if (datas.length >= 3) {
-    datas[0].innerHTML = `Termin: 10. dzień <br><strong style="color:${dZus <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dZus} dni!</strong>`;
-    datas[1].innerHTML = `Termin: 20. dzień <br><strong style="color:${dPit <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dPit} dni!</strong>`;
-    datas[2].innerHTML = `Termin: 25. dzień <br><strong style="color:${dVat <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dVat} dni!</strong>`;
-  }
-}
+  <div class="beta-bar">🚀 Wersja Beta – testujemy nowe funkcje!</div>
 
-window.obliczPodatki = function() {
-  const incomeInput = document.getElementById('calc-income');
-  const type = document.getElementById('calc-type').value;
-  const resultBox = document.getElementById('calc-result');
-  const income = parseFloat(incomeInput.value);
+  <nav>
+    <a href="#" class="logo">TerminyJDG.pl</a>
+    <button class="nav-btn" onclick="pokazAplikacje()">Przejdź do aplikacji</button>
+  </nav>
 
-  if (isNaN(income) || income <= 0) {
-    resultBox.style.display = 'none';
-    return;
-  }
+  <!-- ================= STRONA GŁÓWNA (LANDING) ================= -->
+  <div id="landing-view">
+    <div class="hero">
+      <h1>Twój osobisty asystent podatkowy</h1>
+      <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, przygotuj się do KSeF i oblicz swoje podatki w jednym miejscu.</p>
+      <button class="main-cta" onclick="pokazAplikacje()">Przejdź do aplikacji →</button>
+    </div>
 
-  resultBox.style.display = 'block';
-  const zus = 1600; 
-  let tax = 0;
-  let net = 0;
+    <div class="container">
+      <div class="marketing-section">
+        <h2>Dlaczego TerminyJDG.pl?</h2>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h3>⏰ Koniec z karami</h3>
+            <p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p>
+          </div>
+          <div class="feature-item">
+            <h3>💰 Wiesz, ile zostanie Ci w kieszeni</h3>
+            <p>Nasz kalkulator na bieżąco wylicza podatki i składki, pokazując realny zysk z Twojej firmy.</p>
+          </div>
+        </div>
 
-  if (type === 'liniowy') {
-    tax = (income - zus) * 0.19;
-    net = income - zus - tax;
-  } else if (type === 'ryczalt') {
-    tax = income * 0.12;
-    net = income - zus - tax;
-  } else {
-    tax = (income - zus) * 0.12;
-    net = income - zus - tax;
-  }
+        <!-- NOWA SEKCJA: POWIADOMIENIA SMS I EMAIL -->
+        <div class="notif-box">
+          <h3>Nigdy więcej nie zapomnij o terminie</h3>
+          <p>Wyślemy Ci przypomnienie, zanim będzie za późno. Otrzymasz powiadomienia na dwa sposoby:</p>
+          <div class="notif-icons">
+            <div class="notif-icon-item">
+              <span>📱</span>
+              <strong>Powiadomienia SMS</strong>
+            </div>
+            <div class="notif-icon-item">
+              <span>✉️</span>
+              <strong>Wiadomości E-mail</strong>
+            </div>
+          </div>
+        </div>
 
-  if (tax < 0) tax = 0;
-  if (net < 0) net = 0;
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h3>📄 Gotowy na KSeF</h3>
+            <p>Interaktywna lista kontrolna krok po kroku przygotuje Cię do obowiązkowego systemu e-faktur w 2026 roku.</p>
+          </div>
+        </div>
 
-  document.getElementById('res-zus').textContent = zus.toLocaleString('pl-PL') + ' zł';
-  document.getElementById('res-tax').textContent = Math.round(tax).toLocaleString('pl-PL') + ' zł';
-  document.getElementById('res-net').textContent = Math.round(net).toLocaleString('pl-PL') + ' zł';
-};
+        <div class="premium-box">
+          <h2>Odblokuj pełnię możliwości</h2>
+          <p>Wersja PRO daje dostęp do Generatora Faktur bez limitów, powiadomień SMS oraz priorytetowego wsparcia.</p>
+          <div class="premium-price">19 zł <span style="font-size:16px; color:#bfdbfe; font-weight:400;">/ mies.</span></div>
+          <button class="main-cta" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-document.addEventListener('DOMContentLoaded', () => {
-  wczytajStan();
-  sprawdzOstrzezenia();
-  
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      if (cb.id === 'setting-vat') przelaczWidocznoscVat(cb.checked);
-      zapiszStan();
-    });
-  });
-});
+  <!-- ================= APLIKACJA (UKRYTA DOMYŚLNIE) ================= -->
+  <div id="app-view">
+    <div class="app-header">
+      <button class="back-btn" onclick="pokazLanding()">← Wróć na stronę główną</button>
+      <span style="font-weight: 800; color: #1e3a8a;">Twoja Aplikacja</span>
+    </div>
+
+    <div class="container">
+      <!-- Tracker -->
+      <div class="card">
+        <div class="settings-section">
+          <div class="settings-title">Dostosuj aplikację</div>
+          <label class="settings-label">
+            <input type="checkbox" id="setting-vat" checked />
+            Jestem podatnikiem VAT
+          </label>
+        </div>
+
+        <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
+        
+        <div class="termin-card">
+          <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
+          <input type="checkbox" class="tracker-check" id="cb-zus" />
+        </div>
+        <div class="termin-card">
+          <div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div>
+          <input type="checkbox" class="tracker-check" id="cb-pit" />
+        </div>
+        <div class="termin-card" id="karta-vat">
+          <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
+          <input type="checkbox" class="tracker-check" id="cb-vat" />
+        </div>
+
+        <div class="ksef-section">
+          <div class="ksef-title">Przygotowanie do KSeF (2026)</div>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Sprawdziłem program do fakturowania</span></label>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Wygenerowałem token autoryzacyjny</span></label>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Wiem, jak wystawić fakturę w KSeF</span></label>
+        </div>
+      </div>
+
+      <!-- Kalkulator -->
+      <div class="card">
+        <div class="calc-title">Kalkulator Podatkowy</div>
+        <div class="calc-group">
+          <label>Twój miesięczny przychód (zł)</label>
+          <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
+        </div>
+        <div class="calc-group">
+          <label>Forma opodatkowania</label>
+          <select id="calc-type" onchange="obliczPodatki()">
+            <option value="skala">Skala podatkowa (12% / 32%)</option>
+            <option value="liniowy">Podatek liniowy (19%)</option>
+            <option value="ryczalt">Ryczałt (12% dla IT)</option>
+          </select>
+        </div>
+        <div class="calc-result" id="calc-result">
+          <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
+          <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
+          <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <a href="#">Regulamin</a>
+      <a href="#">Polityka Prywatności</a>
+    </div>
+    <div>&copy; 2026 TerminyJDG.pl. Wszelkie prawa zastrzeżone.</div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
