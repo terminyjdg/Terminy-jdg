@@ -78,6 +78,14 @@
     .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
     .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
 
+    /* Poduszka finansowa */
+    .pillow-input { width: 100%; padding: 15px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 15px; outline: none; transition: border 0.2s; }
+    .pillow-input:focus { border-color: #2563eb; }
+    .pillow-result { background: #ecfdf5; border: 1px solid #10b981; padding: 20px; border-radius: 10px; text-align: center; display: none; }
+    .pillow-result h3 { color: #047857; font-size: 16px; margin-bottom: 5px; }
+    .pillow-amount { font-size: 32px; font-weight: 800; color: #059669; margin-bottom: 10px; }
+    .pillow-text { font-size: 14px; color: #4b5563; }
+
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; display: flex; flex-direction: column; gap: 10px; }
     footer a { color: #6b7280; text-decoration: none; margin: 0 10px; }
   </style>
@@ -108,24 +116,17 @@
             <p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p>
           </div>
           <div class="feature-item">
-            <h3>💰 Wiesz, ile zostanie Ci w kieszeni</h3>
-            <p>Nasz kalkulator na bieżąco wylicza podatki i składki, pokazując realny zysk z Twojej firmy.</p>
+            <h3>💰 Poduszka finansowa</h3>
+            <p>Wiesz dokładnie, ile odłożyć na podatki, a ile możesz bezpiecznie wydać na siebie.</p>
           </div>
         </div>
 
-        <!-- SEKCJA POWIADOMIEŃ -->
         <div class="notif-box">
           <h3>Nigdy więcej nie zapomnij o terminie</h3>
           <p>Wyślemy Ci przypomnienie, zanim będzie za późno. Otrzymasz powiadomienia na dwa sposoby:</p>
           <div class="notif-icons">
-            <div class="notif-icon-item">
-              <span>📱</span>
-              <strong>Powiadomienia SMS</strong>
-            </div>
-            <div class="notif-icon-item">
-              <span>✉️</span>
-              <strong>Wiadomości E-mail</strong>
-            </div>
+            <div class="notif-icon-item"><span>📱</span><strong>Powiadomienia SMS</strong></div>
+            <div class="notif-icon-item"><span>✉️</span><strong>Wiadomości E-mail</strong></div>
           </div>
         </div>
 
@@ -146,7 +147,7 @@
     </div>
   </div>
 
-  <!-- ================= APLIKACJA (UKRYTA DOMYŚLNIE) ================= -->
+  <!-- ================= APLIKACJA ================= -->
   <div id="app-view">
     <div class="app-header">
       <button class="back-btn" onclick="pokazLanding()">← Wróć na stronę główną</button>
@@ -208,6 +209,21 @@
           <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
         </div>
       </div>
+
+      <!-- NOWY KAFELEK: Poduszka Finansowa -->
+      <div class="card" style="background: #ecfdf5; border: 2px solid #10b981;">
+        <h2 style="color: #047857; font-size: 18px; margin-bottom: 10px;">Poduszka Finansowa</h2>
+        <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Wpisz kwotę, jaka właśnie wpłynęła na Twoje konto. Powiemy Ci, ile odłożyć na podatki.</p>
+        
+        <input type="number" class="pillow-input" id="pillow-income" placeholder="Wpisz kwotę (np. 5000)" oninput="obliczPoduszke()" />
+        
+        <div class="pillow-result" id="pillow-result">
+          <h3>Odłóż na podatki:</h3>
+          <div class="pillow-amount" id="pillow-tax">0 zł</div>
+          <div class="pillow-text">Możesz bezpiecznie wydać: <strong id="pillow-safe" style="color: #047857;">0 zł</strong></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
