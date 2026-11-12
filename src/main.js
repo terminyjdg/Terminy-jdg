@@ -31,25 +31,7 @@ function obliczDni(dzien) {
   return Math.ceil((termin - dzisiaj) / (1000 * 60 * 60 * 24));
 }
 
-// --- GŁÓWNA FUNKCJA POKAZUJĄCA APLIKACJĘ ---
-window.zapisz = function () {
-  const email = document.getElementById('email').value.trim();
-  const msg = document.getElementById('msg');
-
-  if (!email || !email.includes('@')) {
-    msg.textContent = 'Podaj poprawny adres e-mail.';
-    return;
-  }
-
-  msg.textContent = 'Odblokowano podgląd!';
-  msg.style.color = '#bbf7d0';
-  
-  // Pokazujemy ukryty kontener
-  document.getElementById('app-wrapper').style.display = 'block';
-  document.getElementById('app-wrapper').scrollIntoView({ behavior: 'smooth' });
-
-  // Inicjalizacja trackera
-  wczytajStan();
+function odswiezDaty() {
   const dZus = obliczDni(10);
   const dPit = obliczDni(20);
   const dVat = obliczDni(25);
@@ -59,7 +41,7 @@ window.zapisz = function () {
     datas[1].innerHTML = `Termin: 20. dzień <br><strong style="color:${dPit <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dPit} dni!</strong>`;
     datas[2].innerHTML = `Termin: 25. dzień <br><strong style="color:${dVat <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dVat} dni!</strong>`;
   }
-};
+}
 
 // --- KALKULATOR PODATKOWY ---
 window.obliczPodatki = function() {
@@ -76,41 +58,39 @@ window.obliczPodatki = function() {
 
   resultBox.style.display = 'block';
 
-  // Uproszczone wyliczenia dla JDG (Ryczałt dla informatyków 12%)
-  // ZUS (Duży ZUS w przybliżeniu): ok. 1600 zł (składki społeczne + zdrowotna)
+  // Uproszczone wyliczenia (duży ZUS ok. 1600 zł)
   const zus = 1600; 
-  
   let tax = 0;
   let net = 0;
 
   if (type === 'liniowy') {
-    // Podatek liniowy 19% (zakładamy brak kosztów dla uproszczenia)
     tax = (income - zus) * 0.19;
     net = income - zus - tax;
   } 
   else if (type === 'ryczalt') {
-    // Ryczałt 12% od przychodu (dla branży IT)
     tax = income * 0.12;
     net = income - zus - tax;
   } 
   else {
-    // Skala podatkowa 12% (zakładamy, że dochód nie przekracza drugiego progu)
     tax = (income - zus) * 0.12;
     net = income - zus - tax;
   }
 
-  // Zabezpieczenie przed ujemnymi wartościami
   if (tax < 0) tax = 0;
   if (net < 0) net = 0;
 
-  // Wyświetlanie wyników
   document.getElementById('res-zus').textContent = zus.toLocaleString('pl-PL') + ' zł';
   document.getElementById('res-tax').textContent = Math.round(tax).toLocaleString('pl-PL') + ' zł';
   document.getElementById('res-net').textContent = Math.round(net).toLocaleString('pl-PL') + ' zł';
 };
 
-// --- INICJALIZACJA ---
+// --- INICJALIZACJA PRZY STARCIE ---
 document.addEventListener('DOMContentLoaded', () => {
+  // Wczytaj stan checkboxów i daty od razu
+  wczytajStan();
+  odswiezDaty();
+  
+  // Przypisz zapis do checkboxów
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', zapiszStan);
   });
