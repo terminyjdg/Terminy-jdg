@@ -14,6 +14,7 @@ window.pokazLanding = function() {
   window.scrollTo(0, 0);
 };
 
+// --- WIDOK GENERATORA FAKTUR ---
 window.pokazFaktury = function() {
   document.getElementById('landing-view').style.display = 'none';
   document.getElementById('app-view').style.display = 'none';
@@ -21,22 +22,28 @@ window.pokazFaktury = function() {
   window.scrollTo(0, 0);
 };
 
-// --- PAYWALL (DYNAMICZNE OKIENKO) ---
-window.pokazPaywall = function(typ) {
-  const title = document.getElementById('paywall-title');
-  const text = document.getElementById('paywall-text');
-  
-  if (typ === 'push') {
-    title.textContent = 'Powiadomienia Push (PRO)';
-    text.textContent = 'Powiadomienia Push są dostępne w planie PRO. Odblokuj je, aby mieć 100% pewności, że nie przegapisz terminu.';
-  } else if (typ === 'faktura') {
-    title.textContent = 'Generator Faktur (PRO)';
-    text.textContent = 'Wystawianie faktur jest dostępne w planie PRO. Odblokuj tę funkcję, aby generować nieograniczoną liczbę dokumentów.';
+window.pokazGlowna = function() {
+  document.getElementById('invoice-view').style.display = 'none';
+  document.getElementById('landing-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+// --- GENERATOR FAKTUR (BLOKADA PAYWALL) ---
+window.generujFakture = function() {
+  // Zamiast generować fakturę, pokazujemy okienko Premium
+  window.pokazPaywall("Generator Faktur");
+};
+
+// --- PAYWALL (OKIENKO PREMIUM Z DYNAMICZNYM TEKSTEM) ---
+window.pokazPaywall = function(funkcja) {
+  const textElem = document.getElementById('paywall-text');
+  if (funkcja === "Generator Faktur") {
+    textElem.textContent = "Generator Faktur jest dostępny w planie PRO. Odblokuj go, aby wystawiać nieograniczoną liczbę faktur.";
+  } else if (funkcja === "Powiadomienia Push") {
+    textElem.textContent = "Powiadomienia Push są dostępne w planie PRO. Odblokuj je, aby mieć 100% pewności, że nie przegapisz terminu.";
   } else {
-    title.textContent = 'Funkcja Premium';
-    text.textContent = 'Odblokuj pełnię możliwości w planie PRO.';
+    textElem.textContent = "Ta funkcja jest dostępna w planie PRO.";
   }
-  
   document.getElementById('paywall-modal').style.display = 'flex';
 };
 
