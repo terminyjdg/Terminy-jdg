@@ -7,22 +7,17 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; display: flex; flex-direction: column; min-height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; }
     
     nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
 
-    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-    .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 15px; }
-    .hero p { font-size: 15px; color: #bfdbfe; margin-bottom: 25px; }
-    
-    .form-container { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
-    input[type="email"] { width: 100%; padding: 15px; font-size: 16px; border: none; border-radius: 10px; outline: none; }
-    #btn { width: 100%; padding: 15px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
-    #msg { margin-top: 15px; font-weight: 600; font-size: 14px; color: #fca5a5; }
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero h1 { font-size: 24px; font-weight: 800; }
+    .hero p { font-size: 15px; color: #bfdbfe; margin-top: 5px; }
 
-    .app-container { max-width: 600px; margin: -20px auto 40px; padding: 0 15px; display: none; }
-    #app-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: block; }
+    .app-container { max-width: 600px; margin: 20px auto 40px; padding: 0 15px; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
     
     /* Tracker */
     .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -31,23 +26,20 @@
     .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
     
     /* KSeF */
-    .ksef-section { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
+    .ksef-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
     .ksef-title { font-size: 16px; color: #1e3a8a; margin-bottom: 10px; font-weight: bold; }
     .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; cursor: pointer; }
     .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; flex-shrink: 0; }
 
-    /* KALKULATOR - Nowa sekcja */
-    .calc-section { margin-top: 30px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; }
+    /* KALKULATOR */
     .calc-title { font-size: 18px; color: #1e3a8a; margin-bottom: 15px; font-weight: 800; }
     .calc-group { margin-bottom: 15px; }
     .calc-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #475569; }
-    .calc-group input, .calc-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: white; }
+    .calc-group input, .calc-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; }
     
-    .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; }
+    .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; display: none; }
     .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
     .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
-    
-    #btn-save-progress { width: 100%; padding: 15px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; margin-top: 20px; display: none; }
   </style>
 </head>
 <body>
@@ -58,17 +50,12 @@
 
   <div class="hero">
     <h1>Twój osobisty asystent podatkowy</h1>
-    <p>Zapisz się, aby śledzić terminy i obliczyć swoje podatki.</p>
-    <div class="form-container">
-      <input type="email" id="email" placeholder="twój@email.pl" />
-      <button id="btn" onclick="zapisz()">Odblokuj podgląd</button>
-      <div id="msg"></div>
-    </div>
+    <p>Śledź terminy i oblicz swoje podatki w jednym miejscu.</p>
   </div>
 
-  <div class="app-container" id="app-wrapper">
-    <div id="app-section">
-      <h2 style="margin-bottom: 15px; color: #111827;">Twój Terminarz</h2>
+  <div class="app-container">
+    <div class="card">
+      <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
       
       <div class="termin-card">
         <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
@@ -91,35 +78,34 @@
         <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Wygenerowałem token autoryzacyjny</span></label>
         <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Wiem, jak wystawić fakturę w KSeF</span></label>
       </div>
+    </div>
 
-      <!-- KALKULATOR PODATKOWY -->
-      <div class="calc-section">
-        <div class="calc-title">Kalkulator Podatkowy</div>
-        
-        <div class="calc-group">
-          <label>Twój miesięczny przychód (zł)</label>
-          <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
-        </div>
-
-        <div class="calc-group">
-          <label>Forma opodatkowania</label>
-          <select id="calc-type" onchange="obliczPodatki()">
-            <option value="skala">Skala podatkowa (12% / 32%)</option>
-            <option value="liniowy">Podatek liniowy (19%)</option>
-            <option value="ryczalt">Ryczałt (12% dla IT)</option>
-          </select>
-        </div>
-
-        <div class="calc-result" id="calc-result" style="display: none;">
-          <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
-          <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
-          <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
-        </div>
-      </div>
+    <!-- KALKULATOR PODATKOWY -->
+    <div class="card">
+      <div class="calc-title">Kalkulator Podatkowy</div>
       
+      <div class="calc-group">
+        <label>Twój miesięczny przychód (zł)</label>
+        <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
+      </div>
+
+      <div class="calc-group">
+        <label>Forma opodatkowania</label>
+        <select id="calc-type" onchange="obliczPodatki()">
+          <option value="skala">Skala podatkowa (12% / 32%)</option>
+          <option value="liniowy">Podatek liniowy (19%)</option>
+          <option value="ryczalt">Ryczałt (12% dla IT)</option>
+        </select>
+      </div>
+
+      <div class="calc-result" id="calc-result">
+        <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
+        <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
+        <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
+      </div>
     </div>
   </div>
 
-  <script src="/src/main.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
