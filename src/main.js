@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -53,6 +53,17 @@ window.pokazGlowna = function() {
 };
 
 // --- LOGOWANIE FIREBASE ---
+window.zalogujPrzezGoogle = async function() {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    document.getElementById('user-email-display').textContent = result.user.email;
+    pokazAplikacje();
+  } catch (error) {
+    alert("Błąd logowania Google: " + error.message);
+  }
+};
+
 window.obsluzRejestracje = async function() {
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
@@ -97,7 +108,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// --- RESZTA KODU (kalkulatory, itp.) ---
+// --- RESZTA KODU ---
 window.pokazPaywall = function(funkcja) {
   const textElem = document.getElementById('paywall-text');
   if (funkcja === "Generator Faktur") textElem.textContent = "Generator Faktur jest dostępny w planie PRO.";
