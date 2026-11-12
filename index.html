@@ -12,87 +12,74 @@
     nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
 
-    /* Ekran logowania */
-    #auth-screen { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .auth-box { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
-    .auth-box h2 { text-align: center; margin-bottom: 20px; color: #1e3a8a; }
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 15px; }
+    .hero p { font-size: 15px; color: #bfdbfe; margin-bottom: 25px; }
     
-    .input-group { margin-bottom: 15px; }
-    .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #4b5563; }
-    .input-group input { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; }
-    
-    .auth-btn { width: 100%; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; }
-    .auth-btn:hover { background: #1d4ed8; }
-    .toggle-auth { text-align: center; margin-top: 15px; font-size: 14px; color: #6b7280; cursor: pointer; }
-    .toggle-auth span { color: #2563eb; font-weight: 600; }
-    #auth-msg { text-align: center; margin-top: 15px; font-size: 14px; font-weight: 600; }
+    .form-container { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
+    input[type="email"] { width: 100%; padding: 15px; font-size: 16px; border: none; border-radius: 10px; outline: none; }
+    #btn { width: 100%; padding: 15px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
+    #msg { margin-top: 15px; font-weight: 600; font-size: 14px; color: #fca5a5; }
 
-    /* Ekran aplikacji (ukryty domyślnie) */
-    #app-screen { display: none; flex: 1; flex-direction: column; }
-    .app-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .app-container { max-width: 600px; margin: -20px auto 40px; padding: 0 15px; display: none; }
+    #app-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: block; }
     
-    .app-content { max-width: 600px; margin: 20px auto; padding: 0 15px; width: 100%; }
-    #user-email-display { font-size: 14px; color: #6b7280; margin-bottom: 15px; }
-
-    /* Karty terminów (z poprzedniej wersji) */
-    .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background: white; }
-    .termin-card strong { color: #1e3a8a; font-size: 16px; }
-    .termin-data { font-size: 14px; color: #4b5563; display: block; margin-top: 4px; }
+    /* Tracker */
+    .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .termin-card strong { color: #1e3a8a; display: block; font-size: 16px; margin-bottom: 4px; }
+    .termin-data { font-size: 14px; color: #4b5563; display: block; }
     .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
-
-    .ksef-section { margin-top: 25px; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e5e7eb; }
+    
+    /* KSeF */
+    .ksef-section { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
     .ksef-title { font-size: 16px; color: #1e3a8a; margin-bottom: 10px; font-weight: bold; }
-    .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; }
-    .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; }
+    .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; cursor: pointer; }
+    .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; flex-shrink: 0; }
+
+    /* KALKULATOR - Nowa sekcja */
+    .calc-section { margin-top: 30px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; }
+    .calc-title { font-size: 18px; color: #1e3a8a; margin-bottom: 15px; font-weight: 800; }
+    .calc-group { margin-bottom: 15px; }
+    .calc-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+    .calc-group input, .calc-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: white; }
+    
+    .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; }
+    .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
+    .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
+    
+    #btn-save-progress { width: 100%; padding: 15px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; margin-top: 20px; display: none; }
   </style>
 </head>
 <body>
 
-  <nav><a href="#" class="logo">TerminyJDG.pl</a></nav>
+  <nav>
+    <a href="#" class="logo">TerminyJDG.pl</a>
+  </nav>
 
-  <!-- EKRAN LOGOWANIA / REJESTRACJI -->
-  <div id="auth-screen">
-    <div class="auth-box">
-      <h2 id="auth-title">Zaloguj się</h2>
-      
-      <div class="input-group">
-        <label>Adres e-mail</label>
-        <input type="email" id="auth-email" placeholder="twój@email.pl" />
-      </div>
-      
-      <div class="input-group">
-        <label>Hasło</label>
-        <input type="password" id="auth-password" placeholder="Minimum 6 znaków" />
-      </div>
-      
-      <button class="auth-btn" id="auth-submit">Zaloguj się</button>
-      <div id="auth-msg"></div>
-      
-      <div class="toggle-auth" onclick="przelaczTryb()">
-        Nie masz konta? <span id="toggle-text">Zarejestruj się</span>
-      </div>
+  <div class="hero">
+    <h1>Twój osobisty asystent podatkowy</h1>
+    <p>Zapisz się, aby śledzić terminy i obliczyć swoje podatki.</p>
+    <div class="form-container">
+      <input type="email" id="email" placeholder="twój@email.pl" />
+      <button id="btn" onclick="zapisz()">Odblokuj podgląd</button>
+      <div id="msg"></div>
     </div>
   </div>
 
-  <!-- EKRAN APLIKACJI (PO ZALOGOWANIU) -->
-  <div id="app-screen">
-    <div class="app-header">
-      <span style="font-weight: 800; color: #1e3a8a;">Twój Panel</span>
-      <button class="logout-btn" onclick="wyloguj()">Wyloguj</button>
-    </div>
-    
-    <div class="app-content">
-      <div id="user-email-display">Zalogowany jako: ...</div>
-
+  <div class="app-container" id="app-wrapper">
+    <div id="app-section">
+      <h2 style="margin-bottom: 15px; color: #111827;">Twój Terminarz</h2>
+      
       <div class="termin-card">
         <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
         <input type="checkbox" class="tracker-check" id="cb-zus" />
       </div>
+
       <div class="termin-card">
         <div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div>
         <input type="checkbox" class="tracker-check" id="cb-pit" />
       </div>
+
       <div class="termin-card">
         <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
         <input type="checkbox" class="tracker-check" id="cb-vat" />
@@ -100,23 +87,39 @@
 
       <div class="ksef-section">
         <div class="ksef-title">Przygotowanie do KSeF (2026)</div>
-        <label class="ksef-label">
-          <input type="checkbox" class="ksef-check" id="ksef-1" />
-          <span>Sprawdziłem program do fakturowania</span>
-        </label>
-        <label class="ksef-label">
-          <input type="checkbox" class="ksef-check" id="ksef-2" />
-          <span>Wygenerowałem token autoryzacyjny</span>
-        </label>
-        <label class="ksef-label">
-          <input type="checkbox" class="ksef-check" id="ksef-3" />
-          <span>Wiem, jak wystawić fakturę w KSeF</span>
-        </label>
+        <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Sprawdziłem program do fakturowania</span></label>
+        <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Wygenerowałem token autoryzacyjny</span></label>
+        <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Wiem, jak wystawić fakturę w KSeF</span></label>
+      </div>
+
+      <!-- KALKULATOR PODATKOWY -->
+      <div class="calc-section">
+        <div class="calc-title">Kalkulator Podatkowy</div>
+        
+        <div class="calc-group">
+          <label>Twój miesięczny przychód (zł)</label>
+          <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
+        </div>
+
+        <div class="calc-group">
+          <label>Forma opodatkowania</label>
+          <select id="calc-type" onchange="obliczPodatki()">
+            <option value="skala">Skala podatkowa (12% / 32%)</option>
+            <option value="liniowy">Podatek liniowy (19%)</option>
+            <option value="ryczalt">Ryczałt (12% dla IT)</option>
+          </select>
+        </div>
+
+        <div class="calc-result" id="calc-result" style="display: none;">
+          <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
+          <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
+          <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
+        </div>
       </div>
       
     </div>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
+  <script src="/src/main.js"></script>
 </body>
 </html>
