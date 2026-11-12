@@ -15,11 +15,10 @@
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
     .nav-buttons { display: flex; gap: 10px; }
     .nav-btn { background: #e5e7eb; color: #1f2937; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
+    .nav-btn-primary { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
     .nav-btn-faktura { background: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
 
-    /* --- STRONA GŁÓWNA (LANDING PAGE) --- */
     #landing-view { display: block; }
-    
     .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 50px 20px 60px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
     .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
@@ -27,29 +26,20 @@
     .hero-form-box { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 450px; margin: 0 auto; text-align: center; }
     .hero-form-box h3 { color: #1e3a8a; font-size: 20px; margin-bottom: 10px; font-weight: 800; }
     .hero-form-box p { color: #4b5563; font-size: 14px; margin-bottom: 20px; }
-    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
-    .waitlist-form input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; background: #f8fafc; }
-    .waitlist-form input:focus { border-color: #2563eb; }
-    .waitlist-form button { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-
+    
     .app-preview-btn { display: inline-block; margin-top: 30px; background: transparent; color: #bfdbfe; border: 1px solid #bfdbfe; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; }
-    .app-preview-btn:hover { background: rgba(255,255,255,0.1); }
 
     .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
-    
     .marketing-section { margin-top: 40px; text-align: center; }
     .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
-    
     .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
     .feature-item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 4px solid #2563eb; }
     .feature-item h3 { font-size: 18px; color: #111827; margin-bottom: 5px; }
     .feature-item p { font-size: 14px; color: #6b7280; }
 
-    /* SEKCJA POWIADOMIEŃ */
-    .notif-box { background: white; border: 2px solid #10b981; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1); }
+    .notif-box { background: white; border: 2px solid #10b981; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; }
     .notif-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
     .notif-box p { font-size: 15px; color: #4b5563; margin-bottom: 20px; }
-    
     .notif-icons { display: flex; justify-content: space-between; gap: 10px; }
     .notif-icon-item { background: #f0fdf4; padding: 15px 5px; border-radius: 12px; flex: 1; border: 1px solid #bbf7d0; }
     .notif-icon-item span { display: block; font-size: 24px; margin-bottom: 5px; }
@@ -61,7 +51,16 @@
     .premium-price { font-size: 28px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
     .premium-box .main-cta { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; max-width: 300px; cursor: pointer; }
 
-    /* --- APLIKACJA (UKRYTA) --- */
+    /* EKRANY LOGOWANIA I REJESTRACJI */
+    #auth-login-view, #auth-register-view { display: none; flex: 1; align-items: center; justify-content: center; padding: 40px 20px; background: #f3f4f6; min-height: 80vh; }
+    .auth-box { background: white; padding: 30px 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+    .auth-box h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 24px; }
+    .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
+    .auth-btn { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 15px; }
+    .auth-switch { font-size: 14px; color: #6b7280; cursor: pointer; }
+    .auth-switch span { color: #2563eb; font-weight: 600; }
+    #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
+
     #app-view { display: none; background: #f3f4f6; padding-bottom: 40px; }
     .app-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .back-btn { background: #e5e7eb; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; }
@@ -90,21 +89,17 @@
     .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
     .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
 
-    /* Poduszka finansowa */
-    .pillow-input { width: 100%; padding: 15px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 15px; outline: none; transition: border 0.2s; }
-    .pillow-input:focus { border-color: #2563eb; }
+    .pillow-input { width: 100%; padding: 15px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 15px; outline: none; }
     .pillow-result { background: #ecfdf5; border: 1px solid #10b981; padding: 20px; border-radius: 10px; text-align: center; display: none; }
     .pillow-result h3 { color: #047857; font-size: 16px; margin-bottom: 5px; }
     .pillow-amount { font-size: 32px; font-weight: 800; color: #059669; margin-bottom: 10px; }
     .pillow-text { font-size: 14px; color: #4b5563; }
 
-    /* Powiadomienia Push w aplikacji */
     .push-box { background: #fffbeb; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; text-align: center; }
     .push-box h3 { font-size: 18px; color: #b45309; margin-bottom: 8px; font-weight: 800; }
     .push-box p { font-size: 14px; color: #78350f; margin-bottom: 15px; }
     .push-btn { background: #f59e0b; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; }
 
-    /* --- WIDOK GENERATORA FAKTUR --- */
     #invoice-view { display: none; padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 60px; }
     .invoice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .invoice-form { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
@@ -116,19 +111,13 @@
     .preview-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
     .preview-total { font-weight: 800; font-size: 20px; color: #10b981; border-bottom: none; }
 
-    /* PRZYCISK GŁÓWNY (do naprawy) */
-    .main-cta { display: inline-block; width: 100%; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; text-align: center; }
-    .main-cta:hover { transform: translateY(-2px); }
+    .main-cta { display: inline-block; width: 100%; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); text-align: center; }
 
-    /* PAYWALL MODAL */
     #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal-content { background: white; padding: 30px 20px; border-radius: 16px; text-align: center; max-width: 400px; width: 100%; }
     .modal-content h2 { color: #1e3a8a; margin-bottom: 10px; font-size: 24px; }
     .modal-content p { color: #6b7280; font-size: 15px; margin-bottom: 20px; }
     .modal-price { font-size: 32px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
-    .modal-price span { font-size: 16px; color: #6b7280; font-weight: 400; }
-    
-    /* NOWE STYLE DLA PRZYCISKU W MODALU */
     .modal-pro-btn { display: block; width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
     .modal-close { background: #e5e7eb; color: #4b5563; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
@@ -143,25 +132,22 @@
   <nav>
     <a href="#" class="logo">TerminyJDG.pl</a>
     <div class="nav-buttons">
-      <button class="nav-btn-faktura" onclick="pokazFaktury()">Wystaw Fakturę</button>
+      <button class="nav-btn-faktura" onclick="pokazFaktury()">Faktura</button>
       <button class="nav-btn" onclick="pokazAplikacje()">Aplikacja</button>
+      <button class="nav-btn-primary" id="nav-auth-btn" onclick="pokazLogowanie()">Zaloguj</button>
     </div>
   </nav>
 
-  <!-- ================= STRONA GŁÓWNA (LANDING) ================= -->
+  <!-- STRONA GŁÓWNA -->
   <div id="landing-view">
     <div class="hero">
       <h1>Twój osobisty asystent podatkowy</h1>
       <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i oblicz swoje podatki w jednym miejscu.</p>
       
       <div class="hero-form-box">
-        <h3>Zapisz się na listę oczekujących</h3>
-        <p>Uruchamiamy wersję Beta! Zostaw swój e-mail, aby jako pierwszy otrzymać dostęp do aplikacji.</p>
-        
-        <form action="https://formspree.io/f/mrpqgrpy" method="POST" class="waitlist-form">
-          <input type="email" name="email" placeholder="twój@email.pl" required />
-          <button type="submit">Zapisz mnie na listę</button>
-        </form>
+        <h3>Załóż darmowe konto</h3>
+        <p>Dołącz do wersji Beta i zapisz swoje dane w chmurze. Otrzymasz powiadomienia, zanim będzie za późno.</p>
+        <button class="main-cta" onclick="pokazLogowanie()">Zarejestruj się / Zaloguj</button>
       </div>
 
       <button class="app-preview-btn" onclick="pokazAplikacje()">Zobacz podgląd aplikacji →</button>
@@ -171,14 +157,8 @@
       <div class="marketing-section">
         <h2>Dlaczego TerminyJDG.pl?</h2>
         <div class="feature-grid">
-          <div class="feature-item">
-            <h3>⏰ Koniec z karami</h3>
-            <p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p>
-          </div>
-          <div class="feature-item">
-            <h3>💰 Poduszka finansowa</h3>
-            <p>Wiesz dokładnie, ile odłożyć na podatki, a ile możesz bezpiecznie wydać na siebie.</p>
-          </div>
+          <div class="feature-item"><h3>⏰ Koniec z karami</h3><p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p></div>
+          <div class="feature-item"><h3>💰 Poduszka finansowa</h3><p>Wiesz dokładnie, ile odłożyć na podatki, a ile możesz bezpiecznie wydać na siebie.</p></div>
         </div>
 
         <div class="notif-box">
@@ -201,15 +181,39 @@
     </div>
   </div>
 
-  <!-- ================= APLIKACJA ================= -->
+  <!-- EKRAN LOGOWANIA -->
+  <div id="auth-login-view">
+    <div class="auth-box">
+      <h2>Zaloguj się</h2>
+      <div id="login-msg"></div>
+      <input type="email" id="login-email" class="auth-input" placeholder="twój@email.pl" />
+      <input type="password" id="login-password" class="auth-input" placeholder="Hasło" />
+      <button class="auth-btn" onclick="obsluzLogowanie()">Zaloguj się</button>
+      <div class="auth-switch" onclick="pokazRejestracje()">Nie masz konta? <span>Zarejestruj się</span></div>
+    </div>
+  </div>
+
+  <!-- EKRAN REJESTRACJI -->
+  <div id="auth-register-view">
+    <div class="auth-box">
+      <h2>Utwórz konto</h2>
+      <div id="register-msg"></div>
+      <input type="email" id="register-email" class="auth-input" placeholder="twój@email.pl" />
+      <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)" />
+      <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
+      <div class="auth-switch" onclick="pokazLogowanie()">Masz już konto? <span>Zaloguj się</span></div>
+    </div>
+  </div>
+
+  <!-- APLIKACJA -->
   <div id="app-view">
     <div class="app-header">
-      <button class="back-btn" onclick="pokazLanding()">← Wróć na stronę główną</button>
-      <span style="font-weight: 800; color: #1e3a8a;">Twoja Aplikacja</span>
+      <button class="back-btn" onclick="pokazLanding()">← Wróć</button>
+      <span style="font-weight: 800; color: #1e3a8a; font-size: 14px;" id="user-email-display">Niezalogowany</span>
+      <button class="back-btn" style="background: #ef4444; color: white;" onclick="wyloguj()">Wyloguj</button>
     </div>
 
     <div class="container">
-      <!-- Tracker -->
       <div class="card">
         <div class="settings-section">
           <div class="settings-title">Dostosuj aplikację</div>
@@ -221,18 +225,9 @@
 
         <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
         
-        <div class="termin-card">
-          <div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div>
-          <input type="checkbox" class="tracker-check" id="cb-zus" />
-        </div>
-        <div class="termin-card">
-          <div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div>
-          <input type="checkbox" class="tracker-check" id="cb-pit" />
-        </div>
-        <div class="termin-card" id="karta-vat">
-          <div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div>
-          <input type="checkbox" class="tracker-check" id="cb-vat" />
-        </div>
+        <div class="termin-card"><div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div><input type="checkbox" class="tracker-check" id="cb-zus" /></div>
+        <div class="termin-card"><div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div><input type="checkbox" class="tracker-check" id="cb-pit" /></div>
+        <div class="termin-card" id="karta-vat"><div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div><input type="checkbox" class="tracker-check" id="cb-vat" /></div>
 
         <div class="ksef-section">
           <div class="ksef-title">Bieżące obowiązki w KSeF</div>
@@ -242,15 +237,10 @@
         </div>
       </div>
 
-      <!-- Kalkulator -->
       <div class="card">
         <div class="calc-title">Kalkulator Podatkowy</div>
-        <div class="calc-group">
-          <label>Twój miesięczny przychód (zł)</label>
-          <input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" />
-        </div>
-        <div class="calc-group">
-          <label>Forma opodatkowania</label>
+        <div class="calc-group"><label>Twój miesięczny przychód (zł)</label><input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" /></div>
+        <div class="calc-group"><label>Forma opodatkowania</label>
           <select id="calc-type" onchange="obliczPodatki()">
             <option value="skala">Skala podatkowa (12% / 32%)</option>
             <option value="liniowy">Podatek liniowy (19%)</option>
@@ -264,13 +254,10 @@
         </div>
       </div>
 
-      <!-- Poduszka Finansowa -->
       <div class="card" style="background: #ecfdf5; border: 2px solid #10b981;">
         <h2 style="color: #047857; font-size: 18px; margin-bottom: 10px;">Poduszka Finansowa</h2>
-        <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Wpisz kwotę, jaka właśnie wpłynęła na Twoje konto. Powiemy Ci, ile odłożyć na podatki.</p>
-        
+        <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Wpisz kwotę, jaka właśnie wpłynęła na Twoje konto.</p>
         <input type="number" class="pillow-input" id="pillow-income" placeholder="Wpisz kwotę (np. 5000)" oninput="obliczPoduszke()" />
-        
         <div class="pillow-result" id="pillow-result">
           <h3>Odłóż na podatki:</h3>
           <div class="pillow-amount" id="pillow-tax">0 zł</div>
@@ -278,46 +265,39 @@
         </div>
       </div>
 
-      <!-- Powiadomienia Push w aplikacji -->
       <div class="card" style="background: #fffbeb; border: 2px solid #f59e0b;">
         <h3 style="font-size: 18px; color: #b45309; margin-bottom: 8px; font-weight: 800;">Powiadomienia Push (PRO)</h3>
-        <p style="font-size: 14px; color: #78350f; margin-bottom: 15px;">Otrzymuj powiadomienia na telefon, nawet gdy strona jest zamknięta. Na pewno nie ominiesz terminu.</p>
+        <p style="font-size: 14px; color: #78350f; margin-bottom: 15px;">Otrzymuj powiadomienia na telefon, nawet gdy strona jest zamknięta.</p>
         <button class="push-btn" onclick="pokazPaywall('Powiadomienia Push')">Włącz powiadomienia Push</button>
       </div>
-
     </div>
   </div>
 
-  <!-- ================= GENERATOR FAKTUR ================= -->
+  <!-- GENERATOR FAKTUR -->
   <div id="invoice-view">
-    <div class="invoice-header">
-      <button class="back-btn" onclick="pokazGlowna()">← Wróć</button>
-      <h2 style="color: #1e3a8a;">Generator Faktur</h2>
-    </div>
-
+    <div class="invoice-header"><button class="back-btn" onclick="pokazGlowna()">← Wróć</button><h2 style="color: #1e3a8a;">Generator Faktur</h2></div>
     <div class="invoice-form">
       <h2>Wpisz dane do faktury</h2>
-      <div class="form-row"><label>Nabywca (Nazwa firmy / Imię i nazwisko)</label><input type="text" id="inv-buyer" placeholder="np. Firma XYZ Sp. z o.o." /></div>
+      <div class="form-row"><label>Nabywca</label><input type="text" id="inv-buyer" placeholder="np. Firma XYZ" /></div>
       <div class="form-row"><label>NIP Nabywcy</label><input type="text" id="inv-nip" placeholder="np. 1234567890" /></div>
-      <div class="form-row"><label>Nazwa usługi / towaru</label><input type="text" id="inv-service" placeholder="np. Usługi programistyczne" /></div>
+      <div class="form-row"><label>Usługa</label><input type="text" id="inv-service" placeholder="np. Usługi IT" /></div>
       <div class="form-row"><label>Kwota netto (zł)</label><input type="number" id="inv-amount" placeholder="np. 5000" /></div>
       <button class="main-cta" onclick="generujFakture()">Wygeneruj Fakturę</button>
     </div>
-
     <div class="invoice-preview" id="invoice-preview">
       <h1>Faktura VAT</h1>
-      <div class="preview-row"><span>Data wystawienia:</span> <span id="prev-date">-</span></div>
+      <div class="preview-row"><span>Data:</span> <span id="prev-date">-</span></div>
       <div class="preview-row"><span>Nabywca:</span> <span id="prev-buyer">-</span></div>
       <div class="preview-row"><span>NIP:</span> <span id="prev-nip">-</span></div>
       <div class="preview-row"><span>Usługa:</span> <span id="prev-service">-</span></div>
-      <div class="preview-row"><span>Kwota netto:</span> <span id="prev-net">-</span></div>
+      <div class="preview-row"><span>Netto:</span> <span id="prev-net">-</span></div>
       <div class="preview-row"><span>VAT (23%):</span> <span id="prev-vat">-</span></div>
-      <div class="preview-row preview-total"><span>Do zapłaty (brutto):</span> <span id="prev-gross">-</span></div>
-      <button class="main-cta" onclick="window.print()" style="background: #2563eb; margin-top: 20px;">Wydrukuj / Zapisz jako PDF</button>
+      <div class="preview-row preview-total"><span>Brutto:</span> <span id="prev-gross">-</span></div>
+      <button class="main-cta" onclick="window.print()" style="background: #2563eb; margin-top: 20px;">Wydrukuj / PDF</button>
     </div>
   </div>
 
-  <!-- PAYWALL MODAL -->
+  <!-- PAYWALL -->
   <div id="paywall-modal">
     <div class="modal-content">
       <h2>Funkcja Premium</h2>
@@ -328,13 +308,7 @@
     </div>
   </div>
 
-  <footer>
-    <div>
-      <a href="#">Regulamin</a>
-      <a href="#">Polityka Prywatności</a>
-    </div>
-    <div>&copy; 2026 TerminyJDG.pl. Wszelkie prawa zastrzeżone.</div>
-  </footer>
+  <footer><div><a href="#">Regulamin</a><a href="#">Polityka Prywatności</a></div><div>&copy; 2026 TerminyJDG.pl.</div></footer>
 
   <script type="module" src="/src/main.js"></script>
 </body>
