@@ -9,12 +9,15 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; }
     
+    /* Pasek Beta */
+    .beta-bar { background: #f59e0b; color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
+
     nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
 
-    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-    .hero h1 { font-size: 24px; font-weight: 800; }
-    .hero p { font-size: 15px; color: #bfdbfe; margin-top: 5px; }
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    .hero p { font-size: 16px; color: #bfdbfe; max-width: 500px; margin: 0 auto; }
 
     .app-container { max-width: 600px; margin: 20px auto 40px; padding: 0 15px; }
     .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
@@ -40,9 +43,29 @@
     .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; display: none; }
     .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
     .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
+
+    /* LANDING PAGE (Sekcja Marketingowa) */
+    .marketing-section { margin-top: 40px; text-align: center; }
+    .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
+    
+    .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+    .feature-item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: left; border-left: 4px solid #2563eb; }
+    .feature-item h3 { font-size: 16px; color: #111827; margin-bottom: 5px; }
+    .feature-item p { font-size: 14px; color: #6b7280; }
+
+    .cta-box { background: #1e3a8a; padding: 30px 20px; border-radius: 16px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3); }
+    .cta-box h2 { font-size: 22px; margin-bottom: 10px; color: white; }
+    .cta-box p { font-size: 15px; color: #bfdbfe; margin-bottom: 20px; }
+    .cta-btn { display: inline-block; width: 100%; padding: 16px; background: #10b981; color: white; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; transition: background 0.2s; }
+    .cta-btn:hover { background: #059669; }
+
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; margin-top: 30px; }
   </style>
 </head>
 <body>
+
+  <!-- Pasek Beta -->
+  <div class="beta-bar">🚀 Wersja Beta – testujemy nowe funkcje!</div>
 
   <nav>
     <a href="#" class="logo">TerminyJDG.pl</a>
@@ -50,10 +73,11 @@
 
   <div class="hero">
     <h1>Twój osobisty asystent podatkowy</h1>
-    <p>Śledź terminy i oblicz swoje podatki w jednym miejscu.</p>
+    <p>Śledź terminy, przygotuj się do KSeF i oblicz swoje podatki w jednym miejscu.</p>
   </div>
 
   <div class="app-container">
+    <!-- Tracker -->
     <div class="card">
       <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
       
@@ -80,7 +104,7 @@
       </div>
     </div>
 
-    <!-- KALKULATOR PODATKOWY -->
+    <!-- Kalkulator -->
     <div class="card">
       <div class="calc-title">Kalkulator Podatkowy</div>
       
@@ -104,7 +128,38 @@
         <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
       </div>
     </div>
+
+    <!-- SEKCJA MARKETINGOWA (Landing Page) -->
+    <div class="marketing-section">
+      <h2>Dlaczego TerminyJDG.pl?</h2>
+      
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h3>⏰ Koniec z karami</h3>
+          <p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p>
+        </div>
+        <div class="feature-item">
+          <h3>💰 Wiesz, ile zostanie Ci w kieszeni</h3>
+          <p>Nasz kalkulator na bieżąco wylicza podatki i składki, pokazując realny zysk z Twojej firmy.</p>
+        </div>
+        <div class="feature-item">
+          <h3>📄 Gotowy na KSeF</h3>
+          <p>Interaktywna lista kontrolna krok po kroku przygotuje Cię do obowiązkowego systemu e-faktur w 2026 roku.</p>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <h2>Chcesz mieć spokojną głowę?</h2>
+        <p>Zapisz się na listę oczekujących i jako pierwszy otrzymaj dostęp do pełnej wersji aplikacji!</p>
+        <button class="cta-btn" onclick="alert('Dziękujemy! Wkrótce uruchomimy zapisy.')">Chcę to mieć! (Wypróbuj za darmo)</button>
+      </div>
+    </div>
+
   </div>
+
+  <footer>
+    &copy; 2026 TerminyJDG.pl. Wszelkie prawa zastrzeżone.
+  </footer>
 
   <script type="module" src="/src/main.js"></script>
 </body>
