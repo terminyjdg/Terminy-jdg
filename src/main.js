@@ -6,7 +6,8 @@ function zapiszStan() {
     vat: document.getElementById('cb-vat')?.checked || false,
     ksef1: document.getElementById('ksef-1')?.checked || false,
     ksef2: document.getElementById('ksef-2')?.checked || false,
-    ksef3: document.getElementById('ksef-3')?.checked || false
+    ksef3: document.getElementById('ksef-3')?.checked || false,
+    isVatPayer: document.getElementById('setting-vat')?.checked || false
   };
   localStorage.setItem('terminy_jdg_dane', JSON.stringify(stan));
 }
@@ -15,12 +16,28 @@ function wczytajStan() {
   const dane = localStorage.getItem('terminy_jdg_dane');
   if (!dane) return;
   const stan = JSON.parse(dane);
+  
   if (document.getElementById('cb-zus')) document.getElementById('cb-zus').checked = stan.zus;
   if (document.getElementById('cb-pit')) document.getElementById('cb-pit').checked = stan.pit;
   if (document.getElementById('cb-vat')) document.getElementById('cb-vat').checked = stan.vat;
   if (document.getElementById('ksef-1')) document.getElementById('ksef-1').checked = stan.ksef1;
   if (document.getElementById('ksef-2')) document.getElementById('ksef-2').checked = stan.ksef2;
   if (document.getElementById('ksef-3')) document.getElementById('ksef-3').checked = stan.ksef3;
+  
+  // Ustawiamy stan checkboxa VAT
+  const settingVat = document.getElementById('setting-vat');
+  if (settingVat && stan.isVatPayer !== undefined) {
+    settingVat.checked = stan.isVatPayer;
+    przelaczWidocznoscVat(stan.isVatPayer);
+  }
+}
+
+// --- UKRYWANIE/POKAZYWANIE KARTY VAT ---
+function przelaczWidocznoscVat(jestPodatnikiem) {
+  const kartaVat = document.getElementById('karta-vat');
+  if (kartaVat) {
+    kartaVat.style.display = jestPodatnikiem ? 'flex' : 'none';
+  }
 }
 
 // --- DATY ---
@@ -58,7 +75,6 @@ window.obliczPodatki = function() {
 
   resultBox.style.display = 'block';
 
-  // Uproszczone wyliczenia (duży ZUS ok. 1600 zł)
   const zus = 1600; 
   let tax = 0;
   let net = 0;
@@ -84,14 +100,19 @@ window.obliczPodatki = function() {
   document.getElementById('res-net').textContent = Math.round(net).toLocaleString('pl-PL') + ' zł';
 };
 
-// --- INICJALIZACJA PRZY STARCIE ---
+// --- INICJALIZACJA ---
 document.addEventListener('DOMContentLoaded', () => {
-  // Wczytaj stan checkboxów i daty od razu
   wczytajStan();
   odswiezDaty();
   
-  // Przypisz zapis do checkboxów
+  // Obsługa zapisu dla wszystkich checkboxów
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', zapiszStan);
+    cb.addEventListener('change', () => {
+      // Jeśli zmieniono ustawienie VAT, natychmiast ukryj/pokaż kartę
+      if (cb.id === 'setting-vat') {
+        przelaczWidocznoscVat(cb.checked);
+      }
+      zapiszStan();
+    });
   });
 });
