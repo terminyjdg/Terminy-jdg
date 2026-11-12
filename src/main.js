@@ -1,13 +1,20 @@
+// --- PAYWALL (BLOKADA PREMIUM) ---
+window.pokazPaywall = function() {
+  document.getElementById('paywall-modal').style.display = 'flex';
+};
+
+window.zamknijPaywall = function() {
+  document.getElementById('paywall-modal').style.display = 'none';
+};
+
 // --- INTELIGENTNE POWIADOMIENIA ---
 function sprawdzOstrzezenia() {
   const dZus = obliczDni(10);
   const dPit = obliczDni(20);
   const dVat = obliczDni(25);
   const banner = document.getElementById('alert-banner');
-
   let ostrzezenie = '';
 
-  // Sprawdzamy, czy termin jest blisko (np. 3 dni lub mniej)
   if (dZus <= 3 && dZus > 0) {
     ostrzezenie = `⚠️ Uwaga! Do opłacenia ZUS zostały ${dZus} dni!`;
   } else if (dPit <= 3 && dPit > 0) {
@@ -16,7 +23,6 @@ function sprawdzOstrzezenia() {
     ostrzezenie = `⚠️ Uwaga! Do opłacenia VAT zostały ${dVat} dni!`;
   }
 
-  // Jeśli jest ostrzeżenie, pokazujemy baner
   if (ostrzezenie) {
     banner.textContent = ostrzezenie;
     banner.style.display = 'block';
@@ -36,8 +42,13 @@ window.pokazGlowna = function() {
   window.scrollTo(0, 0);
 };
 
-// --- GENERATOR FAKTUR ---
+// --- GENERATOR FAKTUR (Z PAYWALLEM) ---
 window.generujFakture = function() {
+  // Zamiast generować od razu, pokazujemy okienko Premium
+  window.pokazPaywall();
+  
+  /* 
+  // Prawdziwa logika faktury (zakomentowana, bo mamy Paywall)
   const buyer = document.getElementById('inv-buyer').value || 'Brak nazwy';
   const nip = document.getElementById('inv-nip').value || 'Brak NIP';
   const service = document.getElementById('inv-service').value || 'Brak opisu';
@@ -63,6 +74,7 @@ window.generujFakture = function() {
 
   document.getElementById('invoice-preview').style.display = 'block';
   document.getElementById('invoice-preview').scrollIntoView({ behavior: 'smooth' });
+  */
 };
 
 // --- RESZTA (Tracker, Kalkulator, Ustawienia) ---
@@ -159,7 +171,7 @@ window.obliczPodatki = function() {
 document.addEventListener('DOMContentLoaded', () => {
   wczytajStan();
   odswiezDaty();
-  sprawdzOstrzezenia(); // Uruchamiamy sprawdzanie powiadomień przy starcie
+  sprawdzOstrzezenia();
   
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', () => {
