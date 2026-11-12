@@ -22,7 +22,7 @@
     .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
     .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
     
-    .main-cta { display: inline-block; width: 100%; max-width: 350px; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 20px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; }
+    .main-cta { display: inline-block; width: 100%; max-width: 350px; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 20px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; text-align: center; }
     .main-cta:hover { transform: translateY(-2px); }
 
     .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
@@ -40,7 +40,6 @@
     .notif-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
     .notif-box p { font-size: 15px; color: #4b5563; margin-bottom: 20px; }
     
-    /* Zmieniony układ ikon na 3 */
     .notif-icons { display: flex; justify-content: space-between; gap: 10px; }
     .notif-icon-item { background: #f0fdf4; padding: 15px 5px; border-radius: 12px; flex: 1; border: 1px solid #bbf7d0; }
     .notif-icon-item span { display: block; font-size: 24px; margin-bottom: 5px; }
@@ -50,6 +49,15 @@
     .premium-box h2 { font-size: 22px; margin-bottom: 10px; }
     .premium-box p { font-size: 15px; color: #bfdbfe; margin-bottom: 20px; }
     .premium-price { font-size: 28px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
+
+    /* FORMULARZ ZAPISU */
+    .waitlist-box { background: #eff6ff; border: 2px solid #2563eb; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; }
+    .waitlist-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
+    .waitlist-box p { font-size: 15px; color: #1e40af; margin-bottom: 20px; }
+    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
+    .waitlist-form input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+    .waitlist-form input:focus { border-color: #2563eb; }
+    .waitlist-form button { background: #2563eb; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; }
 
     /* --- APLIKACJA (UKRYTA) --- */
     #app-view { display: none; background: #f3f4f6; padding-bottom: 40px; }
@@ -138,23 +146,13 @@
           </div>
         </div>
 
-        <!-- ZMIENIONA SEKCJA POWIADOMIEŃ -->
         <div class="notif-box">
           <h3>Na pewno nie ominiesz powiadomienia</h3>
           <p>Dotrzemy do Ciebie z każdej strony, zanim będzie za późno:</p>
           <div class="notif-icons">
-            <div class="notif-icon-item">
-              <span>📱</span>
-              <strong>SMS</strong>
-            </div>
-            <div class="notif-icon-item">
-              <span>✉️</span>
-              <strong>E-mail</strong>
-            </div>
-            <div class="notif-icon-item">
-              <span>🔔</span>
-              <strong>Push w telefonie</strong>
-            </div>
+            <div class="notif-icon-item"><span>📱</span><strong>SMS</strong></div>
+            <div class="notif-icon-item"><span>✉️</span><strong>E-mail</strong></div>
+            <div class="notif-icon-item"><span>🔔</span><strong>Push</strong></div>
           </div>
         </div>
 
@@ -164,6 +162,18 @@
           <div class="premium-price">19 zł <span style="font-size:16px; color:#bfdbfe; font-weight:400;">/ mies.</span></div>
           <button class="main-cta" onclick="pokazPaywall()">Przejdź na PRO</button>
         </div>
+
+        <!-- NOWY FORMULARZ ZAPISU (FORMSPREE) -->
+        <div class="waitlist-box">
+          <h3>Zapisz się na listę oczekujących</h3>
+          <p>Zostaw swój e-mail. Damy Ci znać, gdy uruchomimy płatności i pełną wersję PRO.</p>
+          
+          <form action="https://formspree.io/f/mrpqgrpy" method="POST" class="waitlist-form">
+            <input type="email" name="email" placeholder="twój@email.pl" required />
+            <button type="submit">Zapisz mnie</button>
+          </form>
+        </div>
+
       </div>
     </div>
   </div>
