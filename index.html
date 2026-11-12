@@ -86,6 +86,21 @@
     .pillow-amount { font-size: 32px; font-weight: 800; color: #059669; margin-bottom: 10px; }
     .pillow-text { font-size: 14px; color: #4b5563; }
 
+    /* NOWY KAFELEK: Powiadomienia Push */
+    .push-box { background: #fffbeb; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; text-align: center; }
+    .push-box h3 { font-size: 18px; color: #b45309; margin-bottom: 8px; font-weight: 800; }
+    .push-box p { font-size: 14px; color: #78350f; margin-bottom: 15px; }
+    .push-btn { background: #f59e0b; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; }
+
+    /* PAYWALL MODAL */
+    #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: white; padding: 30px 20px; border-radius: 16px; text-align: center; max-width: 400px; width: 100%; }
+    .modal-content h2 { color: #1e3a8a; margin-bottom: 10px; font-size: 24px; }
+    .modal-content p { color: #6b7280; font-size: 15px; margin-bottom: 20px; }
+    .modal-price { font-size: 32px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
+    .modal-price span { font-size: 16px; color: #6b7280; font-weight: 400; }
+    .modal-close { background: #e5e7eb; color: #4b5563; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; display: flex; flex-direction: column; gap: 10px; }
     footer a { color: #6b7280; text-decoration: none; margin: 0 10px; }
   </style>
@@ -130,18 +145,11 @@
           </div>
         </div>
 
-        <div class="feature-grid">
-          <div class="feature-item">
-            <h3>📄 Bieżąca obsługa KSeF</h3>
-            <p>KSeF już działa! Nasza lista kontrolna pomoże Ci bezbłędnie wysyłać faktury, pobierać UPO i zarządzać uprawnieniami w systemie.</p>
-          </div>
-        </div>
-
         <div class="premium-box">
           <h2>Odblokuj pełnię możliwości</h2>
-          <p>Wersja PRO daje dostęp do Generatora Faktur bez limitów, powiadomień SMS oraz priorytetowego wsparcia.</p>
+          <p>Wersja PRO daje dostęp do Generatora Faktur, powiadomień SMS oraz Powiadomień Push w przeglądarce.</p>
           <div class="premium-price">19 zł <span style="font-size:16px; color:#bfdbfe; font-weight:400;">/ mies.</span></div>
-          <button class="main-cta" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
+          <button class="main-cta" onclick="pokazPaywall()">Przejdź na PRO</button>
         </div>
       </div>
     </div>
@@ -210,7 +218,7 @@
         </div>
       </div>
 
-      <!-- NOWY KAFELEK: Poduszka Finansowa -->
+      <!-- Poduszka Finansowa -->
       <div class="card" style="background: #ecfdf5; border: 2px solid #10b981;">
         <h2 style="color: #047857; font-size: 18px; margin-bottom: 10px;">Poduszka Finansowa</h2>
         <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Wpisz kwotę, jaka właśnie wpłynęła na Twoje konto. Powiemy Ci, ile odłożyć na podatki.</p>
@@ -224,6 +232,24 @@
         </div>
       </div>
 
+      <!-- NOWY KAFELEK: Powiadomienia Push -->
+      <div class="card" style="background: #fffbeb; border: 2px solid #f59e0b;">
+        <h3 style="font-size: 18px; color: #b45309; margin-bottom: 8px; font-weight: 800;">Powiadomienia Push (PRO)</h3>
+        <p style="font-size: 14px; color: #78350f; margin-bottom: 15px;">Otrzymuj powiadomienia na telefon, nawet gdy strona jest zamknięta.</p>
+        <button class="push-btn" onclick="pokazPaywall()">Włącz powiadomienia Push</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PAYWALL MODAL -->
+  <div id="paywall-modal">
+    <div class="modal-content">
+      <h2>Funkcja Premium</h2>
+      <p>Powiadomienia Push są dostępne w planie PRO. Odblokuj je, aby nigdy nie przegapić terminu.</p>
+      <div class="modal-price">19 zł <span>/ mies.</span></div>
+      <button class="main-cta" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
+      <button class="modal-close" onclick="zamknijPaywall()">Może później</button>
     </div>
   </div>
 
