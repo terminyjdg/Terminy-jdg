@@ -55,12 +55,15 @@
     .premium-price { font-size: 28px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
     .premium-box .main-cta { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; max-width: 300px; cursor: pointer; }
 
-    /* EKRANY LOGOWANIA I REJESTRACJI */
     #auth-login-view, #auth-register-view { display: none; flex: 1; align-items: center; justify-content: center; padding: 40px 20px; background: #f3f4f6; min-height: 80vh; }
     .auth-box { background: white; padding: 30px 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
     .auth-box h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 24px; }
     .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
     .auth-btn { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 15px; }
+    
+    .google-btn { width: 100%; padding: 15px; background: white; color: #1f2937; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .google-btn:hover { background: #f9fafb; }
+    
     .auth-switch { font-size: 14px; color: #6b7280; cursor: pointer; }
     .auth-switch span { color: #2563eb; font-weight: 600; }
     #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
@@ -148,7 +151,6 @@
       <h1>Twój osobisty asystent podatkowy</h1>
       <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i oblicz swoje podatki w jednym miejscu.</p>
       
-      <!-- PRZYWRÓCONY FORMULARZ E-MAILI -->
       <div class="hero-form-box">
         <h3>Zapisz się na listę oczekujących</h3>
         <p>Uruchamiamy wersję Beta! Zostaw swój e-mail, aby jako pierwszy otrzymać dostęp do aplikacji.</p>
@@ -195,6 +197,13 @@
     <div class="auth-box">
       <h2>Zaloguj się</h2>
       <div id="login-msg"></div>
+      
+      <button class="google-btn" onclick="zalogujPrzezGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
+        Zaloguj przez Google
+      </button>
+      <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
+
       <input type="email" id="login-email" class="auth-input" placeholder="twój@email.pl" />
       <input type="password" id="login-password" class="auth-input" placeholder="Hasło" />
       <button class="auth-btn" onclick="obsluzLogowanie()">Zaloguj się</button>
@@ -207,6 +216,13 @@
     <div class="auth-box">
       <h2>Utwórz konto</h2>
       <div id="register-msg"></div>
+      
+      <button class="google-btn" onclick="zalogujPrzezGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
+        Zarejestruj przez Google
+      </button>
+      <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
+
       <input type="email" id="register-email" class="auth-input" placeholder="twój@email.pl" />
       <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)" />
       <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
@@ -226,10 +242,7 @@
       <div class="card">
         <div class="settings-section">
           <div class="settings-title">Dostosuj aplikację</div>
-          <label class="settings-label">
-            <input type="checkbox" id="setting-vat" checked />
-            Jestem podatnikiem VAT
-          </label>
+          <label class="settings-label"><input type="checkbox" id="setting-vat" checked /> Jestem podatnikiem VAT</label>
         </div>
 
         <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
