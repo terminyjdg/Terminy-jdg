@@ -1,10 +1,20 @@
-import { createClient } from '@supabase/supabase-js'
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
-const supabaseUrl = '/api'
-const supabaseKey = 'sb_publishable_Z6yw9Yc5t0dQ9tgPpLDqMg_9zvA2biD'
+const firebaseConfig = {
+  apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
+  authDomain: "terminy-jdg.firebaseapp.com",
+  projectId: "terminy-jdg",
+  storageBucket: "terminy-jdg.firebasestorage.app",
+  messagingSenderId: "572109992539",
+  appId: "1:572109992539:web:fab9aaa03ea2a1ffd6857e",
+  measurementId: "G-VFMYDX44MH"
+};
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
+// --- NAWIGACJA ---
 window.pokazLanding = function() {
   document.querySelectorAll('#app-view, #auth-login-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
   document.getElementById('landing-view').style.display = 'block';
@@ -42,6 +52,7 @@ window.pokazGlowna = function() {
   window.scrollTo(0, 0);
 };
 
+// --- LOGOWANIE FIREBASE ---
 window.obsluzRejestracje = async function() {
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
@@ -49,13 +60,12 @@ window.obsluzRejestracje = async function() {
   
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
 
-  const { error } = await supabase.auth.signUp({ email, password });
-
-  if (error) {
-    msg.textContent = error.message; msg.style.color = '#dc2626';
-  } else {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
     msg.textContent = 'Konto utworzone! Możesz się zalogować.'; msg.style.color = '#16a34a';
     setTimeout(() => pokazLogowanie(), 2000);
+  } catch (error) {
+    msg.textContent = error.message; msg.style.color = '#dc2626';
   }
 };
 
@@ -66,29 +76,28 @@ window.obsluzLogowanie = async function() {
 
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    msg.textContent = error.message; msg.style.color = '#dc2626';
-  } else {
-    document.getElementById('user-email-display').textContent = data.user.email;
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    document.getElementById('user-email-display').textContent = userCredential.user.email;
     pokazAplikacje();
+  } catch (error) {
+    msg.textContent = error.message; msg.style.color = '#dc2626';
   }
 };
 
 window.wyloguj = async function() {
-  await supabase.auth.signOut();
+  await signOut(auth);
   document.getElementById('user-email-display').textContent = 'Niezalogowany';
   pokazLanding();
 };
 
-async function sprawdzSesje() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    document.getElementById('user-email-display').textContent = session.user.email;
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById('user-email-display').textContent = user.email;
   }
-}
+});
 
+// --- RESZTA KODU (kalkulatory, itp.) ---
 window.pokazPaywall = function(funkcja) {
   const textElem = document.getElementById('paywall-text');
   if (funkcja === "Generator Faktur") textElem.textContent = "Generator Faktur jest dostępny w planie PRO.";
@@ -142,7 +151,3 @@ window.obliczPoduszke = function() {
   document.getElementById('pillow-safe').textContent = Math.round(income - totalTax).toLocaleString('pl-PL') + ' zł';
   resultBox.style.display = 'block';
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-  sprawdzSesje();
-});
