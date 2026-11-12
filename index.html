@@ -10,9 +10,7 @@
     body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; scroll-behavior: smooth; }
     
     .beta-bar { background: #f59e0b; color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
-    #alert-banner { display: none; background: #ef4444; color: white; text-align: center; padding: 12px; font-size: 15px; font-weight: 800; animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-
+    
     nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
     .nav-btn { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
@@ -37,7 +35,7 @@
     .feature-item h3 { font-size: 18px; color: #111827; margin-bottom: 5px; }
     .feature-item p { font-size: 14px; color: #6b7280; }
 
-    /* NOWA SEKCJA POWIADOMIEŃ */
+    /* SEKCJA POWIADOMIEŃ */
     .notif-box { background: white; border: 2px solid #10b981; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1); }
     .notif-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
     .notif-box p { font-size: 15px; color: #4b5563; margin-bottom: 20px; }
@@ -97,7 +95,7 @@
   <div id="landing-view">
     <div class="hero">
       <h1>Twój osobisty asystent podatkowy</h1>
-      <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, przygotuj się do KSeF i oblicz swoje podatki w jednym miejscu.</p>
+      <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i oblicz swoje podatki w jednym miejscu.</p>
       <button class="main-cta" onclick="pokazAplikacje()">Przejdź do aplikacji →</button>
     </div>
 
@@ -115,7 +113,7 @@
           </div>
         </div>
 
-        <!-- NOWA SEKCJA: POWIADOMIENIA SMS I EMAIL -->
+        <!-- SEKCJA POWIADOMIEŃ -->
         <div class="notif-box">
           <h3>Nigdy więcej nie zapomnij o terminie</h3>
           <p>Wyślemy Ci przypomnienie, zanim będzie za późno. Otrzymasz powiadomienia na dwa sposoby:</p>
@@ -133,8 +131,8 @@
 
         <div class="feature-grid">
           <div class="feature-item">
-            <h3>📄 Gotowy na KSeF</h3>
-            <p>Interaktywna lista kontrolna krok po kroku przygotuje Cię do obowiązkowego systemu e-faktur w 2026 roku.</p>
+            <h3>📄 Bieżąca obsługa KSeF</h3>
+            <p>KSeF już działa! Nasza lista kontrolna pomoże Ci bezbłędnie wysyłać faktury, pobierać UPO i zarządzać uprawnieniami w systemie.</p>
           </div>
         </div>
 
@@ -182,10 +180,10 @@
         </div>
 
         <div class="ksef-section">
-          <div class="ksef-title">Przygotowanie do KSeF (2026)</div>
-          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Sprawdziłem program do fakturowania</span></label>
-          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Wygenerowałem token autoryzacyjny</span></label>
-          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Wiem, jak wystawić fakturę w KSeF</span></label>
+          <div class="ksef-title">Bieżące obowiązki w KSeF</div>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Wysłałem wszystkie faktury sprzedaży do KSeF</span></label>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Pobrałem UPO (Urzędowe Poświadczenie Odbioru)</span></label>
+          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Sprawdziłem faktury zakupowe w systemie</span></label>
         </div>
       </div>
 
