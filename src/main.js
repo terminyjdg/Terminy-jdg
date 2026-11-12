@@ -1,6 +1,7 @@
 // --- NAWIGACJA MIĘDZY STRONAMI ---
 window.pokazAplikacje = function() {
   document.getElementById('landing-view').style.display = 'none';
+  document.getElementById('invoice-view').style.display = 'none';
   document.getElementById('app-view').style.display = 'block';
   window.scrollTo(0, 0);
   odswiezDaty(); 
@@ -8,8 +9,29 @@ window.pokazAplikacje = function() {
 
 window.pokazLanding = function() {
   document.getElementById('app-view').style.display = 'none';
+  document.getElementById('invoice-view').style.display = 'none';
   document.getElementById('landing-view').style.display = 'block';
   window.scrollTo(0, 0);
+};
+
+// --- WIDOK GENERATORA FAKTUR ---
+window.pokazFaktury = function() {
+  document.getElementById('landing-view').style.display = 'none';
+  document.getElementById('app-view').style.display = 'none';
+  document.getElementById('invoice-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+window.pokazGlowna = function() {
+  document.getElementById('invoice-view').style.display = 'none';
+  document.getElementById('landing-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+// --- GENERATOR FAKTUR (PAYWALL) ---
+window.generujFakture = function() {
+  // Zamiast generować, pokazujemy okienko Premium
+  window.pokazPaywall();
 };
 
 // --- PAYWALL (OKIENKO PREMIUM) ---
