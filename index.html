@@ -3,70 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TerminyJDG.pl – nie przegap terminów ZUS, PIT i VAT</title>
+  <title>TerminyJDG.pl – Twój osobisty asystent podatkowy</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f9fafb; color: #1f2937; }
+    /* Nowoczesne fonty i reset */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background-color: #f3f4f6; color: #1f2937; line-height: 1.5; }
     
-    /* Styl dla sekcji zapisu */
-    .zapis-sekcja { text-align: center; margin-bottom: 40px; }
-    h1 { font-size: 28px; margin-bottom: 10px; }
-    p { color: #4b5563; font-size: 16px; }
-    input[type="email"] { width: 100%; padding: 14px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 8px; margin: 16px 0; box-sizing: border-box; }
-    #btn { width: 100%; padding: 14px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    #btn:disabled { background: #9ca3af; }
-    #msg { margin-top: 10px; font-weight: 600; font-size: 14px; }
-    .ok { color: #16a34a; }
-    .err { color: #dc2626; }
+    /* Górny pasek nawigacji */
+    nav { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 10; }
+    .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
+    .nav-links a { color: #6b7280; text-decoration: none; font-weight: 600; font-size: 14px; margin-left: 15px; }
 
-    /* Styl dla sekcji trackera */
-    #app-section { display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; margin-top: 20px; }
-    #app-section h2 { font-size: 20px; margin-top: 0; }
-    .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; }
-    .termin-card strong { color: #2563eb; display: block; font-size: 16px; margin-bottom: 4px; }
-    .termin-card span { font-size: 14px; color: #6b7280; }
-    .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
-    #btn-save-progress { width: 100%; padding: 14px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+    /* Sekcja Hero (zaproszenie do zapisu) */
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2); }
+    .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px; }
+    .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    
+    /* Formularz w sekcji Hero */
+    .form-container { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
+    input[type="email"] { width: 100%; padding: 16px; font-size: 16px; border: none; border-radius: 12px; outline: none; font-family: inherit; }
+    #btn { width: 100%; padding: 16px; font-size: 16px; background: #10b981; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+    #btn:hover { background: #059669; }
+    #btn:disabled { background: #9ca3af; }
+    #msg { margin-top: 15px; font-weight: 600; font-size: 14px; color: #fca5a5; }
+
+    /* Sekcja Aplikacji (Tracker) */
+    .app-container { max-width: 600px; margin: -30px auto 40px; padding: 0 20px; position: relative; z-index: 5; }
+    #app-section { display: none; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+    #app-section h2 { font-size: 22px; font-weight: 800; margin-bottom: 10px; color: #111827; }
+    .app-desc { font-size: 15px; color: #6b7280; margin-bottom: 25px; }
+    
+    /* Karty terminów */
+    .termin-card { border: 1px solid #e5e7eb; padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; transition: transform 0.2s, box-shadow 0.2s; }
+    .termin-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .termin-card strong { color: #1e3a8a; display: block; font-size: 18px; margin-bottom: 4px; }
+    .termin-card span { font-size: 14px; color: #4b5563; display: block; }
+    .termin-card input[type="checkbox"] { width: 28px; height: 28px; accent-color: #2563eb; cursor: pointer; }
+    
+    /* Przycisk zapisu postępu */
+    #btn-save-progress { width: 100%; padding: 16px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: background 0.2s; }
+    #btn-save-progress:hover { background: #1d4ed8; }
   </style>
 </head>
 <body>
 
-  <div class="zapis-sekcja">
-    <h1>TerminyJDG.pl</h1>
-    <p>Nie przegap terminów ZUS, PIT i VAT. Zapisz się na listę oczekujących – damy Ci znać, gdy aplikacja będzie gotowa.</p>
-    <input type="email" id="email" placeholder="twój@email.pl" />
-    <button id="btn" onclick="zapisz()">Zapisz mnie</button>
-    <div id="msg"></div>
+  <!-- Nawigacja -->
+  <nav>
+    <a href="#" class="logo">TerminyJDG.pl</a>
+    <div class="nav-links">
+      <a href="#">Zaloguj się</a>
+    </div>
+  </nav>
+
+  <!-- Sekcja Hero -->
+  <div class="hero">
+    <h1>Koniec z karami za spóźnienia.</h1>
+    <p>Twój osobisty, inteligentny terminarz ZUS, PIT i VAT. Zapisz się na listę oczekujących i zyskaj spokój ducha.</p>
+    
+    <div class="form-container">
+      <input type="email" id="email" placeholder="twój@email.pl" />
+      <button id="btn" onclick="zapisz()">Zapisz mnie</button>
+      <div id="msg"></div>
+    </div>
   </div>
 
-  <div id="app-section">
-    <h2>Twój Terminarz (Podgląd)</h2>
-    <p style="margin-bottom: 20px;">Poniżej znajdziesz najbliższe terminy. Zaznacz te, które już opłaciłeś.</p>
-    
-    <div class="termin-card">
-      <div>
-        <strong>ZUS</strong>
-        <span>Termin: 10. dzień miesiąca</span>
+  <!-- Sekcja Aplikacji -->
+  <div class="app-container">
+    <div id="app-section">
+      <h2>Twój Terminarz</h2>
+      <p class="app-desc">Poniżej znajdziesz najbliższe terminy. Odhacz te, które są już opłacone.</p>
+      
+      <div class="termin-card">
+        <div>
+          <strong>ZUS</strong>
+          <span class="termin-data">Termin: 10. dzień miesiąca</span>
+        </div>
+        <input type="checkbox" />
       </div>
-      <input type="checkbox" />
-    </div>
 
-    <div class="termin-card">
-      <div>
-        <strong>PIT (Zaliczka)</strong>
-        <span>Termin: 20. dzień miesiąca</span>
+      <div class="termin-card">
+        <div>
+          <strong>PIT (Zaliczka)</strong>
+          <span class="termin-data">Termin: 20. dzień miesiąca</span>
+        </div>
+        <input type="checkbox" />
       </div>
-      <input type="checkbox" />
-    </div>
 
-    <div class="termin-card">
-      <div>
-        <strong>VAT</strong>
-        <span>Termin: 25. dzień miesiąca</span>
+      <div class="termin-card">
+        <div>
+          <strong>VAT</strong>
+          <span class="termin-data">Termin: 25. dzień miesiąca</span>
+        </div>
+        <input type="checkbox" />
       </div>
-      <input type="checkbox" />
+      
+      <button id="btn-save-progress">Zapisz postęp</button>
     </div>
-    
-    <button id="btn-save-progress">Zapisz postęp</button>
   </div>
 
   <script type="module" src="/src/main.js"></script>
