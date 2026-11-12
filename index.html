@@ -13,17 +13,26 @@
     
     nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
     .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
-    .nav-btn { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+    .nav-btn { background: #e5e7eb; color: #1f2937; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
 
     /* --- STRONA GŁÓWNA (LANDING PAGE) --- */
     #landing-view { display: block; }
     
-    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 50px 20px 60px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
     .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
     
-    .main-cta { display: inline-block; width: 100%; max-width: 350px; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 20px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; text-align: center; }
-    .main-cta:hover { transform: translateY(-2px); }
+    /* NOWY FORMULARZ W SEKCJI HERO */
+    .hero-form-box { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 450px; margin: 0 auto; text-align: center; }
+    .hero-form-box h3 { color: #1e3a8a; font-size: 20px; margin-bottom: 10px; font-weight: 800; }
+    .hero-form-box p { color: #4b5563; font-size: 14px; margin-bottom: 20px; }
+    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
+    .waitlist-form input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; background: #f8fafc; }
+    .waitlist-form input:focus { border-color: #2563eb; }
+    .waitlist-form button { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+
+    .app-preview-btn { display: inline-block; margin-top: 30px; background: transparent; color: #bfdbfe; border: 1px solid #bfdbfe; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; }
+    .app-preview-btn:hover { background: rgba(255,255,255,0.1); }
 
     .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
     
@@ -49,15 +58,7 @@
     .premium-box h2 { font-size: 22px; margin-bottom: 10px; }
     .premium-box p { font-size: 15px; color: #bfdbfe; margin-bottom: 20px; }
     .premium-price { font-size: 28px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
-
-    /* FORMULARZ ZAPISU */
-    .waitlist-box { background: #eff6ff; border: 2px solid #2563eb; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; }
-    .waitlist-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
-    .waitlist-box p { font-size: 15px; color: #1e40af; margin-bottom: 20px; }
-    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
-    .waitlist-form input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
-    .waitlist-form input:focus { border-color: #2563eb; }
-    .waitlist-form button { background: #2563eb; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; }
+    .premium-box .main-cta { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; max-width: 300px; cursor: pointer; }
 
     /* --- APLIKACJA (UKRYTA) --- */
     #app-view { display: none; background: #f3f4f6; padding-bottom: 40px; }
@@ -121,7 +122,7 @@
 
   <nav>
     <a href="#" class="logo">TerminyJDG.pl</a>
-    <button class="nav-btn" onclick="pokazAplikacje()">Przejdź do aplikacji</button>
+    <button class="nav-btn" onclick="pokazAplikacje()">Aplikacja</button>
   </nav>
 
   <!-- ================= STRONA GŁÓWNA (LANDING) ================= -->
@@ -129,7 +130,19 @@
     <div class="hero">
       <h1>Twój osobisty asystent podatkowy</h1>
       <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i oblicz swoje podatki w jednym miejscu.</p>
-      <button class="main-cta" onclick="pokazAplikacje()">Przejdź do aplikacji →</button>
+      
+      <!-- FORMULARZ NA SAMEJ GÓRZE -->
+      <div class="hero-form-box">
+        <h3>Zapisz się na listę oczekujących</h3>
+        <p>Uruchamiamy wersję Beta! Zostaw swój e-mail, aby jako pierwszy otrzymać dostęp do aplikacji.</p>
+        
+        <form action="https://formspree.io/f/mrpqgrpy" method="POST" class="waitlist-form">
+          <input type="email" name="email" placeholder="twój@email.pl" required />
+          <button type="submit">Zapisz mnie na listę</button>
+        </form>
+      </div>
+
+      <button class="app-preview-btn" onclick="pokazAplikacje()">Zobacz podgląd aplikacji →</button>
     </div>
 
     <div class="container">
@@ -162,18 +175,6 @@
           <div class="premium-price">19 zł <span style="font-size:16px; color:#bfdbfe; font-weight:400;">/ mies.</span></div>
           <button class="main-cta" onclick="pokazPaywall()">Przejdź na PRO</button>
         </div>
-
-        <!-- NOWY FORMULARZ ZAPISU (FORMSPREE) -->
-        <div class="waitlist-box">
-          <h3>Zapisz się na listę oczekujących</h3>
-          <p>Zostaw swój e-mail. Damy Ci znać, gdy uruchomimy płatności i pełną wersję PRO.</p>
-          
-          <form action="https://formspree.io/f/mrpqgrpy" method="POST" class="waitlist-form">
-            <input type="email" name="email" placeholder="twój@email.pl" required />
-            <button type="submit">Zapisz mnie</button>
-          </form>
-        </div>
-
       </div>
     </div>
   </div>
