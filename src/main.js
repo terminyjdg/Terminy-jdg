@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -31,50 +31,72 @@ let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
+let czyDaneWczytane = false; // NOWA BLOKADA
 
 // --- ZAPIS GWIAZDEK DO FIREBASE ---
 async function zapiszGwiazdkiDoBazy() {
-  if (aktualnyUzytkownik) {
+  if (aktualnyUzytkownik && czyDaneWczytane) {
     try {
-      // Używamy await, żeby mieć pewność, że zapis się powiedzie
-      await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-        gwiazdki: gwiazdki,
-        email: aktualnyUzytkownik.email
-      }, { merge: true });
+      const userRef = doc(db, "users", aktualnyUzytkownik.uid);
+      // Używamy updateDoc, które jest bezpieczniejsze dla istniejących pól
+      await updateDoc(userRef, {
+        gwiazdki: gwiazdki
+      });
+      console.log("Zapisano gwiazdki:", gwiazdki);
     } catch (e) {
-      console.error("Błąd zapisu do bazy:", e);
+      console.error("Błąd zapisu do bazy (prawdopodobnie dokument nie istnieje):", e);
+      // Jeśli dokument nie istnieje, tworzymy go
+      try {
+        await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
+          gwiazdki: gwiazdki,
+          email: aktualnyUzytkownik.email
+        }, { merge: true });
+      } catch (err) {
+        console.error("Błąd tworzenia dokumentu:", err);
+      }
     }
   }
 }
 
-// --- ODCZYT GWIAZDEK Z FIREBASE (WYMUSZONY SERWER) ---
+// --- ODCZYT GWIAZDEK Z FIREBASE ---
 async function wczytajGwiazdkiZbazy() {
   if (aktualnyUzytkownik) {
     try {
-      // KLUCZOWA ZMIANA: source: 'server' wymusza pobranie świeżych danych, a nie z cache
+      // Wymuszamy pobranie z serwera, ignorując cache
       const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid), { source: 'server' });
       
       if (docSnap.exists()) {
         const dane = docSnap.data();
-        // Jeśli w bazie jest pole gwiazdki, ustawiamy je. W przeciwnym razie 0.
         gwiazdki = dane.gwiazdki !== undefined ? dane.gwiazdki : 0;
-        document.getElementById('stars-count').textContent = gwiazdki;
       } else {
         // Jeśli dokument nie istnieje, tworzymy go z zerem
         gwiazdki = 0;
-        document.getElementById('stars-count').textContent = 0;
-        await setDoc(doc(db, "users", aktualnyUzytkownik.uid), { gwiazdki: 0, email: aktualnyUzytkownik.email }, { merge: true });
+        await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
+          gwiazdki: 0,
+          email: aktualnyUzytkownik.email
+        });
       }
+      
+      document.getElementById('stars-count').textContent = gwiazdki;
+      czyDaneWczytane = true; // Odblokowujemy zapis
     } catch (e) {
       console.error("Błąd odczytu z bazy:", e);
+      // W razie błędu sieci, pokazujemy 0, ale nie blokujemy na wieki
+      gwiazdki = 0;
+      document.getElementById('stars-count').textContent = 0;
+      czyDaneWczytane = true; 
     }
   }
 }
 
 function dodajGwiazdke() {
   if (czySlowoZaliczone) return;
-  czySlowoZaliczone = true;
+  if (!czyDaneWczytane) {
+    console.warn("Dane jeszcze się nie wczytały, czekam...");
+    return;
+  }
   
+  czySlowoZaliczone = true;
   gwiazdki++;
   document.getElementById('stars-count').textContent = gwiazdki;
   zapiszGwiazdkiDoBazy();
@@ -342,14 +364,15 @@ onAuthStateChanged(auth, async (user) => {
   
   if (user) {
     aktualnyUzytkownik = user;
+    czyDaneWczytane = false; // Blokujemy zapis na czas wczytywania
     loginBtn.style.display = 'none';
     userInfo.style.display = 'flex';
     emailDisplay.textContent = user.email.split('@')[0];
     
-    // Wczytujemy dane z serwera przy każdym logowaniu/odświeżeniu
     await wczytajGwiazdkiZbazy();
   } else {
     aktualnyUzytkownik = null;
+    czyDaneWczytane = false;
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
     gwiazdki = 0;
