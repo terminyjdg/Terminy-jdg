@@ -115,13 +115,13 @@
     .mic-btn { background: #10b981; color: white; border: none; width: 80px; height: 80px; border-radius: 50%; font-size: 35px; cursor: pointer; box-shadow: 0 6px 0 #059669; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; }
     .mic-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #059669; }
     
-    /* MODALE I RESZTA */
+    /* WYMUSZENIE WYŚRODKOWANIA MODALI I LOGOWANIA */
     #paywall-modal, #auth-login-view, #auth-register-view { 
       display: none; 
       position: fixed; 
       top: 0; left: 0; width: 100%; height: 100%; 
-      background: rgba(0,0,0,0.6); 
-      z-index: 100; 
+      background: rgba(0,0,0,0.7); 
+      z-index: 1000; 
       align-items: center; 
       justify-content: center; 
       padding: 20px; 
@@ -397,6 +397,7 @@
 
   </div> <!-- KONIEC APP-CONTAINER -->
 
-  <script type="module" src="/src/main.js"></script>
+  <!-- DODANO WERSJONOWANIE (?v=2) ABY WYMUSIĆ POBRANIE NOWEGO PLIKU -->
+  <script type="module" src="/src/main.js?v=2"></script>
 </body>
 </html>
