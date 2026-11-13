@@ -38,10 +38,7 @@
 
     #main-view { display: none; }
     .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; margin-top: 20px; }
-    
-    /* SIATKA GŁOSEK - naprawiona, żeby ładnie się zawijała */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
-    
     .letter-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 8px 0 #fbcfe8; border: 2px solid #fbcfe8; transition: transform 0.1s; position: relative; }
     .letter-card:active { transform: translateY(4px); box-shadow: 0 4px 0 #fbcfe8; }
     .letter-card .big-letter { font-size: 48px; font-weight: 700; color: #db2777; margin-bottom: 5px; display: block; }
@@ -77,11 +74,17 @@
     #parent-panel-view { display: none; padding: 20px; }
     .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
     .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
     .stat-box { background: #fdf2f8; padding: 15px; border-radius: 15px; border: 1px solid #fbcfe8; }
     .stat-box h3 { font-size: 14px; color: #6b7280; margin-bottom: 5px; }
     .stat-box .value { font-size: 28px; font-weight: 700; color: #db2777; }
     .stats-card p { color: #4b5563; font-size: 15px; line-height: 1.5; margin-top: 15px; }
+    
+    /* LISTA GŁOSEK W PANELU RODZICA */
+    .history-list { text-align: left; margin-top: 15px; }
+    .history-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 15px; }
+    .history-item:last-child { border-bottom: none; }
+
     .back-to-app-btn { display: block; width: 100%; padding: 15px; background: #ec4899; color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; margin-top: 20px; }
 
     #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -160,7 +163,6 @@
   <div class="container" id="main-view">
     <div class="welcome-text">Wybierz głoskę do ćwiczenia:</div>
     <div class="grid">
-      <!-- DARMOWE GŁOSKI -->
       <div class="letter-card" onclick="rozpocznijCwiczenie('R')">
         <span class="big-letter">R</span>
         <span class="desc">np. RAK, ROWER</span>
@@ -173,8 +175,6 @@
         <span class="big-letter">C</span>
         <span class="desc">np. CEBULA, CYTRYNA</span>
       </div>
-      
-      <!-- NOWE GŁOSKI (DOSTĘPNE W PRO) -->
       <div class="letter-card" onclick="pokazPaywall()" style="opacity: 0.7;">
         <span class="lock-icon">🔒</span>
         <span class="big-letter">SZ</span>
@@ -246,7 +246,15 @@
           <div class="value" id="parent-words-count">0</div>
         </div>
       </div>
-      <p>Gwiazdki zdobywane są za poprawne wypowiedzenie słów lub zaliczenie przez rodzica. Zachęcaj dziecko do codziennych ćwiczeń!</p>
+      <p>Gwiazdki zdobywane są za poprawne wypowiedzenie słów lub zaliczenie przez rodzica.</p>
+    </div>
+
+    <!-- HISTORIA GŁOSEK -->
+    <div class="stats-card">
+      <h2>Ostatnio ćwiczone głoski</h2>
+      <div class="history-list" id="parent-history-list">
+        <div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>
+      </div>
     </div>
 
     <div class="stats-card">
