@@ -29,7 +29,11 @@ let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
 let historiaCwiczen = {};
 
-// --- GENEROWANIE KAFELKÓW ---
+// NOWE: Zmienne dla Streaka
+let streak = 0;
+let ostatniaDataCwiczenia = null;
+
+// --- GENEROWANIE KAFELKÓW Z SORTOWANIEM ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
   grid.innerHTML = ''; 
@@ -66,7 +70,9 @@ async function zapiszDaneDoBazy() {
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
         gwiazdki: gwiazdki,
         email: aktualnyUzytkownik.email,
-        historia: historiaCwiczen
+        historia: historiaCwiczen,
+        streak: streak,
+        ostatniaData: ostatniaDataCwiczenia
       }, { merge: true });
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
@@ -82,13 +88,19 @@ async function wczytajDaneZbazy() {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
         historiaCwiczen = dane.historia || {};
+        streak = dane.streak || 0;
+        ostatniaDataCwiczenia = dane.ostatniaData || null;
       } else {
         gwiazdki = 0;
         historiaCwiczen = {};
+        streak = 0;
+        ostatniaDataCwiczenia = null;
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           email: aktualnyUzytkownik.email,
-          historia: {}
+          historia: {},
+          streak: 0,
+          ostatniaData: null
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -109,6 +121,29 @@ function dodajGwiazdke() {
     historiaCwiczen[aktualnaGloska] = 0;
   }
   historiaCwiczen[aktualnaGloska]++;
+
+  // STREAK LOGIC
+  const dzisiaj = new Date().toISOString().split('T')[0];
+  
+  if (ostatniaDataCwiczenia !== dzisiaj) {
+    // To jest nowy dzień ćwiczeń
+    const wczoraj = new Date();
+    wczoraj.setDate(wczoraj.getDate() - 1);
+    const wczorajStr = wczoraj.toISOString().split('T')[0];
+
+    if (ostatniaDataCwiczenia === wczorajStr) {
+      streak++; // Kontynuacja serii
+    } else {
+      streak = 1; // Nowa seria
+    }
+    ostatniaDataCwiczenia = dzisiaj;
+    
+    // BONUS ZA STREAK (np. +1 gwiazdka za każdy dzień z rzędu)
+    if (streak > 1) {
+      gwiazdki += streak;
+      document.getElementById('stars-count').textContent = gwiazdki;
+    }
+  }
   
   zapiszDaneDoBazy();
 }
@@ -214,6 +249,7 @@ window.pokazPanelRodzica = function() {
   window.scrollTo(0, 0);
   
   document.getElementById('parent-total-stars').textContent = gwiazdki;
+  document.getElementById('streak-count').textContent = streak;
   
   let totalWords = 0;
   for (const gloska in historiaCwiczen) {
@@ -433,7 +469,10 @@ onAuthStateChanged(auth, async (user) => {
     panelBtn.style.display = 'none';
     gwiazdki = 0;
     historiaCwiczen = {};
+    streak = 0;
+    ostatniaDataCwiczenia = null;
     document.getElementById('stars-count').textContent = '0';
+    renderujKafelki();
   }
 });
 
