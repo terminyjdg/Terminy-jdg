@@ -18,7 +18,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const slowa = bazaSlow;
-const darmoweGloski = ['R', 'S', 'C', 'D', 'T', 'K']; // Lista darmowych głosek
+// Definiujemy, które głoski są darmowe (A, B, C, D, E, F, K, M, P, R, S, T, W, Z)
+// Wszystkie inne (np. G, SZ, Ż, L) będą wymagały PRO.
+const darmoweGloski = ['A', 'B', 'C', 'D', 'E', 'F', 'K', 'M', 'P', 'R', 'S', 'T', 'W', 'Z'];
 
 let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
@@ -29,18 +31,19 @@ let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
 let historiaCwiczen = {};
 
-// --- GENEROWANIE KAFELKÓW ---
+// --- GENEROWANIE KAFELKÓW Z SORTOWANIEM ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
-  grid.innerHTML = ''; // Czyścimy kontener
+  grid.innerHTML = ''; 
 
-  // Iterujemy po wszystkich kluczach (gloskach) z bazySlow
-  Object.keys(slowa).forEach(gloska => {
+  // Pobieramy klucze i SORTUJEMY ALFABETYCZNIE
+  const posortowaneGloski = Object.keys(slowa).sort();
+
+  posortowaneGloski.forEach(gloska => {
     const jestDarmowa = darmoweGloski.includes(gloska);
     const card = document.createElement('div');
     card.className = 'letter-card';
     
-    // Jeśli głoska nie jest darmowa, dodajemy kłódkę i odpowiedni wygląd
     if (!jestDarmowa) {
       card.style.opacity = '0.7';
       card.innerHTML = `<span class="lock-icon">🔒</span>`;
@@ -49,7 +52,6 @@ function renderujKafelki() {
       card.onclick = () => window.rozpocznijCwiczenie(gloska);
     }
 
-    // Pobieramy pierwsze słowo dla podpisu
     const przykladoweSlowo = slowa[gloska][0].word;
 
     card.innerHTML += `
@@ -430,6 +432,6 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderujKafelki(); // Generujemy kafelki na starcie
+  renderujKafelki(); 
   pokazLanding();
 });
