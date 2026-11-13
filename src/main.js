@@ -34,8 +34,9 @@ let historiaCwiczen = {};
 let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
+let odznaki = {}; 
 
-// --- GENEROWANIE KAFELKÓW (POPRAWIONA) ---
+// --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
   if (!grid) return;
@@ -56,7 +57,6 @@ function renderujKafelki() {
       card.onclick = () => window.rozpocznijCwiczenie(gloska);
     }
 
-    // Używamy bez polskich znaków w nazwie zmiennej
     const przykladoweSlowo = slowa[gloska][0].word;
 
     card.innerHTML += `
@@ -77,7 +77,8 @@ async function zapiszDaneDoBazy() {
         historia: historiaCwiczen,
         streak: streak,
         ostatniaData: ostatniaDataCwiczenia,
-        celTygodniowy: celTygodniowy
+        celTygodniowy: celTygodniowy,
+        odznaki: odznaki
       }, { merge: true });
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
@@ -96,19 +97,22 @@ async function wczytajDaneZbazy() {
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
         celTygodniowy = dane.celTygodniowy || 0;
+        odznaki = dane.odznaki || {};
       } else {
         gwiazdki = 0;
         historiaCwiczen = {};
         streak = 0;
         ostatniaDataCwiczenia = null;
         celTygodniowy = 0;
+        odznaki = {};
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           email: aktualnyUzytkownik.email,
           historia: {},
           streak: 0,
           ostatniaData: null,
-          celTygodniowy: 0
+          celTygodniowy: 0,
+          odznaki: {}
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -160,6 +164,29 @@ function odtworzDzwiek(sukces) {
   oscillator.stop(audioCtx.currentTime + 0.3);
 }
 
+// --- SYSTEM ODZNAK ---
+function sprawdzOdznaki() {
+  let nowaOdznaka = false;
+
+  if (gwiazdki >= 1 && !odznaki['pierwszy_krok']) {
+    odznaki['pierwszy_krok'] = true;
+    nowaOdznaka = true;
+  }
+  if (streak >= 3 && !odznaki['konsekwencja']) {
+    odznaki['konsekwencja'] = true;
+    nowaOdznaka = true;
+  }
+  if (gwiazdki >= 50 && !odznaki['kolekcjoner']) {
+    odznaki['kolekcjoner'] = true;
+    nowaOdznaka = true;
+  }
+
+  if (nowaOdznaka) {
+    pokazKonfetti();
+    odtworzDzwiek(true);
+  }
+}
+
 function dodajGwiazdke(ilosc = 1) {
   if (czySlowoZaliczone) return;
   czySlowoZaliczone = true;
@@ -197,6 +224,8 @@ function dodajGwiazdke(ilosc = 1) {
     }
     ostatniaDataCwiczenia = dzisiaj;
   }
+
+  sprawdzOdznaki(); 
   
   zapiszDaneDoBazy();
 }
@@ -307,6 +336,7 @@ window.pokazMemory = function() {
     document.getElementById('stars-count').textContent = gwiazdki;
     pokazKonfetti();
     odtworzDzwiek(true);
+    sprawdzOdznaki();
     zapiszDaneDoBazy();
   });
 };
@@ -352,7 +382,8 @@ window.pokazPanelRodzica = function() {
     celTygodniowy: celTygodniowy,
     totalWords: totalWords,
     historiaHTML: historiaHTML,
-    raportTekst: raportTekst
+    raportTekst: raportTekst,
+    odznaki: odznaki
   });
 };
 
@@ -559,6 +590,7 @@ onAuthStateChanged(auth, async (user) => {
     streak = 0;
     ostatniaDataCwiczenia = null;
     celTygodniowy = 0;
+    odznaki = {};
     document.getElementById('stars-count').textContent = '0';
     renderujKafelki();
   }
