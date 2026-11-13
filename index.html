@@ -36,6 +36,14 @@
     .premium-price { font-size: 32px; font-weight: 700; color: #10b981; margin-bottom: 20px; }
     .premium-box .main-cta { background: #ec4899; max-width: 300px; font-size: 18px; }
 
+    /* NOWE MENU WYBORU */
+    #menu-view { display: none; padding-top: 30px; }
+    .menu-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 20px; }
+    .menu-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; transition: transform 0.1s; position: relative; }
+    .menu-card:active { transform: translateY(4px); }
+    .menu-card .icon { font-size: 50px; display: block; margin-bottom: 10px; }
+    .menu-card .title { font-size: 22px; font-weight: 700; }
+
     #main-view { display: none; }
     .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; margin-top: 20px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
@@ -185,7 +193,8 @@
     <div class="hero">
       <h1>Pomóż dziecku mówić poprawnie</h1>
       <p>Zabawa, która rozwija wymowę. Bez kolejek do logopedy, w domu, w formie przyjaznej gry.</p>
-      <button class="main-cta" onclick="pokazGlowna()">Zacznij ćwiczyć →</button>
+      <!-- ZMIENIONO NA pokazMenu() -->
+      <button class="main-cta" onclick="pokazMenu()">Zacznij ćwiczyć →</button>
     </div>
 
     <div class="container">
@@ -217,13 +226,42 @@
     <footer>&copy; 2026 Gaduła. Wszelkie prawa zastrzeżone.</footer>
   </div>
 
+  <!-- NOWY EKRAN: MENU WYBORU -->
+  <div class="container" id="menu-view">
+    <div class="welcome-text" style="font-size: 28px; margin-top: 10px;">Co dzisiaj robimy?</div>
+    
+    <div class="menu-grid">
+      <!-- Kafelek 1: Głoski -->
+      <div class="menu-card" onclick="pokazGlowna()" style="border: 2px solid #fbcfe8; box-shadow: 0 8px 0 #fbcfe8;">
+        <span class="icon">🗣️</span>
+        <div class="title" style="color: #db2777;">Ćwicz głoski</div>
+      </div>
+
+      <!-- Kafelek 2: Rysowanie -->
+      <div class="menu-card" onclick="pokazRysowanie()" style="border: 2px solid #ddd6fe; box-shadow: 0 8px 0 #ddd6fe;">
+        <span class="icon">🎨</span>
+        <div class="title" style="color: #8b5cf6;">Rysuj</div>
+      </div>
+
+      <!-- Kafelek 3: Historyjki -->
+      <div class="menu-card" onclick="pokazHistoryjki()" style="border: 2px solid #fde68a; box-shadow: 0 8px 0 #fde68a;">
+        <span class="icon">📖</span>
+        <div class="title" style="color: #f59e0b;">Historyjki</div>
+      </div>
+    </div>
+
+    <!-- Przycisk powrotu -->
+    <button class="nav-btn" style="margin-top: 30px; width: 100%; background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazLanding()">← Wróć na start</button>
+  </div>
+
   <!-- EKRAN GŁÓWNY (WYBÓR GŁOSKI) -->
   <div class="container" id="main-view">
     <div class="welcome-text">Wybierz głoskę do ćwiczenia:</div>
     <div class="grid" id="gloski-grid"></div>
     
-    <!-- PRZYCISK KREATOR HISTORYJEK -->
+    <!-- PRZYCISK KREATOR HISTORYJEK (zostawiony na dole, bo może być wygodny) -->
     <button class="main-cta" style="background: #8b5cf6; margin-top: 10px;" onclick="pokazHistoryjki()">📖 Kreator Historyjek</button>
+    <button class="nav-btn" style="margin-top: 15px; width: 100%; background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazMenu()">← Wróć do menu</button>
   </div>
 
   <!-- EKRAN ĆWICZENIA -->
@@ -257,7 +295,7 @@
   <!-- EKRAN RYSOWANIA -->
   <div class="container" id="draw-view">
     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563;" onclick="pokazCwiczenie()">← Wróć do słowa</button>
+      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="wrocZRysowania()">← Wróć</button>
       <span style="font-weight:700; color:#db2777; font-size:18px;">Narysuj: <span id="draw-word">RAK</span></span>
     </div>
     
@@ -279,16 +317,20 @@
   <!-- EKRAN MEMORY -->
   <div class="container" id="memory-view">
     <div class="memory-header">
-      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563;" onclick="pokazCwiczenie()">← Wróć</button>
+      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazCwiczenie()">← Wróć</button>
       <span style="font-weight:700; color:#db2777; font-size:18px;">Znajdź parę</span>
     </div>
     <div class="memory-grid" id="memory-grid"></div>
   </div>
 
   <!-- EKRAN HISTORYJEK (PUSTY KONTENER) -->
-  <div class="container" id="historyjki-view"></div>
+  <div class="container" id="historyjki-view">
+    <!-- Tymczasowy przycisk powrotu dla pustego widoku -->
+    <button class="nav-btn" style="margin-bottom: 20px; background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazMenu()">← Wróć do menu</button>
+    <div style="text-align: center; color: #831843; font-weight: 700; font-size: 24px;">Tu wkrótce pojawią się historyjki!</div>
+  </div>
 
-  <!-- PANEL RODZICA (PUSTY KONTENER) -->
+  <!-- PANEL RODZICA -->
   <div class="container" id="parent-panel-view"></div>
 
   <!-- LOGOWANIE / REJESTRACJA -->
