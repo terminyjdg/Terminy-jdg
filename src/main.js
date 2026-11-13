@@ -28,7 +28,7 @@ const darmoweGloski = ['A', 'B', 'C'];
 let aktualnaGloska = 'A';
 let aktualneSlowoIndex = 0;
 let gwiazdki = 0;
-let gwiazdkiWTygodniu = 0; // NOWA ZMIENNA
+let gwiazdkiWTygodniu = 0;
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
@@ -40,6 +40,15 @@ let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 let odznaki = {}; 
 let historyjki = [];
+
+// NOWY OBIEKT DO STATYSTYK
+let statystykiGier = {
+  mowa: 0,
+  dodawanie: 0,
+  odejmowanie: 0,
+  mnozenie: 0,
+  dzielenie: 0
+};
 
 // --- SYSTEM PRO (TEST) ---
 let czyMaPro = false;
@@ -120,7 +129,8 @@ async function zapiszDaneDoBazy() {
     try {
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
         gwiazdki: gwiazdki,
-        gwiazdkiWTygodniu: gwiazdkiWTygodniu, // ZAPIS NOWEJ ZMIENNEJ
+        gwiazdkiWTygodniu: gwiazdkiWTygodniu,
+        statystykiGier: statystykiGier, // ZAPIS NOWYCH STATYSTYK
         email: aktualnyUzytkownik.email,
         historia: historiaCwiczen,
         streak: streak,
@@ -142,7 +152,8 @@ async function wczytajDaneZbazy() {
       if (docSnap.exists()) {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
-        gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0; // ODCZYT
+        gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0;
+        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 }; // ODCZYT
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
@@ -152,6 +163,7 @@ async function wczytajDaneZbazy() {
       } else {
         gwiazdki = 0;
         gwiazdkiWTygodniu = 0;
+        statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 };
         historiaCwiczen = {};
         streak = 0;
         ostatniaDataCwiczenia = null;
@@ -161,6 +173,7 @@ async function wczytajDaneZbazy() {
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           gwiazdkiWTygodniu: 0,
+          statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 },
           email: aktualnyUzytkownik.email,
           historia: {},
           streak: 0,
@@ -247,7 +260,8 @@ function dodajGwiazdke(ilosc = 1) {
   czySlowoZaliczone = true;
   
   gwiazdki += ilosc;
-  gwiazdkiWTygodniu += ilosc; // DODAJEMY DO TYGODNIA
+  gwiazdkiWTygodniu += ilosc;
+  statystykiGier.mowa += ilosc; // DODAJEMY DO MOWY
   
   const starDisplay = document.getElementById('stars-display');
   if (starDisplay) {
@@ -285,9 +299,14 @@ function dodajGwiazdke(ilosc = 1) {
   zapiszDaneDoBazy();
 }
 
-function dodajGwiazdkeMatma() {
+// Funkcja dla matematyki (dodaje informację, z jakiego działania była gwiazdka)
+function dodajGwiazdkeMatma(rodzajGry) {
   gwiazdki += 1;
-  gwiazdkiWTygodniu += 1; // DODAJEMY DO TYGODNIA
+  gwiazdkiWTygodniu += 1; 
+  
+  if (statystykiGier[rodzajGry] !== undefined) {
+    statystykiGier[rodzajGry] += 1; // ZWIĘKSZAMY LICZNIK DLA KONKRETNEGO DZIAŁANIA
+  }
   
   document.getElementById('stars-count').textContent = gwiazdki;
   
@@ -453,8 +472,9 @@ window.pokazHistoryjki = function() {
 
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
-  startMatma(dzialanie, () => {
-    dodajGwiazdkeMatma(); 
+  startMatma(dzialanie, (rodzajGry) => {
+    // Odbieramy informację, z jakiej gry była gwiazdka (dodawanie, odejmowanie itp.)
+    dodajGwiazdkeMatma(rodzajGry); 
   });
 };
 
@@ -496,12 +516,12 @@ window.pokazPanelRodzica = function() {
     raportTekst = `W tym tygodniu Twoje dziecko poprawnie wypowiedziało ${totalWords} słów. Najczęściej ćwiczyło głoskę ${najczestszaGloska}. Świetna robota!`;
   }
 
-  // Przekazujemy dane do panelu, w tym nowe gwiazdkiWTygodniu
   renderujPanelRodzica({
     gwiazdki: gwiazdki,
     gwiazdkiWTygodniu: gwiazdkiWTygodniu,
+    statystykiGier: statystykiGier, // PRZEKAZUJEMY NOWE STATYSTYKI
     streak: streak,
-    dniCwiczen: streak, // Na razie używamy streak jako dni z rzędu
+    dniCwiczen: streak,
     celTygodniowy: celTygodniowy,
     totalWords: totalWords,
     historiaHTML: historyHTML,
@@ -719,6 +739,7 @@ onAuthStateChanged(auth, async (user) => {
     panelBtn.style.display = 'none';
     gwiazdki = 0;
     gwiazdkiWTygodniu = 0;
+    statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 };
     historiaCwiczen = {};
     streak = 0;
     ostatniaDataCwiczenia = null;
