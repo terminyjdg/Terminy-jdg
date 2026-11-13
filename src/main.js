@@ -18,9 +18,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const slowa = bazaSlow;
-// Definiujemy, które głoski są darmowe (A, B, C, D, E, F, K, M, P, R, S, T, W, Z)
-// Wszystkie inne (np. G, SZ, Ż, L) będą wymagały PRO.
-const darmoweGloski = ['A', 'B', 'C', 'D', 'E', 'F', 'K', 'M', 'P', 'R', 'S', 'T', 'W', 'Z'];
+
+// TYLKO TE GŁOSKI SĄ DARMOWE - RESZTA JEST ZABLOKOWANA
+const darmoweGloski = ['A', 'B', 'C']; 
 
 let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
