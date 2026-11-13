@@ -3,20 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gaduła - Trener Wymowy</title>
+  <title>Gaduła - Trener Wymowy dla Dzieci</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Fredoka', sans-serif; background: #fdf2f8; color: #1f2937; scroll-behavior: smooth; }
     
+    /* Pasek górny */
     nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
     .logo { font-weight: 700; font-size: 24px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
     .nav-btn { background: white; color: #ec4899; border: none; padding: 10px 15px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     .user-info { color: white; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
     .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 12px; }
 
-    .container { max-width: 600px; margin: 20px auto; padding: 0 20px; }
-    .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; }
+    /* --- STRONA GŁÓWNA (LANDING PAGE) --- */
+    #landing-view { display: block; }
+    
+    .hero { background: linear-gradient(135deg, #db2777 0%, #ec4899 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+    .hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 15px; line-height: 1.2; }
+    .hero p { font-size: 18px; color: #fbcfe8; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    
+    .main-cta { display: inline-block; width: 100%; max-width: 350px; padding: 18px; background: #10b981; color: white; border-radius: 20px; font-weight: 700; font-size: 22px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; }
+    .main-cta:hover { transform: translateY(-2px); }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+    
+    .marketing-section { margin-top: 40px; text-align: center; }
+    .marketing-section h2 { font-size: 26px; font-weight: 700; color: #831843; margin-bottom: 25px; }
+    
+    .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+    .feature-item { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 6px solid #ec4899; }
+    .feature-item h3 { font-size: 18px; color: #831843; margin-bottom: 5px; }
+    .feature-item p { font-size: 15px; color: #6b7280; line-height: 1.5; }
+    
+    .premium-box { background: #831843; padding: 30px 20px; border-radius: 20px; color: white; text-align: center; margin-bottom: 40px; }
+    .premium-box h2 { font-size: 24px; margin-bottom: 10px; }
+    .premium-box p { font-size: 16px; color: #fbcfe8; margin-bottom: 20px; }
+    .premium-price { font-size: 32px; font-weight: 700; color: #10b981; margin-bottom: 20px; }
+    .premium-box .main-cta { background: #ec4899; max-width: 300px; font-size: 18px; }
+
+    /* --- APLIKACJA (WYBÓR GŁOSEK) --- */
+    #main-view { display: none; }
+    .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; margin-top: 20px; }
     
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .letter-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 8px 0 #fbcfe8; border: 2px solid #fbcfe8; transition: transform 0.1s; position: relative; }
@@ -25,6 +53,7 @@
     .letter-card .desc { font-size: 14px; color: #6b7280; font-weight: 600; }
     .lock-icon { position: absolute; top: 10px; right: 10px; font-size: 18px; }
 
+    /* Ćwiczenia */
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 10px 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .stars-display { font-size: 24px; font-weight: 700; color: #f59e0b; }
     .draw-btn { background: #8b5cf6; color: white; border: none; padding: 8px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; }
@@ -47,6 +76,7 @@
     .word-nav { display: flex; justify-content: center; gap: 15px; }
     .word-nav button { background: #fbcfe8; color: #db2777; border: none; padding: 10px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; }
 
+    /* Rysowanie */
     #draw-view { display: none; text-align: center; }
     .canvas-container { background: white; border-radius: 20px; padding: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
     canvas { border: 2px dashed #cbd5e1; border-radius: 15px; touch-action: none; width: 100%; height: 300px; cursor: crosshair; display: block; }
@@ -54,9 +84,10 @@
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
+    /* Reklamy */
     .ad-banner { background: #e5e7eb; color: #9ca3af; text-align: center; padding: 15px; border-radius: 10px; font-size: 12px; margin-top: 20px; border: 1px dashed #cbd5e1; }
 
-    /* PAYWALL MODAL */
+    /* Paywall */
     #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal-content { background: white; padding: 30px 20px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .modal-content h2 { color: #db2777; margin-bottom: 10px; font-size: 24px; }
@@ -66,6 +97,7 @@
     .modal-pro-btn { display: block; width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
     .modal-close { background: #f3f4f6; color: #4b5563; border: none; padding: 12px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; }
 
+    /* Logowanie */
     #auth-login-view, #auth-register-view { display: none; padding: 40px 20px; min-height: 80vh; }
     .auth-box { background: white; padding: 30px 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; margin: 0 auto; }
     .auth-box h2 { color: #db2777; margin-bottom: 20px; font-size: 24px; }
@@ -75,12 +107,14 @@
     .auth-switch { font-size: 14px; color: #6b7280; cursor: pointer; }
     .auth-switch span { color: #ec4899; font-weight: 700; }
     #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
+
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="#" class="logo" onclick="pokazGlowna()">🐶 Gaduła</a>
+    <a href="#" class="logo" onclick="pokazLanding()">🐶 Gaduła</a>
     <button class="nav-btn" id="nav-login-btn" onclick="pokazLogowanie()">Zaloguj / Zapisz postęp</button>
     <div class="user-info" id="nav-user-info" style="display: none;">
       <span id="user-email-display">Zalogowany</span>
@@ -88,6 +122,45 @@
     </div>
   </nav>
 
+  <!-- STRONA GŁÓWNA (LANDING) -->
+  <div id="landing-view">
+    <div class="hero">
+      <h1>Pomóż dziecku mówić poprawnie</h1>
+      <p>Zabawa, która rozwija wymowę. Bez kolejek do logopedy, w domu, w formie przyjaznej gry.</p>
+      <button class="main-cta" onclick="pokazGlowna()">Zacznij ćwiczyć →</button>
+    </div>
+
+    <div class="container">
+      <div class="marketing-section">
+        <h2>Dlaczego Gaduła?</h2>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h3>🎤 Prawdziwy trener wymowy</h3>
+            <p>Dziecko mówi do mikrofonu, a aplikacja sprawdza, czy słowo zostało wypowiedziane poprawnie. Gwiazdki motywują do dalszej pracy.</p>
+          </div>
+          <div class="feature-item">
+            <h3>🎨 Kreatywna tablica</h3>
+            <p>Po poprawnym wypowiedzeniu słowa, dziecko może narysować to, o czym mówiło. To rozwija wyobraźnię i utrwala słownictwo.</p>
+          </div>
+          <div class="feature-item">
+            <h3>📈 Zapis postępów</h3>
+            <p>Zaloguj się, aby zapisywać zdobyte gwiazdki. Twoje dziecko widzi, jak robi postępy każdego dnia.</p>
+          </div>
+        </div>
+
+        <div class="premium-box">
+          <h2>Odblokuj pełnię możliwości</h2>
+          <p>Wersja PRO daje dostęp do wszystkich głosek, wyłącza reklamy i pozwala śledzić szczegółowe statystyki.</p>
+          <div class="premium-price">19 zł <span style="font-size:16px; color:#fbcfe8; font-weight:400;">/ mies.</span></div>
+          <button class="main-cta" onclick="pokazPaywall()">Przejdź na PRO</button>
+        </div>
+      </div>
+      <div class="ad-banner">Miejsce na reklamę (Google AdSense)</div>
+    </div>
+    <footer>&copy; 2026 Gaduła. Wszelkie prawa zastrzeżone.</footer>
+  </div>
+
+  <!-- EKRAN GŁÓWNY (WYBÓR GŁOSKI) -->
   <div class="container" id="main-view">
     <div class="welcome-text">Wybierz głoskę do ćwiczenia:</div>
     <div class="grid">
@@ -103,38 +176,35 @@
         <span class="big-letter">C</span>
         <span class="desc">np. CEBULA, CYTRYNA</span>
       </div>
-      <!-- Zablokowana głoska (przykład Paywalla) -->
       <div class="letter-card" onclick="pokazPaywall()" style="opacity: 0.7;">
         <span class="lock-icon">🔒</span>
         <span class="big-letter">L</span>
         <span class="desc">Dostępne w PRO</span>
       </div>
     </div>
-    <div class="ad-banner">Miejsce na reklamę (Google AdSense) – widoczne w wersji darmowej</div>
+    <div class="ad-banner">Miejsce na reklamę – wersja darmowa</div>
   </div>
 
+  <!-- EKRAN ĆWICZENIA -->
   <div class="container" id="exercise-view">
     <div class="top-bar">
       <div class="stars-display">⭐ <span id="stars-count">0</span></div>
       <button class="draw-btn" onclick="pokazRysowanie()">🎨 Rysuj</button>
     </div>
-
     <div class="word-display">
       <div class="word-image" id="ex-image">🦀</div>
       <div class="word-text" id="ex-word">RAK</div>
     </div>
-
     <button class="mic-btn" id="mic-button" onclick="nagrajIWymow()">🎤</button>
     <div class="mic-hint" id="mic-hint">Kliknij i powiedz słowo!</div>
-    
     <button class="parent-check-btn" onclick="rodzicZaliczyl()">Rodzic: Dobrze powiedziane</button>
-
     <div class="word-nav">
       <button onclick="nastepneSlowo()">Następne słowo →</button>
     </div>
     <div class="ad-banner">Miejsce na reklamę – wersja darmowa</div>
   </div>
 
+  <!-- EKRAN RYSOWANIA -->
   <div class="container" id="draw-view">
     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
       <button class="nav-btn" style="background: #f3f4f6; color: #4b5563;" onclick="pokazCwiczenie()">← Wróć do słowa</button>
@@ -153,6 +223,7 @@
     <button class="clear-btn" onclick="wyczyscCanvas()">Wyczyść tablicę</button>
   </div>
 
+  <!-- LOGOWANIE / REJESTRACJA -->
   <div id="auth-login-view">
     <div class="auth-box">
       <h2>Zaloguj się</h2>
@@ -166,7 +237,7 @@
       <input type="password" id="login-password" class="auth-input" placeholder="Hasło" />
       <button class="auth-btn" onclick="obsluzLogowanie()">Zaloguj się</button>
       <div class="auth-switch" onclick="pokazRejestracje()">Nie masz konta? <span>Zarejestruj się</span></div>
-      <div style="margin-top: 15px;"><a href="#" onclick="pokazGlowna()" style="color:#6b7280; font-size:14px;">Wróć do ćwiczeń</a></div>
+      <div style="margin-top: 15px;"><a href="#" onclick="pokazLanding()" style="color:#6b7280; font-size:14px;">Wróć na stronę główną</a></div>
     </div>
   </div>
 
@@ -183,7 +254,7 @@
       <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)" />
       <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
       <div class="auth-switch" onclick="pokazLogowanie()">Masz już konto? <span>Zaloguj się</span></div>
-      <div style="margin-top: 15px;"><a href="#" onclick="pokazGlowna()" style="color:#6b7280; font-size:14px;">Wróć do ćwiczeń</a></div>
+      <div style="margin-top: 15px;"><a href="#" onclick="pokazLanding()" style="color:#6b7280; font-size:14px;">Wróć na stronę główną</a></div>
     </div>
   </div>
 
