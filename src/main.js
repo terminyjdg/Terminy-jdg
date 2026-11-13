@@ -5,9 +5,8 @@ import { bazaSlow } from './dane.js';
 import { renderujPanelRodzica } from './panel.js'; 
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
-import { startHistoryjki } from './historyjki.js';
+import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
-// ZMIENIONO NAZWĘ IMPORTU, ABY NIE KOLIDOWAŁA Z FUNKCJĄ LOKALNĄ
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
 
 const firebaseConfig = {
@@ -41,15 +40,10 @@ let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 let odznaki = {}; 
-let historyjki = [];
+let historyjki = []; // Tutaj zapisujemy ułożone historyjki
 
 let statystykiGier = {
-  mowa: 0,
-  dodawanie: 0,
-  odejmowanie: 0,
-  mnozenie: 0,
-  dzielenie: 0,
-  zgadnij: 0
+  mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0
 };
 
 // --- SYSTEM PRO (TEST) ---
@@ -173,16 +167,9 @@ async function wczytajDaneZbazy() {
         odznaki = {};
         historyjki = [];
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-          gwiazdki: 0,
-          gwiazdkiWTygodniu: 0,
+          gwiazdki: 0, gwiazdkiWTygodniu: 0,
           statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 },
-          email: aktualnyUzytkownik.email,
-          historia: {},
-          streak: 0,
-          ostatniaData: null,
-          celTygodniowy: 0,
-          odznaki: {},
-          historyjki: []
+          email: aktualnyUzytkownik.email, historia: {}, streak: 0, ostatniaData: null, celTygodniowy: 0, odznaki: {}, historyjki: []
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -209,7 +196,6 @@ function pokazKonfetti() {
   }
 }
 
-// TO JEST TWOJA LOKALNA FUNKCJA DŹWIĘKOWA (sukces/błąd)
 function odtworzDzwiek(sukces) {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioCtx.createOscillator();
@@ -409,18 +395,10 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
-  document.getElementById('landing-view').style.display = 'none';
-  document.getElementById('menu-view').style.display = 'none';
-  document.getElementById('main-view').style.display = 'none';
-  document.getElementById('exercise-view').style.display = 'none';
-  document.getElementById('draw-view').style.display = 'none';
-  document.getElementById('memory-view').style.display = 'none';
-  document.getElementById('auth-login-view').style.display = 'none';
-  document.getElementById('auth-register-view').style.display = 'none';
-  document.getElementById('parent-panel-view').style.display = 'none';
-  document.getElementById('historyjki-view').style.display = 'none';
-  document.getElementById('math-view').style.display = 'none';
-  document.getElementById('zgadnij-view').style.display = 'none';
+  ['landing-view', 'menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'auth-login-view', 'auth-register-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
 }
 
 window.pokazMenu = function() {
@@ -513,8 +491,10 @@ window.pokazHistoryjki = function() {
   document.getElementById('historyjki-view').style.display = 'block';
   window.scrollTo(0, 0);
   
-  startHistoryjki(bazaSlow, (nowaHistoryjka) => {
-    historyjki.push(nowaHistoryjka);
+  // Uruchamiamy kreator
+  startHistoryjki((obrazki) => {
+    // Zapisujemy historyjkę w bazie
+    historyjki.push(obrazki);
     zapiszDaneDoBazy();
   });
 };
@@ -542,8 +522,12 @@ window.nastepneZadanie = nastepneZadanie;
 
 window.wyjdzZZgadnij = wyjdzZZgadnij;
 window.nastepneZgadnij = nastepnePytanie;
-// PRZYPISUJEMY NOWĄ NAZWĘ DO PRZYCISKU GŁOŚNIKA
 window.odtworzZgadnijDzwiek = odtworzDzwiekLektora; 
+
+// EKSPORT FUNKCJI HISTORYJEK
+window.wyjdzZHistoryjek = wyjdzZHistoryjek;
+window.wyczyscHistoryjke = wyczyscHistoryjke;
+window.zapiszHistoryjke = zapiszHistoryjke;
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
