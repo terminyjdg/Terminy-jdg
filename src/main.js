@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"; // Dodano Firestore
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -14,7 +14,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // Inicjalizacja bazy
+const db = getFirestore(app);
 
 // --- SŁOWNIKI SŁÓW ---
 const slowa = {
@@ -30,6 +30,7 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
+let czySlowoZaliczone = false; // Flaga blokująca wielokrotne klikanie
 
 // --- ZAPIS GWIAZDEK DO FIREBASE ---
 async function zapiszGwiazdkiDoBazy() {
@@ -39,7 +40,6 @@ async function zapiszGwiazdkiDoBazy() {
         gwiazdki: gwiazdki,
         email: aktualnyUzytkownik.email
       }, { merge: true });
-      console.log("Zapisano gwiazdki w chmurze.");
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
     }
@@ -61,9 +61,12 @@ async function wczytajGwiazdkiZbazy() {
 }
 
 function dodajGwiazdke() {
+  if (czySlowoZaliczone) return; // Jeśli już zaliczone, nie dodawaj kolejnej
+  czySlowoZaliczone = true;
+  
   gwiazdki++;
   document.getElementById('stars-count').textContent = gwiazdki;
-  zapiszGwiazdkiDoBazy(); // Zapisujemy od razu do chmury
+  zapiszGwiazdkiDoBazy();
 }
 
 // Sprawdzenie, czy przeglądarka wspiera rozpoznawanie mowy
@@ -167,6 +170,7 @@ function odswiezSlowo() {
   document.getElementById('draw-word').textContent = slowoObj.word;
   document.getElementById('mic-hint').textContent = 'Kliknij i powiedz słowo!';
   document.getElementById('mic-hint').className = 'mic-hint';
+  czySlowoZaliczone = false; // Reset flagi przy nowym słowie
 }
 
 window.nastepneSlowo = function() {
@@ -203,6 +207,10 @@ function sprawdzWymowe(uslyszaneSlowo) {
 }
 
 window.rodzicZaliczyl = function() {
+  if (czySlowoZaliczone) {
+    alert("To słowo zostało już zaliczone! Kliknij 'Następne słowo'.");
+    return;
+  }
   const hint = document.getElementById('mic-hint');
   hint.textContent = 'Zaliczone przez rodzica! ⭐';
   hint.className = 'mic-hint success';
@@ -326,12 +334,15 @@ onAuthStateChanged(auth, async (user) => {
     loginBtn.style.display = 'none';
     userInfo.style.display = 'flex';
     emailDisplay.textContent = user.email.split('@')[0];
-    await wczytajGwiazdkiZbazy(); // Wczytujemy postęp po zalogowaniu
+    
+    // Wczytujemy gwiazdki z bazy
+    await wczytajGwiazdkiZbazy();
   } else {
     aktualnyUzytkownik = null;
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
-    // Resetujemy gwiazdki dla nowego użytkownika
+    
+    // Resetujemy gwiazdki dla niezalogowanych
     gwiazdki = 0;
     document.getElementById('stars-count').textContent = '0';
   }
