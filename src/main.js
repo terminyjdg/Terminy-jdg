@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-import { bazaSlow } from './dane.js'; // IMPORTUJEMY NASZE SŁOWA
+import { bazaSlow } from './dane.js'; 
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -17,8 +17,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// UŻYWAMY IMPORTU ZAMIAST DEFINICJI
 const slowa = bazaSlow;
+const darmoweGloski = ['R', 'S', 'C', 'D', 'T', 'K']; // Lista darmowych głosek
 
 let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
@@ -28,6 +28,37 @@ let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
 let historiaCwiczen = {};
+
+// --- GENEROWANIE KAFELKÓW ---
+function renderujKafelki() {
+  const grid = document.getElementById('gloski-grid');
+  grid.innerHTML = ''; // Czyścimy kontener
+
+  // Iterujemy po wszystkich kluczach (gloskach) z bazySlow
+  Object.keys(slowa).forEach(gloska => {
+    const jestDarmowa = darmoweGloski.includes(gloska);
+    const card = document.createElement('div');
+    card.className = 'letter-card';
+    
+    // Jeśli głoska nie jest darmowa, dodajemy kłódkę i odpowiedni wygląd
+    if (!jestDarmowa) {
+      card.style.opacity = '0.7';
+      card.innerHTML = `<span class="lock-icon">🔒</span>`;
+      card.onclick = window.pokazPaywall;
+    } else {
+      card.onclick = () => window.rozpocznijCwiczenie(gloska);
+    }
+
+    // Pobieramy pierwsze słowo dla podpisu
+    const przykladoweSlowo = slowa[gloska][0].word;
+
+    card.innerHTML += `
+      <span class="big-letter">${gloska}</span>
+      <span class="desc">np. ${przykladoweSlowo}</span>
+    `;
+    grid.appendChild(card);
+  });
+}
 
 // --- FUNKCJE BAZY DANYCH ---
 async function zapiszDaneDoBazy() {
@@ -399,5 +430,6 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  renderujKafelki(); // Generujemy kafelki na starcie
   pokazLanding();
 });
