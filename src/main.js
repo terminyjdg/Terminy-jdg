@@ -376,18 +376,23 @@ window.pokazPanelRodzica = function() {
     raportTekst = `W tym tygodniu Twoje dziecko poprawnie wypowiedziało ${totalWords} słów. Najczęściej ćwiczyło głoskę ${najczestszaGloska}. Świetna robota!`;
   }
 
+  // WYWOŁANIE IMPORTU Z PANEL.JS
   renderujPanelRodzica({
     gwiazdki: gwiazdki,
     streak: streak,
     celTygodniowy: celTygodniowy,
     totalWords: totalWords,
-    historiaHTML: historiaHTML,
+    historiaHTML: historyHTML,
     raportTekst: raportTekst,
     odznaki: odznaki
   });
 };
 
 window.zapiszCelWTle = function(targetValue) {
+  if (isNaN(targetValue) || targetValue <= 0) {
+    alert('Podaj poprawną liczbę gwiazdek (np. 50).');
+    return;
+  }
   celTygodniowy = targetValue;
   zapiszDaneDoBazy();
   pokazPanelRodzica(); 
