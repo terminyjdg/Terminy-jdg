@@ -14,6 +14,8 @@
     nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
     .logo { font-weight: 700; font-size: 24px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
     .nav-btn { background: white; color: #ec4899; border: none; padding: 10px 15px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .user-info { color: white; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 12px; }
 
     /* Ekran startowy */
     .container { max-width: 600px; margin: 20px auto; padding: 0 20px; }
@@ -33,24 +35,39 @@
     .word-image { font-size: 80px; margin-bottom: 10px; }
     .word-text { font-size: 36px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 2px; }
     
-    /* Mikrofon / Przycisk akcji */
     .mic-btn { background: #10b981; color: white; border: none; width: 100px; height: 100px; border-radius: 50%; font-size: 40px; cursor: pointer; box-shadow: 0 8px 0 #059669; transition: transform 0.1s; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
     .mic-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #059669; }
     .mic-hint { font-size: 16px; color: #6b7280; font-weight: 600; }
 
-    /* Nawigacja słówek */
     .word-nav { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
     .word-nav button { background: #fbcfe8; color: #db2777; border: none; padding: 10px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; }
 
-    /* Ekrany logowania - ukryte, na razie uproszczone */
-    #auth-view { display: none; }
+    /* EKRANY LOGOWANIA (Skopiowane z poprzedniej wersji) */
+    #auth-login-view, #auth-register-view { display: none; padding: 40px 20px; min-height: 80vh; }
+    .auth-box { background: white; padding: 30px 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; margin: 0 auto; }
+    .auth-box h2 { color: #db2777; margin-bottom: 20px; font-size: 24px; }
+    .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #fbcfe8; border-radius: 12px; font-size: 16px; outline: none; }
+    .auth-btn { width: 100%; padding: 15px; background: #ec4899; color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 15px; }
+    
+    .google-btn { width: 100%; padding: 15px; background: white; color: #1f2937; border: 1px solid #cbd5e1; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .auth-switch { font-size: 14px; color: #6b7280; cursor: pointer; }
+    .auth-switch span { color: #ec4899; font-weight: 700; }
+    #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
   </style>
 </head>
 <body>
 
   <nav>
     <a href="#" class="logo">🐶 Gaduła</a>
-    <button class="nav-btn" onclick="pokazLogowanie()">Zaloguj / Zapisz postęp</button>
+    
+    <!-- Widok dla niezalogowanych -->
+    <button class="nav-btn" id="nav-login-btn" onclick="pokazLogowanie()">Zaloguj / Zapisz postęp</button>
+    
+    <!-- Widok dla zalogowanych (ukryty domyślnie) -->
+    <div class="user-info" id="nav-user-info" style="display: none;">
+      <span id="user-email-display">Zalogowany</span>
+      <button class="logout-btn" onclick="wyloguj()">Wyloguj</button>
+    </div>
   </nav>
 
   <!-- EKRAN GŁÓWNY (WYBÓR GŁOSKI) -->
@@ -86,7 +103,6 @@
       <div class="word-text" id="ex-word">RAK</div>
     </div>
 
-    <!-- Przycisk imitujący nagrywanie (na razie bez mikrofonu) -->
     <button class="mic-btn" onclick="symulujNagranie()">🎤</button>
     <div class="mic-hint" id="mic-hint">Kliknij i powiedz słowo!</div>
 
@@ -95,11 +111,44 @@
     </div>
   </div>
 
-  <!-- EKRAN LOGOWANIA (Uproszczony na razie) -->
-  <div id="auth-view" class="container">
-    <button class="back-btn" onclick="pokazGlowna()">← Wróć</button>
-    <h2 style="text-align:center; margin-bottom:20px; color:#831843;">Zaloguj się, aby zapisywać postępy</h2>
-    <p style="text-align:center;">Logowanie jest w trakcie budowy. Wróć wkrótce!</p>
+  <!-- EKRAN LOGOWANIA -->
+  <div id="auth-login-view">
+    <div class="auth-box">
+      <h2>Zaloguj się</h2>
+      <div id="login-msg"></div>
+      
+      <button class="google-btn" onclick="zalogujPrzezGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
+        Zaloguj przez Google
+      </button>
+      <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
+
+      <input type="email" id="login-email" class="auth-input" placeholder="twój@email.pl" />
+      <input type="password" id="login-password" class="auth-input" placeholder="Hasło" />
+      <button class="auth-btn" onclick="obsluzLogowanie()">Zaloguj się</button>
+      <div class="auth-switch" onclick="pokazRejestracje()">Nie masz konta? <span>Zarejestruj się</span></div>
+      <div style="margin-top: 15px;"><a href="#" onclick="pokazGlowna()" style="color:#6b7280; font-size:14px;">Wróć do ćwiczeń</a></div>
+    </div>
+  </div>
+
+  <!-- EKRAN REJESTRACJI -->
+  <div id="auth-register-view">
+    <div class="auth-box">
+      <h2>Utwórz konto</h2>
+      <div id="register-msg"></div>
+      
+      <button class="google-btn" onclick="zalogujPrzezGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
+        Zarejestruj przez Google
+      </button>
+      <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
+
+      <input type="email" id="register-email" class="auth-input" placeholder="twój@email.pl" />
+      <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)" />
+      <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
+      <div class="auth-switch" onclick="pokazLogowanie()">Masz już konto? <span>Zaloguj się</span></div>
+      <div style="margin-top: 15px;"><a href="#" onclick="pokazGlowna()" style="color:#6b7280; font-size:14px;">Wróć do ćwiczeń</a></div>
+    </div>
   </div>
 
   <script type="module" src="/src/main.js"></script>
