@@ -3,10 +3,12 @@
 let aktualnyDzialanie = 'dodawanie';
 let aktualnyWynik = 0;
 let callbackSukces = null;
+let callbackBledna = null; // NOWA FUNKCJA
 
-export function startMatma(rodzaj, onSukces) {
+export function startMatma(rodzaj, onSukces, onBledna) {
     aktualnyDzialanie = rodzaj;
     callbackSukces = onSukces;
+    callbackBledna = onBledna;
     
     document.getElementById('menu-view').style.display = 'none';
     document.getElementById('math-view').style.display = 'block';
@@ -101,7 +103,6 @@ function sprawdzOdpowiedz(odp, btn) {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.3);
 
-        // Przekazujemy nazwę działania do funkcji w main.js
         if (callbackSukces) callbackSukces(aktualnyDzialanie);
         
         setTimeout(() => {
@@ -130,7 +131,11 @@ function sprawdzOdpowiedz(odp, btn) {
             }
         });
 
+        // WYWOŁUJEMY ODEJMOWANIE GWIAZDKI
+        if (callbackBledna) callbackBledna();
+
         setTimeout(() => {
+            document.getElementById('math-stars-count').innerText = document.getElementById('stars-count').innerText;
             const nextBtn = document.getElementById('math-next-btn');
             if (nextBtn) nextBtn.style.display = 'inline-block';
         }, 2000);
