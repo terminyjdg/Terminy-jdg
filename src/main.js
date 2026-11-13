@@ -3,7 +3,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { bazaSlow } from './dane.js'; 
 import { renderujPanelRodzica } from './panel.js'; 
-import { startMemory } from './gra-memory.js'; // IMPORTUJEMY GRĘ
+import { startMemory } from './gra-memory.js'; 
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -115,13 +115,65 @@ async function wczytajDaneZbazy() {
   }
 }
 
+// --- KONFETTI I DŹWIĘK ---
+function pokazKonfetti() {
+  const colors = ['#db2777', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+  for (let i = 0; i < 30; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+    document.body.appendChild(confetti);
+    
+    setTimeout(() => {
+      confetti.remove();
+    }, 3000);
+  }
+}
+
+function odtworzDzwiek(sukces) {
+  // Prosty dźwięk za pomocą Web Audio API (bez plików)
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  
+  if (sukces) {
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+    oscillator.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); // C6
+  } else {
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+  }
+  
+  gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+  
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.3);
+}
+
 function dodajGwiazdke(ilosc = 1) {
   if (czySlowoZaliczone) return;
   czySlowoZaliczone = true;
   
   gwiazdki += ilosc;
+  
+  // Animacja "pop" dla licznika
+  const starDisplay = document.getElementById('stars-display');
+  starDisplay.classList.add('pop');
+  setTimeout(() => starDisplay.classList.remove('pop'), 300);
+  
   document.getElementById('stars-count').textContent = gwiazdki;
   
+  pokazKonfetti();
+  odtworzDzwiek(true);
+
   if (!historiaCwiczen[aktualnaGloska]) {
     historiaCwiczen[aktualnaGloska] = 0;
   }
@@ -140,11 +192,6 @@ function dodajGwiazdke(ilosc = 1) {
       streak = 1; 
     }
     ostatniaDataCwiczenia = dzisiaj;
-    
-    if (streak > 1) {
-      gwiazdki += streak;
-      document.getElementById('stars-count').textContent = gwiazdki;
-    }
   }
   
   zapiszDaneDoBazy();
@@ -251,9 +298,12 @@ window.pokazMemory = function() {
   document.getElementById('memory-view').style.display = 'block';
   window.scrollTo(0, 0);
   
-  // Uruchamiamy grę z pliku gra-memory.js
   startMemory(bazaSlow, aktualnaGloska, () => {
-    dodajGwiazdke(5); // Bonus: +5 gwiazdek za wygraną
+    gwiazdki += 5;
+    document.getElementById('stars-count').textContent = gwiazdki;
+    pokazKonfetti();
+    odtworzDzwiek(true);
+    zapiszDaneDoBazy();
   });
 };
 
@@ -332,6 +382,7 @@ function sprawdzWymowe(uslyszaneSlowo) {
   } else {
     hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz: ${doceloweSlowo}`;
     hint.className = 'mic-hint error';
+    odtworzDzwiek(false);
   }
 }
 
