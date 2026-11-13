@@ -52,7 +52,7 @@ const slowa = {
   ],
   'SZ': [ 
     { image: '🧣', word: 'SZALIK' }, 
-    { image: '🐱', word: 'KOT' }, // Placeholder, lepiej dać coś z SZ
+    { image: '🐱', word: 'KOT' },
     { image: '🍎', word: 'GRUSZKA' },
     { image: '🚌', word: 'AUTOBUS' }
   ],
@@ -71,14 +71,16 @@ let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
+let historiaCwiczen = {}; // Obiekt do przechowywania historii (np. { 'R': 5, 'S': 3 })
 
 // --- FUNKCJE BAZY DANYCH ---
-async function zapiszGwiazdkiDoBazy() {
+async function zapiszDaneDoBazy() {
   if (aktualnyUzytkownik) {
     try {
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
         gwiazdki: gwiazdki,
-        email: aktualnyUzytkownik.email
+        email: aktualnyUzytkownik.email,
+        historia: historiaCwiczen
       }, { merge: true });
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
@@ -86,17 +88,21 @@ async function zapiszGwiazdkiDoBazy() {
   }
 }
 
-async function wczytajGwiazdkiZbazy() {
+async function wczytajDaneZbazy() {
   if (aktualnyUzytkownik) {
     try {
       const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid));
       if (docSnap.exists()) {
-        gwiazdki = docSnap.data().gwiazdki || 0;
+        const dane = docSnap.data();
+        gwiazdki = dane.gwiazdki || 0;
+        historiaCwiczen = dane.historia || {};
       } else {
         gwiazdki = 0;
+        historiaCwiczen = {};
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
-          email: aktualnyUzytkownik.email
+          email: aktualnyUzytkownik.email,
+          historia: {}
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -112,7 +118,14 @@ function dodajGwiazdke() {
   
   gwiazdki++;
   document.getElementById('stars-count').textContent = gwiazdki;
-  zapiszGwiazdkiDoBazy();
+  
+  // Aktualizujemy historię dla aktualnej głoski
+  if (!historiaCwiczen[aktualnaGloska]) {
+    historiaCwiczen[aktualnaGloska] = 0;
+  }
+  historiaCwiczen[aktualnaGloska]++;
+  
+  zapiszDaneDoBazy();
 }
 
 // --- RESZTA KODU ---
@@ -215,6 +228,23 @@ window.pokazPanelRodzica = function() {
   window.scrollTo(0, 0);
   
   document.getElementById('parent-total-stars').textContent = gwiazdki;
+  
+  // Generowanie historii
+  const historyList = document.getElementById('parent-history-list');
+  historyList.innerHTML = ''; // Czyszczenie
+  
+  const gloskiKlucze = Object.keys(historiaCwiczen);
+  if (gloskiKlucze.length === 0) {
+    historyList.innerHTML = '<div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>';
+  } else {
+    gloskiKlucze.forEach(gloska => {
+      const ilosc = historiaCwiczen[gloska];
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `<span>Głoska: <strong>${gloska}</strong></span> <span>${ilosc} razy</span>`;
+      historyList.appendChild(div);
+    });
+  }
 };
 
 function odswiezSlowo() {
@@ -386,13 +416,14 @@ onAuthStateChanged(auth, async (user) => {
     userInfo.style.display = 'flex';
     panelBtn.style.display = 'block';
     emailDisplay.textContent = user.email.split('@')[0];
-    await wczytajGwiazdkiZbazy();
+    await wczytajDaneZbazy();
   } else {
     aktualnyUzytkownik = null;
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
     panelBtn.style.display = 'none';
     gwiazdki = 0;
+    historiaCwiczen = {};
     document.getElementById('stars-count').textContent = '0';
   }
 });
