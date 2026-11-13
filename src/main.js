@@ -4,6 +4,7 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { bazaSlow } from './dane.js'; 
 import { renderujPanelRodzica } from './panel.js'; 
 import { startMemory } from './gra-memory.js'; 
+import { initNagrywanie } from './nagrywanie.js'; // IMPORT NAGRYWANIA
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -602,5 +603,6 @@ onAuthStateChanged(auth, async (user) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderujKafelki(); 
+  initNagrywanie(); // INICJALIZACJA NAGRYWANIA
   pokazLanding();
 });
