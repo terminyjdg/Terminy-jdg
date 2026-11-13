@@ -1,13 +1,16 @@
-// Ten plik generuje cały widok Panelu Rodzica i zarządza jego logiką
-
 export function renderujPanelRodzica(dane) {
   const kontener = document.getElementById('parent-panel-view');
   if (!kontener) return;
 
-  // Generujemy HTML Panelu Rodzica
   kontener.innerHTML = `
     <h1 style="text-align: center; color: #831843; margin-bottom: 20px;">Panel Rodzica</h1>
     
+    <!-- RAPORT TYGODNIOWY -->
+    <div class="stats-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981;">
+      <h2 style="color: #047857;">📈 Raport Postępów</h2>
+      <p style="color: #065f46; font-weight: 600; font-size: 16px;">${dane.raportTekst}</p>
+    </div>
+
     <!-- CEL TYGODNIOWY -->
     <div class="mission-box">
       <h2>🎯 Cel Tygodniowy</h2>
@@ -74,7 +77,6 @@ export function renderujPanelRodzica(dane) {
   `;
 }
 
-// Funkcja wywoływana z main.js po kliknięciu "Ustaw cel"
 window.ustawCel = function() {
   const targetInput = document.getElementById('mission-target');
   const targetValue = parseInt(targetInput.value);
@@ -84,7 +86,6 @@ window.ustawCel = function() {
     return;
   }
 
-  // Wywołujemy funkcję z main.js, która zapisze to w bazie
   if (window.zapiszCelWTle) {
     window.zapiszCelWTle(targetValue);
     alert('Cel ustawiony!');
