@@ -10,7 +10,6 @@ export function startMatma(rodzaj, onSukces) {
     
     document.getElementById('menu-view').style.display = 'none';
     document.getElementById('math-view').style.display = 'block';
-    document.getElementById('math-next-btn').style.display = 'none';
     
     const tytuly = {
         'dodawanie': '➕ Dodawanie',
@@ -35,7 +34,10 @@ function generujZadanie() {
     // Resetujemy blokadę, aby można było zdobyć kolejną gwiazdkę
     window.czySlowoZaliczone = false;
     
-    document.getElementById('math-next-btn').style.display = 'none';
+    // Ukrywamy przycisk "Następne zadanie" na czas nowego pytania
+    const nextBtn = document.getElementById('math-next-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+
     let a, b, dzialanieZnak, poprawnaOdpowiedz;
     let maxZakres = 10;
 
@@ -94,6 +96,7 @@ function sprawdzOdpowiedz(odp, btn) {
         btn.style.background = '#10b981';
         btn.style.color = 'white';
         
+        // Dźwięk sukcesu
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'sine';
@@ -103,17 +106,21 @@ function sprawdzOdpowiedz(odp, btn) {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.3);
 
+        // Przekazujemy sukces do main.js (dodanie gwiazdki, konfetti, zapis)
         if (callbackSukces) callbackSukces();
         
+        // Pokazujemy przycisk "Dalej" i aktualizujemy licznik
         setTimeout(() => {
             document.getElementById('math-stars-count').innerText = document.getElementById('stars-count').innerText;
-            document.getElementById('math-next-btn').style.display = 'inline-block';
+            const nextBtn = document.getElementById('math-next-btn');
+            if (nextBtn) nextBtn.style.display = 'inline-block';
         }, 500);
 
     } else {
         btn.style.background = '#ef4444';
         btn.style.color = 'white';
         
+        // Dźwięk błędu
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'sawtooth';
@@ -123,6 +130,7 @@ function sprawdzOdpowiedz(odp, btn) {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.3);
 
+        // Podświetlenie poprawnej odpowiedzi
         wszystkiePrzyciski.forEach(b => {
             if (parseInt(b.innerText) === aktualnyWynik) {
                 b.style.background = '#10b981';
@@ -130,8 +138,10 @@ function sprawdzOdpowiedz(odp, btn) {
             }
         });
 
+        // Po błędzie pokazujemy przycisk Dalej po 2 sekundach
         setTimeout(() => {
-            document.getElementById('math-next-btn').style.display = 'inline-block';
+            const nextBtn = document.getElementById('math-next-btn');
+            if (nextBtn) nextBtn.style.display = 'inline-block';
         }, 2000);
     }
 }
