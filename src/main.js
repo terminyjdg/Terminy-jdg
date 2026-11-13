@@ -20,7 +20,7 @@ const db = getFirestore(app);
 const slowa = bazaSlow;
 const darmoweGloski = ['A', 'B', 'C']; 
 
-let aktualnaGloska = 'R';
+let aktualnaGloska = 'A';
 let aktualneSlowoIndex = 0;
 let gwiazdki = 0;
 let recognition = null;
@@ -29,7 +29,7 @@ let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
 let historiaCwiczen = {};
 
-// --- GENEROWANIE KAFELKÓW Z SORTOWANIEM ---
+// --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
   grid.innerHTML = ''; 
@@ -171,6 +171,7 @@ window.pokazGlowna = function() {
   ukryjWszystkieWidoki();
   document.getElementById('main-view').style.display = 'block';
   window.scrollTo(0, 0);
+  renderujKafelki();
 };
 
 window.pokazLogowanie = function() {
