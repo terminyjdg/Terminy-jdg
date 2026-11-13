@@ -72,6 +72,7 @@
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
+    /* PANEL RODZICA */
     #parent-panel-view { display: none; padding: 20px; }
     .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
     .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
@@ -83,6 +84,11 @@
     .history-list { text-align: left; margin-top: 15px; }
     .history-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 15px; }
     .history-item:last-child { border-bottom: none; }
+
+    /* ALBUM NAKLEJEK */
+    .album-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px; }
+    .sticker { font-size: 50px; opacity: 0.2; filter: grayscale(100%); transition: all 0.3s; }
+    .sticker.unlocked { opacity: 1; filter: grayscale(0%); transform: scale(1.2); text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
     .back-to-app-btn { display: block; width: 100%; padding: 15px; background: #ec4899; color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; margin-top: 20px; }
 
@@ -169,10 +175,7 @@
   <!-- EKRAN GŁÓWNY (WYBÓR GŁOSKI) -->
   <div class="container" id="main-view">
     <div class="welcome-text">Wybierz głoskę do ćwiczenia:</div>
-    
-    <!-- TUTAJ JAVASCRIPT WYGENERUJE KAFELKI -->
     <div class="grid" id="gloski-grid"></div>
-    
   </div>
 
   <!-- EKRAN ĆWICZENIA -->
@@ -232,6 +235,20 @@
         </div>
       </div>
       <p>Gwiazdki zdobywane są za poprawne wypowiedzenie słów lub zaliczenie przez rodzica.</p>
+    </div>
+
+    <!-- ALBUM NAKLEJEK -->
+    <div class="stats-card">
+      <h2>Album Naklejek</h2>
+      <p>Zbieraj gwiazdki, aby odblokować wszystkie naklejki!</p>
+      <div class="album-grid" id="album-grid">
+        <div class="sticker" id="sticker-1">🦁</div>
+        <div class="sticker" id="sticker-2">🚀</div>
+        <div class="sticker" id="sticker-3">🦄</div>
+        <div class="sticker" id="sticker-4">🐉</div>
+        <div class="sticker" id="sticker-5">🍦</div>
+        <div class="sticker" id="sticker-6">🏆</div>
+      </div>
     </div>
 
     <div class="stats-card">
