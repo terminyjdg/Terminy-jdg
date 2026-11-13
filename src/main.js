@@ -85,31 +85,36 @@ if (SpeechRecognition) {
   };
 }
 
-// --- NAWIGACJA ---
-function ukryjWszystko() {
-  document.querySelectorAll('.container, #landing-view, #auth-login-view, #auth-register-view').forEach(el => el.style.display = 'none');
+// --- NAWIGACJA (NAPRAWIONA - BEZPOŚREDNIE STEROWANIE) ---
+function ukryjWszystkieWidoki() {
+  document.getElementById('landing-view').style.display = 'none';
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('exercise-view').style.display = 'none';
+  document.getElementById('draw-view').style.display = 'none';
+  document.getElementById('auth-login-view').style.display = 'none';
+  document.getElementById('auth-register-view').style.display = 'none';
 }
 
 window.pokazLanding = function() {
-  ukryjWszystko();
+  ukryjWszystkieWidoki();
   document.getElementById('landing-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
 
 window.pokazGlowna = function() {
-  ukryjWszystko();
+  ukryjWszystkieWidoki();
   document.getElementById('main-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
 
 window.pokazLogowanie = function() {
-  ukryjWszystko();
+  ukryjWszystkieWidoki();
   document.getElementById('auth-login-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
 
 window.pokazRejestracje = function() {
-  ukryjWszystko();
+  ukryjWszystkieWidoki();
   document.getElementById('auth-register-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
@@ -117,15 +122,22 @@ window.pokazRejestracje = function() {
 window.rozpocznijCwiczenie = function(gloska) {
   aktualnaGloska = gloska;
   aktualneSlowoIndex = 0;
-  ukryjWszystko();
+  ukryjWszystkieWidoki();
   document.getElementById('exercise-view').style.display = 'block';
   odswiezSlowo();
   window.scrollTo(0, 0);
 };
 
 window.pokazCwiczenie = function() {
-  ukryjWszystko();
+  ukryjWszystkieWidoki();
   document.getElementById('exercise-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+window.pokazRysowanie = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('draw-view').style.display = 'block';
+  setTimeout(inicjujCanvas, 50);
   window.scrollTo(0, 0);
 };
 
@@ -182,15 +194,9 @@ window.rodzicZaliczyl = function() {
 // --- RYSOWANIE ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
 
-window.pokazRysowanie = function() {
-  ukryjWszystko();
-  document.getElementById('draw-view').style.display = 'block';
-  setTimeout(inicjujCanvas, 50);
-  window.scrollTo(0, 0);
-};
-
 function inicjujCanvas() {
   canvas = document.getElementById('drawCanvas');
+  if (!canvas) return;
   ctx = canvas.getContext('2d');
   const rect = canvas.parentElement.getBoundingClientRect();
   canvas.width = rect.width - 20;
@@ -306,6 +312,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// Inicjalizacja
 document.addEventListener('DOMContentLoaded', () => {
   pokazLanding();
   wczytajGwiazdki();
