@@ -7,7 +7,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Fredoka', sans-serif; background: #fdf2f8; color: #1f2937; scroll-behavior: smooth; }
+    body { font-family: 'Fredoka', sans-serif; background: #fdf2f8; color: #1f2937; scroll-behavior: smooth; overflow-x: hidden; }
     
     nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
     .logo { font-weight: 700; font-size: 24px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
@@ -46,7 +46,9 @@
     .lock-icon { position: absolute; top: 10px; right: 10px; font-size: 18px; }
 
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 10px 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .stars-display { font-size: 24px; font-weight: 700; color: #f59e0b; }
+    .stars-display { font-size: 24px; font-weight: 700; color: #f59e0b; transition: transform 0.2s; }
+    .stars-display.pop { transform: scale(1.5); color: #10b981; }
+    
     .draw-btn { background: #8b5cf6; color: white; border: none; padding: 8px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; margin-left: 10px; }
     .memory-btn { background: #f59e0b; color: white; border: none; padding: 8px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; }
 
@@ -73,7 +75,6 @@
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-    /* EKRAN MEMORY */
     #memory-view { display: none; text-align: center; padding: 20px; }
     .memory-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 400px; margin: 0 auto; }
@@ -81,7 +82,7 @@
     .memory-card.flipped { background: white; color: #1f2937; border: 2px solid #ec4899; }
     .memory-card.matched { background: #10b981; color: white; cursor: default; }
 
-    /* Style dla Panelu Rodzica */
+    /* PANEL RODZICA */
     #parent-panel-view { display: none; padding: 20px; }
     .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
     .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
@@ -138,6 +139,23 @@
     .auth-switch span { color: #ec4899; font-weight: 700; }
     #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; }
+
+    /* KONFETTI */
+    .confetti {
+      position: fixed;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      opacity: 0;
+      animation: spadanie 2s ease-in forwards;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    @keyframes spadanie {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -200,7 +218,7 @@
   <!-- EKRAN ĆWICZENIA -->
   <div class="container" id="exercise-view">
     <div class="top-bar">
-      <div class="stars-display">⭐ <span id="stars-count">0</span></div>
+      <div class="stars-display" id="stars-display">⭐ <span id="stars-count">0</span></div>
       <div>
         <button class="draw-btn" onclick="pokazRysowanie()">🎨 Rysuj</button>
         <button class="memory-btn" onclick="pokazMemory()">🎮 Memory</button>
