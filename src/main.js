@@ -29,7 +29,9 @@ let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
-let historiaCwiczen = {};
+
+// STATYSTYKI DO RAPORTU
+let historiaCwiczen = {}; // { 'A': { proby: 5, sukcesy: 3 } }
 let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
@@ -58,7 +60,7 @@ function renderujKafelki() {
 
     card.innerHTML += `
       <span class="big-letter">${gloska}</span>
-      <span class="desc">np. ${przykladoweSlowo}</span>
+      <span class="desc">np. ${przykładoweSlowo}</span>
     `;
     grid.appendChild(card);
   });
@@ -172,10 +174,12 @@ function dodajGwiazdke(ilosc = 1) {
   pokazKonfetti();
   odtworzDzwiek(true);
 
+  // Aktualizacja statystyk
   if (!historiaCwiczen[aktualnaGloska]) {
-    historiaCwiczen[aktualnaGloska] = 0;
+    historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
   }
-  historiaCwiczen[aktualnaGloska]++;
+  historiaCwiczen[aktualnaGloska].proby++;
+  historiaCwiczen[aktualnaGloska].sukcesy++;
 
   const dzisiaj = new Date().toISOString().split('T')[0];
   
@@ -311,19 +315,35 @@ window.pokazPanelRodzica = function() {
   window.scrollTo(0, 0);
   
   let totalWords = 0;
-  for (const gloska in historiaCwiczen) {
-    totalWords += historiaCwiczen[gloska];
-  }
+  let najczestszaGloska = '-';
+  let maxProb = 0;
 
+  // Generowanie Raportu i Historii
   let historyHTML = '';
   const gloskiKlucze = Object.keys(historiaCwiczen);
+  
   if (gloskiKlucze.length === 0) {
     historyHTML = '<div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>';
   } else {
     gloskiKlucze.forEach(gloska => {
-      const ilosc = historiaCwiczen[gloska];
-      historyHTML += `<div class="history-item"><span>Głoska: <strong>${gloska}</strong></span> <span>${ilosc} razy</span></div>`;
+      const dane = historiaCwiczen[gloska];
+      const sukcesy = dane.sukcesy || 0;
+      const proby = dane.proby || 0;
+      totalWords += sukcesy;
+      
+      if (proby > maxProb) {
+        maxProb = proby;
+        najczestszaGloska = gloska;
+      }
+
+      historyHTML += `<div class="history-item"><span>Głoska: <strong>${gloska}</strong></span> <span>${sukcesy}/${proby} udanych prób</span></div>`;
     });
+  }
+
+  // Raport tekstowy
+  let raportTekst = "Zacznij ćwiczyć, aby zobaczyć raport!";
+  if (totalWords > 0) {
+    raportTekst = `W tym tygodniu Twoje dziecko poprawnie wypowiedziało ${totalWords} słów. Najczęściej ćwiczyło głoskę ${najczestszaGloska}. Świetna robota!`;
   }
 
   renderujPanelRodzica({
@@ -331,7 +351,8 @@ window.pokazPanelRodzica = function() {
     streak: streak,
     celTygodniowy: celTygodniowy,
     totalWords: totalWords,
-    historiaHTML: historyHTML
+    historiaHTML: historyHTML,
+    raportTekst: raportTekst
   });
 };
 
@@ -381,6 +402,13 @@ function sprawdzWymowe(uslyszaneSlowo) {
     hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz: ${doceloweSlowo}`;
     hint.className = 'mic-hint error';
     odtworzDzwiek(false);
+    
+    // Zapisujemy nieudaną próbę
+    if (!historiaCwiczen[aktualnaGloska]) {
+      historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
+    }
+    historiaCwiczen[aktualnaGloska].proby++;
+    zapiszDaneDoBazy();
   }
 }
 
