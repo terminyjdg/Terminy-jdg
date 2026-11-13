@@ -38,7 +38,7 @@
 
     #main-view { display: none; }
     .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; margin-top: 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
     .letter-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 8px 0 #fbcfe8; border: 2px solid #fbcfe8; transition: transform 0.1s; position: relative; }
     .letter-card:active { transform: translateY(4px); box-shadow: 0 4px 0 #fbcfe8; }
     .letter-card .big-letter { font-size: 48px; font-weight: 700; color: #db2777; margin-bottom: 5px; display: block; }
@@ -64,7 +64,6 @@
     .mic-hint.success { color: #10b981; }
     .mic-hint.error { color: #ef4444; }
     
-    /* NOWE PRZYCISKI NAGRYWANIA */
     .nagrywanie-tools { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
     .nagrywanie-btn { background: #8b5cf6; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 15px; display: flex; align-items: center; gap: 5px; }
     .odsluchaj-btn { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 15px; display: none; align-items: center; gap: 5px; }
@@ -87,6 +86,9 @@
     .memory-card { background: #ec4899; border-radius: 10px; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 30px; cursor: pointer; color: transparent; user-select: none; transition: background 0.2s, transform 0.2s; }
     .memory-card.flipped { background: white; color: #1f2937; border: 2px solid #ec4899; }
     .memory-card.matched { background: #10b981; color: white; cursor: default; }
+
+    /* EKRAN HISTORYJEK */
+    #historyjki-view { display: none; padding: 20px; }
 
     /* PANEL RODZICA (style) */
     #parent-panel-view { display: none; padding: 20px; }
@@ -219,6 +221,9 @@
   <div class="container" id="main-view">
     <div class="welcome-text">Wybierz głoskę do ćwiczenia:</div>
     <div class="grid" id="gloski-grid"></div>
+    
+    <!-- PRZYCISK KREATOR HISTORYJEK -->
+    <button class="main-cta" style="background: #8b5cf6; margin-top: 10px;" onclick="pokazHistoryjki()">📖 Kreator Historyjek</button>
   </div>
 
   <!-- EKRAN ĆWICZENIA -->
@@ -235,7 +240,6 @@
       <div class="word-text" id="ex-word">RAK</div>
     </div>
     
-    <!-- MIKROFON I NAGRYWANIE -->
     <button class="mic-btn" id="mic-button" onclick="nagrajIWymow()">🎤</button>
     <div class="mic-hint" id="mic-hint">Kliknij i powiedz słowo!</div>
 
@@ -280,6 +284,9 @@
     </div>
     <div class="memory-grid" id="memory-grid"></div>
   </div>
+
+  <!-- EKRAN HISTORYJEK (PUSTY KONTENER) -->
+  <div class="container" id="historyjki-view"></div>
 
   <!-- PANEL RODZICA (PUSTY KONTENER) -->
   <div class="container" id="parent-panel-view"></div>
