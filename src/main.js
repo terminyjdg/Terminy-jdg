@@ -6,6 +6,7 @@ import { renderujPanelRodzica } from './panel.js';
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
+import { startMatma, wyjdzZMatmy } from './matma.js'; // IMPORT MATMY
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -277,7 +278,7 @@ if (SpeechRecognition) {
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
   document.getElementById('landing-view').style.display = 'none';
-  document.getElementById('menu-view').style.display = 'none'; // DODANE
+  document.getElementById('menu-view').style.display = 'none';
   document.getElementById('main-view').style.display = 'none';
   document.getElementById('exercise-view').style.display = 'none';
   document.getElementById('draw-view').style.display = 'none';
@@ -286,9 +287,9 @@ function ukryjWszystkieWidoki() {
   document.getElementById('auth-register-view').style.display = 'none';
   document.getElementById('parent-panel-view').style.display = 'none';
   document.getElementById('historyjki-view').style.display = 'none';
+  document.getElementById('math-view').style.display = 'none'; // DODANE
 }
 
-// NOWA FUNKCJA: Pokazuje Menu Wyboru
 window.pokazMenu = function() {
   ukryjWszystkieWidoki();
   document.getElementById('menu-view').style.display = 'block';
@@ -338,7 +339,6 @@ window.pokazCwiczenie = function() {
 window.pokazRysowanie = function() {
   ukryjWszystkieWidoki();
   
-  // Zabezpieczenie: Jeśli wchodzimy z menu i nie ma wybranego słowa, ładujemy domyślne
   if (!slowa[aktualnaGloska] || !slowa[aktualnaGloska][aktualneSlowoIndex]) {
     aktualnaGloska = 'A';
     aktualneSlowoIndex = 0;
@@ -351,8 +351,6 @@ window.pokazRysowanie = function() {
 };
 
 window.wrocZRysowania = function() {
-  // Jeśli wcześniej weszliśmy z ćwiczenia, wracamy do ćwiczenia
-  // Jeśli z menu (nie ma załadowanego słowa w tle), wracamy do menu
   if (slowa[aktualnaGloska] && slowa[aktualnaGloska][aktualneSlowoIndex]) {
     pokazCwiczenie();
   } else {
@@ -385,6 +383,20 @@ window.pokazHistoryjki = function() {
     zapiszDaneDoBazy();
   });
 };
+
+// --- NOWA FUNKCJA DO MATMY ---
+window.uruchomMatme = function(dzialanie) {
+  ukryjWszystkieWidoki();
+  startMatma(dzialanie, () => {
+    dodajGwiazdke(1);
+    // Aktualizacja licznika na ekranie gry
+    setTimeout(() => {
+      document.getElementById('math-stars-count').innerText = gwiazdki;
+    }, 100);
+  });
+};
+
+window.wyjdzZMatmy = wyjdzZMatmy; // Eksportujemy funkcję wyjścia z modułu
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
@@ -567,7 +579,6 @@ window.wyczyscCanvas = function() {
   if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
-
 // --- PAYWALL I AUTORYZACJA ---
 window.pokazPaywall = function() {
   document.getElementById('paywall-modal').style.display = 'flex';
@@ -581,7 +592,7 @@ window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    pokazMenu(); // Zmienione z pokazGlowna na pokazMenu
+    pokazMenu();
   } catch (error) {
     alert("Błąd logowania Google: " + error.message);
   }
@@ -608,7 +619,7 @@ window.obsluzLogowanie = async function() {
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    pokazMenu(); // Zmienione z pokazGlowna na pokazMenu
+    pokazMenu();
   } catch (error) {
     msg.textContent = error.message; msg.style.color = '#dc2626';
   }
