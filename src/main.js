@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore"; // Dodano Firestore
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -13,6 +14,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app); // Inicjalizacja bazy
 
 // --- SŁOWNIKI SŁÓW ---
 const slowa = {
@@ -27,24 +29,41 @@ let aktualneSlowoIndex = 0;
 let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
+let aktualnyUzytkownik = null;
 
-// --- ZAPIS GWIAZDEK ---
-function wczytajGwiazdki() {
-  const zapisane = localStorage.getItem('gadula_gwiazdki');
-  if (zapisane) {
-    gwiazdki = parseInt(zapisane);
-    document.getElementById('stars-count').textContent = gwiazdki;
+// --- ZAPIS GWIAZDEK DO FIREBASE ---
+async function zapiszGwiazdkiDoBazy() {
+  if (aktualnyUzytkownik) {
+    try {
+      await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
+        gwiazdki: gwiazdki,
+        email: aktualnyUzytkownik.email
+      }, { merge: true });
+      console.log("Zapisano gwiazdki w chmurze.");
+    } catch (e) {
+      console.error("Błąd zapisu do bazy:", e);
+    }
   }
 }
 
-function zapiszGwiazdki() {
-  localStorage.setItem('gadula_gwiazdki', gwiazdki);
+async function wczytajGwiazdkiZbazy() {
+  if (aktualnyUzytkownik) {
+    try {
+      const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid));
+      if (docSnap.exists()) {
+        gwiazdki = docSnap.data().gwiazdki || 0;
+        document.getElementById('stars-count').textContent = gwiazdki;
+      }
+    } catch (e) {
+      console.error("Błąd odczytu z bazy:", e);
+    }
+  }
 }
 
 function dodajGwiazdke() {
   gwiazdki++;
   document.getElementById('stars-count').textContent = gwiazdki;
-  zapiszGwiazdki();
+  zapiszGwiazdkiDoBazy(); // Zapisujemy od razu do chmury
 }
 
 // Sprawdzenie, czy przeglądarka wspiera rozpoznawanie mowy
@@ -183,7 +202,6 @@ function sprawdzWymowe(uslyszaneSlowo) {
   }
 }
 
-// --- FUNKCJA DLA RODZICA ---
 window.rodzicZaliczyl = function() {
   const hint = document.getElementById('mic-hint');
   hint.textContent = 'Zaliczone przez rodzica! ⭐';
@@ -298,22 +316,27 @@ window.wyloguj = async function() {
   pokazLanding();
 };
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   const loginBtn = document.getElementById('nav-login-btn');
   const userInfo = document.getElementById('nav-user-info');
   const emailDisplay = document.getElementById('user-email-display');
+  
   if (user) {
+    aktualnyUzytkownik = user;
     loginBtn.style.display = 'none';
     userInfo.style.display = 'flex';
     emailDisplay.textContent = user.email.split('@')[0];
+    await wczytajGwiazdkiZbazy(); // Wczytujemy postęp po zalogowaniu
   } else {
+    aktualnyUzytkownik = null;
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
+    // Resetujemy gwiazdki dla nowego użytkownika
+    gwiazdki = 0;
+    document.getElementById('stars-count').textContent = '0';
   }
 });
 
-// Inicjalizacja
 document.addEventListener('DOMContentLoaded', () => {
   pokazLanding();
-  wczytajGwiazdki();
 });
