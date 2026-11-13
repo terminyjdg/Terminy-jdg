@@ -70,11 +70,12 @@ function aktualizujStatusPro(user) {
   }
 }
 
-window.sprawdzDostepPro = function() {
+window.sprawdzDostepPro = function(akcja) {
   if (czyMaPro) {
-    const dzialanie = prompt("Wybierz działanie do testów (dodawanie, odejmowanie, mnozenie, dzielenie):", "dodawanie");
-    if (dzialanie) {
-      uruchomMatme(dzialanie);
+    if (akcja === 'zgadnij') {
+      alert("Gra 'Zgadnij dźwięk' wkrótce! Spróbuj matematyki.");
+    } else {
+      uruchomMatme(akcja);
     }
   } else {
     pokazPaywall();
@@ -683,7 +684,6 @@ onAuthStateChanged(auth, async (user) => {
     panelBtn.style.display = 'block';
     emailDisplay.textContent = user.email.split('@')[0];
     
-    // Sprawdzanie czy to konto PRO
     aktualizujStatusPro(user);
 
     await wczytajDaneZbazy();
