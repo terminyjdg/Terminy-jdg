@@ -63,6 +63,12 @@
     .mic-hint { font-size: 16px; color: #6b7280; font-weight: 600; margin-bottom: 10px; min-height: 24px; }
     .mic-hint.success { color: #10b981; }
     .mic-hint.error { color: #ef4444; }
+    
+    /* NOWE PRZYCISKI NAGRYWANIA */
+    .nagrywanie-tools { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .nagrywanie-btn { background: #8b5cf6; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+    .odsluchaj-btn { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 15px; display: none; align-items: center; gap: 5px; }
+
     .parent-check-btn { background: #f3f4f6; color: #4b5563; border: 1px dashed #cbd5e1; padding: 8px 15px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; margin-bottom: 20px; display: inline-block; }
     .word-nav { display: flex; justify-content: center; gap: 15px; }
     .word-nav button { background: #fbcfe8; color: #db2777; border: none; padding: 10px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; }
@@ -82,7 +88,7 @@
     .memory-card.flipped { background: white; color: #1f2937; border: 2px solid #ec4899; }
     .memory-card.matched { background: #10b981; color: white; cursor: default; }
 
-    /* PANEL RODZICA */
+    /* PANEL RODZICA (style) */
     #parent-panel-view { display: none; padding: 20px; }
     .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
     .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
@@ -228,8 +234,16 @@
       <div class="word-image" id="ex-image">🦀</div>
       <div class="word-text" id="ex-word">RAK</div>
     </div>
+    
+    <!-- MIKROFON I NAGRYWANIE -->
     <button class="mic-btn" id="mic-button" onclick="nagrajIWymow()">🎤</button>
     <div class="mic-hint" id="mic-hint">Kliknij i powiedz słowo!</div>
+
+    <div class="nagrywanie-tools">
+      <button class="nagrywanie-btn" id="btn-nagraj">🎙️ Nagraj</button>
+      <button class="odsluchaj-btn" id="btn-odsluchaj">🔊 Odsłuchaj</button>
+    </div>
+
     <button class="parent-check-btn" onclick="rodzicZaliczyl()">Rodzic: Dobrze powiedziane</button>
     <div class="word-nav">
       <button onclick="nastepneSlowo()">Następne słowo →</button>
