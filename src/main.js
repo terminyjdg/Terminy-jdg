@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -31,78 +31,51 @@ let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
-let czyDaneWczytane = false; // NOWA BLOKADA
 
-// --- ZAPIS GWIAZDEK DO FIREBASE ---
+// --- FUNKCJE BAZY DANYCH ---
 async function zapiszGwiazdkiDoBazy() {
-  if (aktualnyUzytkownik && czyDaneWczytane) {
+  if (aktualnyUzytkownik) {
     try {
-      const userRef = doc(db, "users", aktualnyUzytkownik.uid);
-      // Używamy updateDoc, które jest bezpieczniejsze dla istniejących pól
-      await updateDoc(userRef, {
-        gwiazdki: gwiazdki
-      });
-      console.log("Zapisano gwiazdki:", gwiazdki);
+      await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
+        gwiazdki: gwiazdki,
+        email: aktualnyUzytkownik.email
+      }, { merge: true });
     } catch (e) {
-      console.error("Błąd zapisu do bazy (prawdopodobnie dokument nie istnieje):", e);
-      // Jeśli dokument nie istnieje, tworzymy go
-      try {
-        await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-          gwiazdki: gwiazdki,
-          email: aktualnyUzytkownik.email
-        }, { merge: true });
-      } catch (err) {
-        console.error("Błąd tworzenia dokumentu:", err);
-      }
+      console.error("Błąd zapisu do bazy:", e);
     }
   }
 }
 
-// --- ODCZYT GWIAZDEK Z FIREBASE ---
 async function wczytajGwiazdkiZbazy() {
   if (aktualnyUzytkownik) {
     try {
-      // Wymuszamy pobranie z serwera, ignorując cache
-      const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid), { source: 'server' });
-      
+      const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid));
       if (docSnap.exists()) {
-        const dane = docSnap.data();
-        gwiazdki = dane.gwiazdki !== undefined ? dane.gwiazdki : 0;
+        gwiazdki = docSnap.data().gwiazdki || 0;
       } else {
-        // Jeśli dokument nie istnieje, tworzymy go z zerem
         gwiazdki = 0;
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           email: aktualnyUzytkownik.email
         });
       }
-      
       document.getElementById('stars-count').textContent = gwiazdki;
-      czyDaneWczytane = true; // Odblokowujemy zapis
     } catch (e) {
       console.error("Błąd odczytu z bazy:", e);
-      // W razie błędu sieci, pokazujemy 0, ale nie blokujemy na wieki
-      gwiazdki = 0;
-      document.getElementById('stars-count').textContent = 0;
-      czyDaneWczytane = true; 
     }
   }
 }
 
 function dodajGwiazdke() {
   if (czySlowoZaliczone) return;
-  if (!czyDaneWczytane) {
-    console.warn("Dane jeszcze się nie wczytały, czekam...");
-    return;
-  }
-  
   czySlowoZaliczone = true;
+  
   gwiazdki++;
   document.getElementById('stars-count').textContent = gwiazdki;
   zapiszGwiazdkiDoBazy();
 }
 
-// Sprawdzenie, czy przeglądarka wspiera rozpoznawanie mowy
+// --- RESZTA KODU (MIKROFON, NAWIGACJA, RYSOWANIE) ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
   recognition = new SpeechRecognition();
@@ -140,7 +113,6 @@ if (SpeechRecognition) {
   };
 }
 
-// --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
   document.getElementById('landing-view').style.display = 'none';
   document.getElementById('main-view').style.display = 'none';
@@ -148,6 +120,7 @@ function ukryjWszystkieWidoki() {
   document.getElementById('draw-view').style.display = 'none';
   document.getElementById('auth-login-view').style.display = 'none';
   document.getElementById('auth-register-view').style.display = 'none';
+  document.getElementById('parent-panel-view').style.display = 'none';
 }
 
 window.pokazLanding = function() {
@@ -196,6 +169,16 @@ window.pokazRysowanie = function() {
   window.scrollTo(0, 0);
 };
 
+window.pokazPanelRodzica = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('parent-panel-view').style.display = 'block';
+  window.scrollTo(0, 0);
+  
+  // Wczytujemy statystyki do panelu
+  document.getElementById('parent-total-stars').textContent = gwiazdki;
+  // Tutaj w przyszłości dodamy liczenie słów
+};
+
 function odswiezSlowo() {
   const slowoObj = slowa[aktualnaGloska][aktualneSlowoIndex];
   document.getElementById('ex-image').textContent = slowoObj.image;
@@ -212,10 +195,9 @@ window.nastepneSlowo = function() {
   odswiezSlowo();
 };
 
-// --- MIKROFON ---
 window.nagrajIWymow = function() {
   if (!recognition) {
-    alert("Twoja przeglądarka nie wspiera rozpoznawania mowy. Spróbuj w Chrome na Androidzie.");
+    alert("Twoja przeglądarka nie wspiera rozpoznawania mowy.");
     return;
   }
   try { recognition.stop(); } catch(e) {}
@@ -250,7 +232,6 @@ window.rodzicZaliczyl = function() {
   dodajGwiazdke();
 };
 
-// --- RYSOWANIE ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
 
 function inicjujCanvas() {
@@ -305,7 +286,6 @@ window.wyczyscCanvas = function() {
   if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
-// --- PAYWALL ---
 window.pokazPaywall = function() {
   document.getElementById('paywall-modal').style.display = 'flex';
 };
@@ -314,7 +294,6 @@ window.zamknijPaywall = function() {
   document.getElementById('paywall-modal').style.display = 'none';
 };
 
-// --- LOGOWANIE FIREBASE ---
 window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
   try {
@@ -360,21 +339,21 @@ window.wyloguj = async function() {
 onAuthStateChanged(auth, async (user) => {
   const loginBtn = document.getElementById('nav-login-btn');
   const userInfo = document.getElementById('nav-user-info');
+  const panelBtn = document.getElementById('nav-panel-btn');
   const emailDisplay = document.getElementById('user-email-display');
   
   if (user) {
     aktualnyUzytkownik = user;
-    czyDaneWczytane = false; // Blokujemy zapis na czas wczytywania
     loginBtn.style.display = 'none';
     userInfo.style.display = 'flex';
+    panelBtn.style.display = 'block';
     emailDisplay.textContent = user.email.split('@')[0];
-    
     await wczytajGwiazdkiZbazy();
   } else {
     aktualnyUzytkownik = null;
-    czyDaneWczytane = false;
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
+    panelBtn.style.display = 'none';
     gwiazdki = 0;
     document.getElementById('stars-count').textContent = '0';
   }
