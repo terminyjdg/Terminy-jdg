@@ -12,6 +12,7 @@
     nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
     .logo { font-weight: 700; font-size: 24px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
     .nav-btn { background: white; color: #ec4899; border: none; padding: 10px 15px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .nav-btn-panel { background: #fbcfe8; color: #831843; border: none; padding: 8px 12px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 13px; margin-right: 10px; display: none; }
     .user-info { color: white; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
     .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 12px; }
 
@@ -19,7 +20,6 @@
     .hero { background: linear-gradient(135deg, #db2777 0%, #ec4899 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 15px; line-height: 1.2; }
     .hero p { font-size: 18px; color: #fbcfe8; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
-    
     .main-cta { display: inline-block; width: 100%; max-width: 350px; padding: 18px; background: #10b981; color: white; border-radius: 20px; font-weight: 700; font-size: 22px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: transform 0.2s; }
     .main-cta:hover { transform: translateY(-2px); }
 
@@ -30,7 +30,6 @@
     .feature-item { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 6px solid #ec4899; }
     .feature-item h3 { font-size: 18px; color: #831843; margin-bottom: 5px; }
     .feature-item p { font-size: 15px; color: #6b7280; line-height: 1.5; }
-    
     .premium-box { background: #831843; padding: 30px 20px; border-radius: 20px; color: white; text-align: center; margin-bottom: 40px; }
     .premium-box h2 { font-size: 24px; margin-bottom: 10px; }
     .premium-box p { font-size: 16px; color: #fbcfe8; margin-bottom: 20px; }
@@ -54,12 +53,10 @@
     .word-display { background: white; border-radius: 30px; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .word-image { font-size: 80px; margin-bottom: 10px; }
     .word-text { font-size: 36px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 2px; }
-    
     .mic-btn { background: #10b981; color: white; border: none; width: 100px; height: 100px; border-radius: 50%; font-size: 40px; cursor: pointer; box-shadow: 0 8px 0 #059669; transition: transform 0.1s; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
     .mic-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #059669; }
     .mic-btn.listening { animation: pulse 1s infinite; background: #ef4444; box-shadow: 0 8px 0 #b91c1c; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
     .mic-hint { font-size: 16px; color: #6b7280; font-weight: 600; margin-bottom: 10px; min-height: 24px; }
     .mic-hint.success { color: #10b981; }
     .mic-hint.error { color: #ef4444; }
@@ -73,6 +70,17 @@
     .tools { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+
+    /* PANEL RODZICA */
+    #parent-panel-view { display: none; padding: 20px; }
+    .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+    .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .stat-box { background: #fdf2f8; padding: 15px; border-radius: 15px; border: 1px solid #fbcfe8; }
+    .stat-box h3 { font-size: 14px; color: #6b7280; margin-bottom: 5px; }
+    .stat-box .value { font-size: 28px; font-weight: 700; color: #db2777; }
+    .stats-card p { color: #4b5563; font-size: 15px; line-height: 1.5; margin-top: 15px; }
+    .back-to-app-btn { display: block; width: 100%; padding: 15px; background: #ec4899; color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; margin-top: 20px; }
 
     #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal-content { background: white; padding: 30px 20px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -92,7 +100,6 @@
     .auth-switch { font-size: 14px; color: #6b7280; cursor: pointer; }
     .auth-switch span { color: #ec4899; font-weight: 700; }
     #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
-
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; }
   </style>
 </head>
@@ -100,7 +107,10 @@
 
   <nav>
     <a href="#" class="logo" onclick="pokazLanding()">🐶 Gaduła</a>
-    <button class="nav-btn" id="nav-login-btn" onclick="pokazLogowanie()">Zaloguj / Zapisz postęp</button>
+    <div style="display: flex; align-items: center;">
+      <button class="nav-btn-panel" id="nav-panel-btn" onclick="pokazPanelRodzica()">📊 Panel Rodzica</button>
+      <button class="nav-btn" id="nav-login-btn" onclick="pokazLogowanie()">Zaloguj</button>
+    </div>
     <div class="user-info" id="nav-user-info" style="display: none;">
       <span id="user-email-display">Zalogowany</span>
       <button class="logout-btn" onclick="wyloguj()">Wyloguj</button>
@@ -203,6 +213,37 @@
       <div class="color-btn" style="background: #000000;" onclick="zmienKolor('#000000')"></div>
     </div>
     <button class="clear-btn" onclick="wyczyscCanvas()">Wyczyść tablicę</button>
+  </div>
+
+  <!-- PANEL RODZICA (STATYSTYKI) -->
+  <div class="container" id="parent-panel-view">
+    <h1 style="text-align: center; color: #831843; margin-bottom: 20px;">Panel Rodzica</h1>
+    
+    <div class="stats-card">
+      <h2>Ogólne statystyki</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <h3>Zdobyte gwiazdki</h3>
+          <div class="value" id="parent-total-stars">0</div>
+        </div>
+        <div class="stat-box">
+          <h3>Zaliczone słowa</h3>
+          <div class="value" id="parent-words-count">0</div>
+        </div>
+      </div>
+      <p>Gwiazdki zdobywane są za poprawne wypowiedzenie słów lub zaliczenie przez rodzica. Zachęcaj dziecko do codziennych ćwiczeń!</p>
+    </div>
+
+    <div class="stats-card">
+      <h2>Jak ćwiczyć z dzieckiem?</h2>
+      <p>1. Usiądź z dzieckiem w cichym miejscu.<br>
+         2. Kliknij wybraną głoskę (np. R).<br>
+         3. Poproś dziecko, aby głośno powiedziało słowo (np. RAK).<br>
+         4. Jeśli mikrofon nie zadziała, kliknij "Rodzic: Dobrze powiedziane".<br>
+         5. Świętujcie razem każdą zdobytą gwiazdkę! ⭐</p>
+    </div>
+
+    <button class="back-to-app-btn" onclick="pokazGlowna()">← Wróć do ćwiczeń</button>
   </div>
 
   <!-- LOGOWANIE / REJESTRACJA -->
