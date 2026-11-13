@@ -5,7 +5,7 @@ import { bazaSlow } from './dane.js';
 import { renderujPanelRodzica } from './panel.js'; 
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
-import { startHistoryjki } from './historyjki.js'; // IMPORT HISTORYJEK
+import { startHistoryjki } from './historyjki.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -37,7 +37,7 @@ let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 let odznaki = {}; 
-let historyjki = []; // NOWA TABLICA
+let historyjki = [];
 
 // --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
@@ -82,7 +82,7 @@ async function zapiszDaneDoBazy() {
         ostatniaData: ostatniaDataCwiczenia,
         celTygodniowy: celTygodniowy,
         odznaki: odznaki,
-        historyjki: historyjki // ZAPIS HISTORYJEK
+        historyjki: historyjki 
       }, { merge: true });
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
@@ -102,7 +102,7 @@ async function wczytajDaneZbazy() {
         ostatniaDataCwiczenia = dane.ostatniaData || null;
         celTygodniowy = dane.celTygodniowy || 0;
         odznaki = dane.odznaki || {};
-        historyjki = dane.historyjki || []; // ODCZYT HISTORYJEK
+        historyjki = dane.historyjki || []; 
       } else {
         gwiazdki = 0;
         historiaCwiczen = {};
@@ -233,11 +233,10 @@ function dodajGwiazdke(ilosc = 1) {
   }
 
   sprawdzOdznaki(); 
-  
   zapiszDaneDoBazy();
 }
 
-// --- RESZTA KODU ---
+// --- ROZPOZNAWANIE MOWY ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
   recognition = new SpeechRecognition();
@@ -275,8 +274,10 @@ if (SpeechRecognition) {
   };
 }
 
+// --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
   document.getElementById('landing-view').style.display = 'none';
+  document.getElementById('menu-view').style.display = 'none'; // DODANE
   document.getElementById('main-view').style.display = 'none';
   document.getElementById('exercise-view').style.display = 'none';
   document.getElementById('draw-view').style.display = 'none';
@@ -286,6 +287,13 @@ function ukryjWszystkieWidoki() {
   document.getElementById('parent-panel-view').style.display = 'none';
   document.getElementById('historyjki-view').style.display = 'none';
 }
+
+// NOWA FUNKCJA: Pokazuje Menu Wyboru
+window.pokazMenu = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('menu-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
 
 window.pokazLanding = function() {
   ukryjWszystkieWidoki();
@@ -329,9 +337,27 @@ window.pokazCwiczenie = function() {
 
 window.pokazRysowanie = function() {
   ukryjWszystkieWidoki();
+  
+  // Zabezpieczenie: Jeśli wchodzimy z menu i nie ma wybranego słowa, ładujemy domyślne
+  if (!slowa[aktualnaGloska] || !slowa[aktualnaGloska][aktualneSlowoIndex]) {
+    aktualnaGloska = 'A';
+    aktualneSlowoIndex = 0;
+    odswiezSlowo();
+  }
+
   document.getElementById('draw-view').style.display = 'block';
   setTimeout(inicjujCanvas, 50);
   window.scrollTo(0, 0);
+};
+
+window.wrocZRysowania = function() {
+  // Jeśli wcześniej weszliśmy z ćwiczenia, wracamy do ćwiczenia
+  // Jeśli z menu (nie ma załadowanego słowa w tle), wracamy do menu
+  if (slowa[aktualnaGloska] && slowa[aktualnaGloska][aktualneSlowoIndex]) {
+    pokazCwiczenie();
+  } else {
+    pokazMenu();
+  }
 };
 
 window.pokazMemory = function() {
@@ -476,6 +502,7 @@ window.rodzicZaliczyl = function() {
   dodajGwiazdke(1);
 };
 
+// --- RYSOWANIE ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
 
 function inicjujCanvas() {
@@ -540,6 +567,8 @@ window.wyczyscCanvas = function() {
   if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
+
+// --- PAYWALL I AUTORYZACJA ---
 window.pokazPaywall = function() {
   document.getElementById('paywall-modal').style.display = 'flex';
 };
@@ -552,7 +581,7 @@ window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    pokazGlowna();
+    pokazMenu(); // Zmienione z pokazGlowna na pokazMenu
   } catch (error) {
     alert("Błąd logowania Google: " + error.message);
   }
@@ -579,7 +608,7 @@ window.obsluzLogowanie = async function() {
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    pokazGlowna();
+    pokazMenu(); // Zmienione z pokazGlowna na pokazMenu
   } catch (error) {
     msg.textContent = error.message; msg.style.color = '#dc2626';
   }
