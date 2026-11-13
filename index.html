@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gaduła - Rozwój i Zabawa dla Dzieci</title>
+  <!-- Cache buster - wymusza pobranie nowej wersji -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Gaduła - Wersja Testowa</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Fredoka', sans-serif; background: #fdf2f8; color: #1f2937; scroll-behavior: smooth; overflow-x: hidden; }
+    /* CZERWONE TŁO TESTOWE */
+    body { font-family: 'Fredoka', sans-serif; background: red; color: #1f2937; scroll-behavior: smooth; overflow-x: hidden; }
     
     nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
     .logo { font-weight: 700; font-size: 24px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
@@ -109,7 +114,7 @@
     /* NOWY EKRAN: KREATOR HISTORYJEK */
     #historyjki-view { display: none; padding-top: 20px; text-align: center; }
     .historyjki-plansza { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-    .historyjki-slot { width: 100px; height: 100px; border-radius: 20px; border: 3px dashed #fbcfe8; display: flex; justify-content: center; align-items: center; font-size: 50px; transition: all 0.3s; }
+    .historyjki-slot { width: 100px; height: 100px; border-radius: 20px; border: 3px dashed #fbcfe8; display: flex; justify-content: center; align-items: center; font-size: 50px; transition: all 0.3s; background: white; }
     .historyjki-baza { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
     .historyjki-obrazek-btn { width: 60px; height: 60px; font-size: 35px; border-radius: 15px; border: 2px solid #fbcfe8; background: #fdf2f8; cursor: pointer; transition: transform 0.1s; display: flex; justify-content: center; align-items: center; }
     .historyjki-obrazek-btn:active { transform: scale(0.9); }
@@ -501,6 +506,7 @@
     </div>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
+  <!-- SKRYPT Z CACHE BUSTEREM -->
+  <script type="module" src="/src/main.js?v=2"></script>
 </body>
 </html>
