@@ -72,7 +72,7 @@
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-    /* PANEL RODZICA */
+    /* Style dla Panelu Rodzica (są teraz w panel.js, ale zostawiamy je tutaj, żeby JS mógł ich użyć) */
     #parent-panel-view { display: none; padding: 20px; }
     .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
     .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
@@ -87,13 +87,19 @@
     .album-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px; }
     .sticker { font-size: 50px; opacity: 0.2; filter: grayscale(100%); transition: all 0.3s; }
     .sticker.unlocked { opacity: 1; filter: grayscale(0%); transform: scale(1.2); text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-    /* STREAK */
     .streak-box { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
     .streak-box h2 { font-size: 20px; margin-bottom: 5px; }
     .streak-number { font-size: 48px; font-weight: 700; line-height: 1; }
     .streak-desc { font-size: 14px; margin-top: 5px; opacity: 0.9; }
-
+    .mission-box { background: #eff6ff; border: 2px solid #3b82f6; padding: 20px; border-radius: 20px; margin-bottom: 20px; text-align: center; }
+    .mission-box h2 { color: #1e3a8a; font-size: 20px; margin-bottom: 10px; }
+    .mission-box p { color: #4b5563; font-size: 15px; margin-bottom: 15px; }
+    .mission-input-group { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+    .mission-input-group input { width: 80px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; text-align: center; }
+    .mission-input-group button { background: #3b82f6; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .progress-bar-container { background: #dbeafe; height: 20px; border-radius: 10px; overflow: hidden; margin-bottom: 5px; }
+    .progress-bar-fill { background: #3b82f6; height: 100%; width: 0%; transition: width 0.3s; }
+    .progress-text { font-size: 14px; color: #1e40af; font-weight: 600; }
     .back-to-app-btn { display: block; width: 100%; padding: 15px; background: #ec4899; color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; margin-top: 20px; }
 
     #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -222,64 +228,8 @@
     <button class="clear-btn" onclick="wyczyscCanvas()">Wyczyść tablicę</button>
   </div>
 
-  <!-- PANEL RODZICA (STATYSTYKI) -->
-  <div class="container" id="parent-panel-view">
-    <h1 style="text-align: center; color: #831843; margin-bottom: 20px;">Panel Rodzica</h1>
-    
-    <!-- NOWA SEKCJA: STREAK -->
-    <div class="streak-box">
-      <h2>🔥 Wyzwanie Dnia</h2>
-      <div class="streak-number" id="streak-count">0</div>
-      <div class="streak-desc">dni z rzędu</div>
-    </div>
-
-    <div class="stats-card">
-      <h2>Ogólne statystyki</h2>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <h3>Zdobyte gwiazdki</h3>
-          <div class="value" id="parent-total-stars">0</div>
-        </div>
-        <div class="stat-box">
-          <h3>Zaliczone słowa</h3>
-          <div class="value" id="parent-words-count">0</div>
-        </div>
-      </div>
-      <p>Gwiazdki zdobywane są za poprawne wypowiedzenie słów lub zaliczenie przez rodzica.</p>
-    </div>
-
-    <!-- ALBUM NAKLEJEK -->
-    <div class="stats-card">
-      <h2>Album Naklejek</h2>
-      <p>Zbieraj gwiazdki, aby odblokować wszystkie naklejki!</p>
-      <div class="album-grid" id="album-grid">
-        <div class="sticker" id="sticker-1">🦁</div>
-        <div class="sticker" id="sticker-2">🚀</div>
-        <div class="sticker" id="sticker-3">🦄</div>
-        <div class="sticker" id="sticker-4">🐉</div>
-        <div class="sticker" id="sticker-5">🍦</div>
-        <div class="sticker" id="sticker-6">🏆</div>
-      </div>
-    </div>
-
-    <div class="stats-card">
-      <h2>Ostatnio ćwiczone głoski</h2>
-      <div class="history-list" id="parent-history-list">
-        <div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>
-      </div>
-    </div>
-
-    <div class="stats-card">
-      <h2>Jak ćwiczyć z dzieckiem?</h2>
-      <p>1. Usiądź z dzieckiem w cichym miejscu.<br>
-         2. Kliknij wybraną głoskę (np. R).<br>
-         3. Poproś dziecko, aby głośno powiedziało słowo (np. RAK).<br>
-         4. Jeśli mikrofon nie zadziała, kliknij "Rodzic: Dobrze powiedziane".<br>
-         5. Świętujcie razem każdą zdobytą gwiazdkę! ⭐</p>
-    </div>
-
-    <button class="back-to-app-btn" onclick="pokazGlowna()">← Wróć do ćwiczeń</button>
-  </div>
+  <!-- PANEL RODZICA (PUSTY KONTENER) -->
+  <div class="container" id="parent-panel-view"></div>
 
   <!-- LOGOWANIE / REJESTRACJA -->
   <div id="auth-login-view">
