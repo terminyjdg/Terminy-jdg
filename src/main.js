@@ -7,7 +7,6 @@ import { startMemory } from './gra-memory.js';
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
-// NOWY IMPORT
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek } from './zgadnij-dzwiek.js';
 
 const firebaseConfig = {
@@ -49,7 +48,7 @@ let statystykiGier = {
   odejmowanie: 0,
   mnozenie: 0,
   dzielenie: 0,
-  zgadnij: 0 // DODANO STATYSTYKĘ DLA DŹWIĘKÓW
+  zgadnij: 0
 };
 
 // --- SYSTEM PRO (TEST) ---
@@ -85,6 +84,7 @@ function aktualizujStatusPro(user) {
 window.sprawdzDostepPro = function(akcja) {
   if (czyMaPro) {
     if (akcja === 'zgadnij') {
+      // NAPRAWIONO: Zamiast alertu uruchamiamy grę
       uruchomZgadnij();
     } else {
       uruchomMatme(akcja);
@@ -336,7 +336,6 @@ function odejmijGwiazdkeMatma() {
   }
 }
 
-// NOWE FUNKCJE DLA ZGADNIJ DŹWIĘK
 function dodajGwiazdkeZgadnij() {
   gwiazdki += 1;
   gwiazdkiWTygodniu += 1; 
@@ -420,7 +419,7 @@ function ukryjWszystkieWidoki() {
   document.getElementById('parent-panel-view').style.display = 'none';
   document.getElementById('historyjki-view').style.display = 'none';
   document.getElementById('math-view').style.display = 'none';
-  document.getElementById('zgadnij-view').style.display = 'none'; // DODANO
+  document.getElementById('zgadnij-view').style.display = 'none';
 }
 
 window.pokazMenu = function() {
@@ -519,7 +518,6 @@ window.pokazHistoryjki = function() {
   });
 };
 
-// FUNKCJE URUCHAMIAJĄCE GRY
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
   startMatma(dzialanie, (rodzajGry) => {
@@ -543,7 +541,7 @@ window.nastepneZadanie = nastepneZadanie;
 
 window.wyjdzZZgadnij = wyjdzZZgadnij;
 window.nastepneZgadnij = nastepnePytanie;
-window.odtworzZgadnijDzwiek = odtworzDzwiek; // Eksportujemy funkcję do przycisku głośnika
+window.odtworzZgadnijDzwiek = odtworzDzwiek;
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
