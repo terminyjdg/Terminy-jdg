@@ -5,7 +5,6 @@ import { bazaSlow } from './dane.js';
 import { renderujPanelRodzica } from './panel.js'; 
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
-// IMPORTUJEMY NOWE FUNKCJE Z HISTORYJEK
 import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke, nagrajHistoryjke, odtworzNagranie } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
@@ -41,7 +40,7 @@ let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 let odznaki = {}; 
-let historyjki = []; // Tutaj zapisujemy ułożone historyjki
+let historyjki = []; 
 
 let statystykiGier = {
   mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0
@@ -396,7 +395,7 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
-  ['landing-view', 'menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'auth-login-view', 'auth-register-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view'].forEach(id => {
+  ['landing-view', 'menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -422,15 +421,18 @@ window.pokazGlowna = function() {
   renderujKafelki();
 };
 
+// NAPRAWIONE FUNKCJE LOGOWANIA (wymuszają display: flex zamiast block)
 window.pokazLogowanie = function() {
   ukryjWszystkieWidoki();
-  document.getElementById('auth-login-view').style.display = 'block';
+  const el = document.getElementById('auth-login-view');
+  el.style.display = 'flex'; 
   window.scrollTo(0, 0);
 };
 
 window.pokazRejestracje = function() {
   ukryjWszystkieWidoki();
-  document.getElementById('auth-register-view').style.display = 'block';
+  const el = document.getElementById('auth-register-view');
+  el.style.display = 'flex';
   window.scrollTo(0, 0);
 };
 
@@ -492,9 +494,7 @@ window.pokazHistoryjki = function() {
   document.getElementById('historyjki-view').style.display = 'block';
   window.scrollTo(0, 0);
   
-  // Uruchamiamy kreator
   startHistoryjki((daneHistoryjki) => {
-    // Zapisujemy historyjkę (obrazki + audio) w bazie
     historyjki.push(daneHistoryjki);
     zapiszDaneDoBazy();
   });
@@ -525,7 +525,6 @@ window.wyjdzZZgadnij = wyjdzZZgadnij;
 window.nastepneZgadnij = nastepnePytanie;
 window.odtworzZgadnijDzwiek = odtworzDzwiekLektora; 
 
-// EKSPORT FUNKCJI HISTORYJEK
 window.wyjdzZHistoryjek = wyjdzZHistoryjek;
 window.wyczyscHistoryjke = wyczyscHistoryjke;
 window.zapiszHistoryjke = zapiszHistoryjke;
@@ -718,7 +717,8 @@ window.wyczyscCanvas = function() {
 
 // --- PAYWALL I AUTORYZACJA ---
 window.pokazPaywall = function() {
-  document.getElementById('paywall-modal').style.display = 'flex';
+  const el = document.getElementById('paywall-modal');
+  el.style.display = 'flex';
 };
 
 window.zamknijPaywall = function() {
