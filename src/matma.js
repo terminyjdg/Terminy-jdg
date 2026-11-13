@@ -20,7 +20,6 @@ export function startMatma(rodzaj, onSukces) {
     };
     document.getElementById('math-title').innerText = tytuly[rodzaj];
     
-    // Pobieramy aktualną liczbę gwiazdek z głównego widoku
     const currentStars = document.getElementById('stars-count').innerText;
     document.getElementById('math-stars-count').innerText = currentStars;
     
@@ -33,6 +32,9 @@ export function wyjdzZMatmy() {
 }
 
 function generujZadanie() {
+    // Resetujemy blokadę, aby można było zdobyć kolejną gwiazdkę
+    window.czySlowoZaliczone = false;
+    
     document.getElementById('math-next-btn').style.display = 'none';
     let a, b, dzialanieZnak, poprawnaOdpowiedz;
     let maxZakres = 10;
@@ -92,7 +94,6 @@ function sprawdzOdpowiedz(odp, btn) {
         btn.style.background = '#10b981';
         btn.style.color = 'white';
         
-        // Dźwięk sukcesu
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'sine';
@@ -102,13 +103,10 @@ function sprawdzOdpowiedz(odp, btn) {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.3);
 
-        // Przekazujemy sukces do main.js (dodanie gwiazdki, konfetti, zapis)
         if (callbackSukces) callbackSukces();
         
-        // Aktualizacja licznika na ekranie po chwili
         setTimeout(() => {
             document.getElementById('math-stars-count').innerText = document.getElementById('stars-count').innerText;
-            // Pokazujemy przycisk "Dalej" zamiast automatycznie przechodzić
             document.getElementById('math-next-btn').style.display = 'inline-block';
         }, 500);
 
@@ -116,7 +114,6 @@ function sprawdzOdpowiedz(odp, btn) {
         btn.style.background = '#ef4444';
         btn.style.color = 'white';
         
-        // Dźwięk błędu
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'sawtooth';
@@ -133,7 +130,6 @@ function sprawdzOdpowiedz(odp, btn) {
             }
         });
 
-        // Po błędzie pokazujemy przycisk Dalej po 2 sekundach
         setTimeout(() => {
             document.getElementById('math-next-btn').style.display = 'inline-block';
         }, 2000);
