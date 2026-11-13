@@ -7,7 +7,8 @@ import { startMemory } from './gra-memory.js';
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
-import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek } from './zgadnij-dzwiek.js';
+// ZMIENIONO NAZWĘ IMPORTU, ABY NIE KOLIDOWAŁA Z FUNKCJĄ LOKALNĄ
+import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -208,6 +209,7 @@ function pokazKonfetti() {
   }
 }
 
+// TO JEST TWOJA LOKALNA FUNKCJA DŹWIĘKOWA (sukces/błąd)
 function odtworzDzwiek(sukces) {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioCtx.createOscillator();
@@ -540,7 +542,8 @@ window.nastepneZadanie = nastepneZadanie;
 
 window.wyjdzZZgadnij = wyjdzZZgadnij;
 window.nastepneZgadnij = nastepnePytanie;
-window.odtworzZgadnijDzwiek = odtworzDzwiek;
+// PRZYPISUJEMY NOWĄ NAZWĘ DO PRZYCISKU GŁOŚNIKA
+window.odtworzZgadnijDzwiek = odtworzDzwiekLektora; 
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
