@@ -28,10 +28,11 @@ const darmoweGloski = ['A', 'B', 'C'];
 let aktualnaGloska = 'A';
 let aktualneSlowoIndex = 0;
 let gwiazdki = 0;
+let gwiazdkiWTygodniu = 0; // NOWA ZMIENNA
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
-let czySlowoZaliczone = false; // Cofnięte do zwykłej zmiennej lokalnej
+let czySlowoZaliczone = false;
 
 let historiaCwiczen = {}; 
 let streak = 0;
@@ -119,6 +120,7 @@ async function zapiszDaneDoBazy() {
     try {
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
         gwiazdki: gwiazdki,
+        gwiazdkiWTygodniu: gwiazdkiWTygodniu, // ZAPIS NOWEJ ZMIENNEJ
         email: aktualnyUzytkownik.email,
         historia: historiaCwiczen,
         streak: streak,
@@ -140,6 +142,7 @@ async function wczytajDaneZbazy() {
       if (docSnap.exists()) {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
+        gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0; // ODCZYT
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
@@ -148,6 +151,7 @@ async function wczytajDaneZbazy() {
         historyjki = dane.historyjki || []; 
       } else {
         gwiazdki = 0;
+        gwiazdkiWTygodniu = 0;
         historiaCwiczen = {};
         streak = 0;
         ostatniaDataCwiczenia = null;
@@ -156,6 +160,7 @@ async function wczytajDaneZbazy() {
         historyjki = [];
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
+          gwiazdkiWTygodniu: 0,
           email: aktualnyUzytkownik.email,
           historia: {},
           streak: 0,
@@ -237,12 +242,12 @@ function sprawdzOdznaki() {
   }
 }
 
-// Funkcja dla ćwiczeń wymowy (z blokadą)
 function dodajGwiazdke(ilosc = 1) {
   if (czySlowoZaliczone) return;
   czySlowoZaliczone = true;
   
   gwiazdki += ilosc;
+  gwiazdkiWTygodniu += ilosc; // DODAJEMY DO TYGODNIA
   
   const starDisplay = document.getElementById('stars-display');
   if (starDisplay) {
@@ -280,11 +285,10 @@ function dodajGwiazdke(ilosc = 1) {
   zapiszDaneDoBazy();
 }
 
-// NOWA FUNKCJA: Tylko dla matematyki (bez blokad, z natychmiastową aktualizacją)
 function dodajGwiazdkeMatma() {
   gwiazdki += 1;
+  gwiazdkiWTygodniu += 1; // DODAJEMY DO TYGODNIA
   
-  // Aktualizujemy liczniki
   document.getElementById('stars-count').textContent = gwiazdki;
   
   const mathStarDisplay = document.getElementById('math-stars-count');
@@ -427,6 +431,7 @@ window.pokazMemory = function() {
   
   startMemory(bazaSlow, aktualnaGloska, () => {
     gwiazdki += 5;
+    gwiazdkiWTygodniu += 5;
     document.getElementById('stars-count').textContent = gwiazdki;
     pokazKonfetti();
     odtworzDzwiek(true);
@@ -448,8 +453,6 @@ window.pokazHistoryjki = function() {
 
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
-  
-  // Przekazujemy TYLKO NOWĄ funkcję dodającą gwiazdkę dla matmy
   startMatma(dzialanie, () => {
     dodajGwiazdkeMatma(); 
   });
@@ -493,9 +496,12 @@ window.pokazPanelRodzica = function() {
     raportTekst = `W tym tygodniu Twoje dziecko poprawnie wypowiedziało ${totalWords} słów. Najczęściej ćwiczyło głoskę ${najczestszaGloska}. Świetna robota!`;
   }
 
+  // Przekazujemy dane do panelu, w tym nowe gwiazdkiWTygodniu
   renderujPanelRodzica({
     gwiazdki: gwiazdki,
+    gwiazdkiWTygodniu: gwiazdkiWTygodniu,
     streak: streak,
+    dniCwiczen: streak, // Na razie używamy streak jako dni z rzędu
     celTygodniowy: celTygodniowy,
     totalWords: totalWords,
     historiaHTML: historyHTML,
@@ -712,6 +718,7 @@ onAuthStateChanged(auth, async (user) => {
     userInfo.style.display = 'none';
     panelBtn.style.display = 'none';
     gwiazdki = 0;
+    gwiazdkiWTygodniu = 0;
     historiaCwiczen = {};
     streak = 0;
     ostatniaDataCwiczenia = null;
