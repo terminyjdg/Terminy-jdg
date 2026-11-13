@@ -71,7 +71,7 @@ let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
-let historiaCwiczen = {}; // Obiekt do przechowywania historii (np. { 'R': 5, 'S': 3 })
+let historiaCwiczen = {};
 
 // --- FUNKCJE BAZY DANYCH ---
 async function zapiszDaneDoBazy() {
@@ -229,9 +229,16 @@ window.pokazPanelRodzica = function() {
   
   document.getElementById('parent-total-stars').textContent = gwiazdki;
   
+  // Obliczamy łączną liczbę zaliczonych słów
+  let totalWords = 0;
+  for (const gloska in historiaCwiczen) {
+    totalWords += historiaCwiczen[gloska];
+  }
+  document.getElementById('parent-words-count').textContent = totalWords;
+
   // Generowanie historii
   const historyList = document.getElementById('parent-history-list');
-  historyList.innerHTML = ''; // Czyszczenie
+  historyList.innerHTML = ''; 
   
   const gloskiKlucze = Object.keys(historiaCwiczen);
   if (gloskiKlucze.length === 0) {
