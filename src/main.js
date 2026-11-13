@@ -28,7 +28,7 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 
-// --- ZAPIS GWIAZDEK (Local Storage) ---
+// --- ZAPIS GWIAZDEK ---
 function wczytajGwiazdki() {
   const zapisane = localStorage.getItem('gadula_gwiazdki');
   if (zapisane) {
@@ -59,7 +59,6 @@ if (SpeechRecognition) {
     document.getElementById('mic-button').classList.add('listening');
     document.getElementById('mic-hint').textContent = 'Słucham... Powiedz słowo!';
     document.getElementById('mic-hint').className = 'mic-hint';
-    
     timeoutId = setTimeout(() => {
       recognition.stop();
       document.getElementById('mic-hint').textContent = 'Spróbuj jeszcze raz lub poproś rodzica o zaliczenie.';
@@ -88,8 +87,14 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystko() {
-  document.querySelectorAll('.container, #auth-login-view, #auth-register-view').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.container, #landing-view, #auth-login-view, #auth-register-view').forEach(el => el.style.display = 'none');
 }
+
+window.pokazLanding = function() {
+  ukryjWszystko();
+  document.getElementById('landing-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
 
 window.pokazGlowna = function() {
   ukryjWszystko();
@@ -145,7 +150,6 @@ window.nagrajIWymow = function() {
     alert("Twoja przeglądarka nie wspiera rozpoznawania mowy. Spróbuj w Chrome na Androidzie.");
     return;
   }
-  
   try { recognition.stop(); } catch(e) {}
   setTimeout(() => { 
     try { recognition.start(); } catch(e) { 
@@ -157,7 +161,6 @@ window.nagrajIWymow = function() {
 function sprawdzWymowe(uslyszaneSlowo) {
   const doceloweSlowo = slowa[aktualnaGloska][aktualneSlowoIndex].word;
   const hint = document.getElementById('mic-hint');
-  
   if (uslyszaneSlowo.includes(doceloweSlowo)) {
     hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
     hint.className = 'mic-hint success';
@@ -286,7 +289,7 @@ window.obsluzLogowanie = async function() {
 
 window.wyloguj = async function() {
   await signOut(auth);
-  pokazGlowna();
+  pokazLanding();
 };
 
 onAuthStateChanged(auth, (user) => {
@@ -304,6 +307,6 @@ onAuthStateChanged(auth, (user) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  pokazGlowna();
+  pokazLanding();
   wczytajGwiazdki();
 });
