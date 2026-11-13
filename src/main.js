@@ -18,8 +18,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const slowa = bazaSlow;
-
-// TYLKO TE GŁOSKI SĄ DARMOWE - RESZTA JEST ZABLOKOWANA
 const darmoweGloski = ['A', 'B', 'C']; 
 
 let aktualnaGloska = 'R';
@@ -36,7 +34,6 @@ function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
   grid.innerHTML = ''; 
 
-  // Pobieramy klucze i SORTUJEMY ALFABETYCZNIE
   const posortowaneGloski = Object.keys(slowa).sort();
 
   posortowaneGloski.forEach(gloska => {
@@ -238,6 +235,14 @@ window.pokazPanelRodzica = function() {
       historyList.appendChild(div);
     });
   }
+
+  // ODBLOKOWYWANIE NAKLEJEK
+  if (gwiazdki >= 10) document.getElementById('sticker-1').classList.add('unlocked');
+  if (gwiazdki >= 25) document.getElementById('sticker-2').classList.add('unlocked');
+  if (gwiazdki >= 50) document.getElementById('sticker-3').classList.add('unlocked');
+  if (gwiazdki >= 100) document.getElementById('sticker-4').classList.add('unlocked');
+  if (gwiazdki >= 200) document.getElementById('sticker-5').classList.add('unlocked');
+  if (gwiazdki >= 500) document.getElementById('sticker-6').classList.add('unlocked');
 };
 
 function odswiezSlowo() {
