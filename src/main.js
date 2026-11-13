@@ -41,7 +41,6 @@ let celTygodniowy = 0;
 let odznaki = {}; 
 let historyjki = [];
 
-// NOWY OBIEKT DO STATYSTYK
 let statystykiGier = {
   mowa: 0,
   dodawanie: 0,
@@ -130,7 +129,7 @@ async function zapiszDaneDoBazy() {
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
         gwiazdki: gwiazdki,
         gwiazdkiWTygodniu: gwiazdkiWTygodniu,
-        statystykiGier: statystykiGier, // ZAPIS NOWYCH STATYSTYK
+        statystykiGier: statystykiGier,
         email: aktualnyUzytkownik.email,
         historia: historiaCwiczen,
         streak: streak,
@@ -153,7 +152,7 @@ async function wczytajDaneZbazy() {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
         gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0;
-        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 }; // ODCZYT
+        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 };
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
@@ -261,7 +260,7 @@ function dodajGwiazdke(ilosc = 1) {
   
   gwiazdki += ilosc;
   gwiazdkiWTygodniu += ilosc;
-  statystykiGier.mowa += ilosc; // DODAJEMY DO MOWY
+  statystykiGier.mowa += ilosc; 
   
   const starDisplay = document.getElementById('stars-display');
   if (starDisplay) {
@@ -299,13 +298,12 @@ function dodajGwiazdke(ilosc = 1) {
   zapiszDaneDoBazy();
 }
 
-// Funkcja dla matematyki (dodaje informację, z jakiego działania była gwiazdka)
 function dodajGwiazdkeMatma(rodzajGry) {
   gwiazdki += 1;
   gwiazdkiWTygodniu += 1; 
   
   if (statystykiGier[rodzajGry] !== undefined) {
-    statystykiGier[rodzajGry] += 1; // ZWIĘKSZAMY LICZNIK DLA KONKRETNEGO DZIAŁANIA
+    statystykiGier[rodzajGry] += 1;
   }
   
   document.getElementById('stars-count').textContent = gwiazdki;
@@ -319,6 +317,22 @@ function dodajGwiazdkeMatma(rodzajGry) {
   odtworzDzwiek(true);
   sprawdzOdznaki();
   zapiszDaneDoBazy();
+}
+
+// NOWA FUNKCJA DO ODEJMOWANIA GWIAZDEK ZA BŁĄD
+function odejmijGwiazdkeMatma() {
+  if (gwiazdki > 0) {
+    gwiazdki -= 1;
+    if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
+    
+    document.getElementById('stars-count').textContent = gwiazdki;
+    const mathStarDisplay = document.getElementById('math-stars-count');
+    if (mathStarDisplay) {
+      mathStarDisplay.textContent = gwiazdki;
+    }
+    
+    zapiszDaneDoBazy();
+  }
 }
 
 // --- ROZPOZNAWANIE MOWY ---
@@ -472,9 +486,11 @@ window.pokazHistoryjki = function() {
 
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
+  // Dodajemy trzeci argument: funkcję do odejmowania gwiazdek za błąd
   startMatma(dzialanie, (rodzajGry) => {
-    // Odbieramy informację, z jakiej gry była gwiazdka (dodawanie, odejmowanie itp.)
     dodajGwiazdkeMatma(rodzajGry); 
+  }, () => {
+    odejmijGwiazdkeMatma();
   });
 };
 
@@ -519,7 +535,7 @@ window.pokazPanelRodzica = function() {
   renderujPanelRodzica({
     gwiazdki: gwiazdki,
     gwiazdkiWTygodniu: gwiazdkiWTygodniu,
-    statystykiGier: statystykiGier, // PRZEKAZUJEMY NOWE STATYSTYKI
+    statystykiGier: statystykiGier,
     streak: streak,
     dniCwiczen: streak,
     celTygodniowy: celTygodniowy,
