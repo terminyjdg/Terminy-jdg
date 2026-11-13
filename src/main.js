@@ -6,7 +6,7 @@ import { renderujPanelRodzica } from './panel.js';
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
-import { startMatma, wyjdzZMatmy } from './matma.js'; // IMPORT MATMY
+import { startMatma, wyjdzZMatmy } from './matma.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -39,6 +39,47 @@ let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 let odznaki = {}; 
 let historyjki = [];
+
+// --- SYSTEM PRO (TEST) ---
+let czyMaPro = false;
+const emailePro = ["harasimowiczmichal5@gmail.com"]; 
+
+function aktualizujStatusPro(user) {
+  if (user && emailePro.includes(user.email)) {
+    czyMaPro = true;
+    const proCards = ['card-zgadnij', 'card-dodawanie', 'card-odejmowanie', 'card-mnozenie', 'card-dzielenie'];
+    proCards.forEach(id => {
+      const card = document.getElementById(id);
+      if (card) {
+        const badge = card.querySelector('.pro-badge');
+        if (badge) badge.style.display = 'none'; 
+        card.style.opacity = '1'; 
+      }
+    });
+  } else {
+    czyMaPro = false;
+    const proCards = ['card-zgadnij', 'card-dodawanie', 'card-odejmowanie', 'card-mnozenie', 'card-dzielenie'];
+    proCards.forEach(id => {
+      const card = document.getElementById(id);
+      if (card) {
+        const badge = card.querySelector('.pro-badge');
+        if (badge) badge.style.display = 'block';
+        card.style.opacity = '0.8';
+      }
+    });
+  }
+}
+
+window.sprawdzDostepPro = function() {
+  if (czyMaPro) {
+    const dzialanie = prompt("Wybierz działanie do testów (dodawanie, odejmowanie, mnozenie, dzielenie):", "dodawanie");
+    if (dzialanie) {
+      uruchomMatme(dzialanie);
+    }
+  } else {
+    pokazPaywall();
+  }
+};
 
 // --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
@@ -287,13 +328,14 @@ function ukryjWszystkieWidoki() {
   document.getElementById('auth-register-view').style.display = 'none';
   document.getElementById('parent-panel-view').style.display = 'none';
   document.getElementById('historyjki-view').style.display = 'none';
-  document.getElementById('math-view').style.display = 'none'; // DODANE
+  document.getElementById('math-view').style.display = 'none';
 }
 
 window.pokazMenu = function() {
   ukryjWszystkieWidoki();
   document.getElementById('menu-view').style.display = 'block';
   window.scrollTo(0, 0);
+  aktualizujStatusPro(aktualnyUzytkownik);
 };
 
 window.pokazLanding = function() {
@@ -384,19 +426,17 @@ window.pokazHistoryjki = function() {
   });
 };
 
-// --- NOWA FUNKCJA DO MATMY ---
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
   startMatma(dzialanie, () => {
     dodajGwiazdke(1);
-    // Aktualizacja licznika na ekranie gry
     setTimeout(() => {
       document.getElementById('math-stars-count').innerText = gwiazdki;
     }, 100);
   });
 };
 
-window.wyjdzZMatmy = wyjdzZMatmy; // Eksportujemy funkcję wyjścia z modułu
+window.wyjdzZMatmy = wyjdzZMatmy;
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
@@ -642,6 +682,10 @@ onAuthStateChanged(auth, async (user) => {
     userInfo.style.display = 'flex';
     panelBtn.style.display = 'block';
     emailDisplay.textContent = user.email.split('@')[0];
+    
+    // Sprawdzanie czy to konto PRO
+    aktualizujStatusPro(user);
+
     await wczytajDaneZbazy();
   } else {
     aktualnyUzytkownik = null;
@@ -656,6 +700,8 @@ onAuthStateChanged(auth, async (user) => {
     odznaki = {};
     historyjki = [];
     document.getElementById('stars-count').textContent = '0';
+    
+    aktualizujStatusPro(null);
     renderujKafelki();
   }
 });
