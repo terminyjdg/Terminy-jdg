@@ -7,6 +7,8 @@ import { startMemory } from './gra-memory.js';
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
+// NOWY IMPORT
+import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek } from './zgadnij-dzwiek.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -46,7 +48,8 @@ let statystykiGier = {
   dodawanie: 0,
   odejmowanie: 0,
   mnozenie: 0,
-  dzielenie: 0
+  dzielenie: 0,
+  zgadnij: 0 // DODANO STATYSTYKĘ DLA DŹWIĘKÓW
 };
 
 // --- SYSTEM PRO (TEST) ---
@@ -82,7 +85,7 @@ function aktualizujStatusPro(user) {
 window.sprawdzDostepPro = function(akcja) {
   if (czyMaPro) {
     if (akcja === 'zgadnij') {
-      alert("Gra 'Zgadnij dźwięk' wkrótce! Spróbuj matematyki.");
+      uruchomZgadnij();
     } else {
       uruchomMatme(akcja);
     }
@@ -152,7 +155,7 @@ async function wczytajDaneZbazy() {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
         gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0;
-        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 };
+        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
@@ -162,7 +165,7 @@ async function wczytajDaneZbazy() {
       } else {
         gwiazdki = 0;
         gwiazdkiWTygodniu = 0;
-        statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 };
+        statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
         historiaCwiczen = {};
         streak = 0;
         ostatniaDataCwiczenia = null;
@@ -172,7 +175,7 @@ async function wczytajDaneZbazy() {
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           gwiazdkiWTygodniu: 0,
-          statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 },
+          statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 },
           email: aktualnyUzytkownik.email,
           historia: {},
           streak: 0,
@@ -319,7 +322,6 @@ function dodajGwiazdkeMatma(rodzajGry) {
   zapiszDaneDoBazy();
 }
 
-// NOWA FUNKCJA DO ODEJMOWANIA GWIAZDEK ZA BŁĄD
 function odejmijGwiazdkeMatma() {
   if (gwiazdki > 0) {
     gwiazdki -= 1;
@@ -330,7 +332,39 @@ function odejmijGwiazdkeMatma() {
     if (mathStarDisplay) {
       mathStarDisplay.textContent = gwiazdki;
     }
+    zapiszDaneDoBazy();
+  }
+}
+
+// NOWE FUNKCJE DLA ZGADNIJ DŹWIĘK
+function dodajGwiazdkeZgadnij() {
+  gwiazdki += 1;
+  gwiazdkiWTygodniu += 1; 
+  statystykiGier.zgadnij += 1;
+  
+  document.getElementById('stars-count').textContent = gwiazdki;
+  
+  const zgadnijStarDisplay = document.getElementById('zgadnij-stars-count');
+  if (zgadnijStarDisplay) {
+    zgadnijStarDisplay.textContent = gwiazdki;
+  }
+
+  pokazKonfetti();
+  odtworzDzwiek(true);
+  sprawdzOdznaki();
+  zapiszDaneDoBazy();
+}
+
+function odejmijGwiazdkeZgadnij() {
+  if (gwiazdki > 0) {
+    gwiazdki -= 1;
+    if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
     
+    document.getElementById('stars-count').textContent = gwiazdki;
+    const zgadnijStarDisplay = document.getElementById('zgadnij-stars-count');
+    if (zgadnijStarDisplay) {
+      zgadnijStarDisplay.textContent = gwiazdki;
+    }
     zapiszDaneDoBazy();
   }
 }
@@ -386,6 +420,7 @@ function ukryjWszystkieWidoki() {
   document.getElementById('parent-panel-view').style.display = 'none';
   document.getElementById('historyjki-view').style.display = 'none';
   document.getElementById('math-view').style.display = 'none';
+  document.getElementById('zgadnij-view').style.display = 'none'; // DODANO
 }
 
 window.pokazMenu = function() {
@@ -484,9 +519,9 @@ window.pokazHistoryjki = function() {
   });
 };
 
+// FUNKCJE URUCHAMIAJĄCE GRY
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
-  // Dodajemy trzeci argument: funkcję do odejmowania gwiazdek za błąd
   startMatma(dzialanie, (rodzajGry) => {
     dodajGwiazdkeMatma(rodzajGry); 
   }, () => {
@@ -494,8 +529,21 @@ window.uruchomMatme = function(dzialanie) {
   });
 };
 
+window.uruchomZgadnij = function() {
+  ukryjWszystkieWidoki();
+  startZgadnijDzwiek(() => {
+    dodajGwiazdkeZgadnij();
+  }, () => {
+    odejmijGwiazdkeZgadnij();
+  });
+};
+
 window.wyjdzZMatmy = wyjdzZMatmy;
 window.nastepneZadanie = nastepneZadanie;
+
+window.wyjdzZZgadnij = wyjdzZZgadnij;
+window.nastepneZgadnij = nastepnePytanie;
+window.odtworzZgadnijDzwiek = odtworzDzwiek; // Eksportujemy funkcję do przycisku głośnika
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
@@ -755,7 +803,7 @@ onAuthStateChanged(auth, async (user) => {
     panelBtn.style.display = 'none';
     gwiazdki = 0;
     gwiazdkiWTygodniu = 0;
-    statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0 };
+    statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
     historiaCwiczen = {};
     streak = 0;
     ostatniaDataCwiczenia = null;
