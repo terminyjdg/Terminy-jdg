@@ -133,7 +133,6 @@ function pokazKonfetti() {
 }
 
 function odtworzDzwiek(sukces) {
-  // Prosty dźwięk za pomocą Web Audio API (bez plików)
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
@@ -143,8 +142,8 @@ function odtworzDzwiek(sukces) {
   
   if (sukces) {
     oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-    oscillator.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); // C6
+    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+    oscillator.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); 
   } else {
     oscillator.type = 'sawtooth';
     oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
@@ -164,7 +163,6 @@ function dodajGwiazdke(ilosc = 1) {
   
   gwiazdki += ilosc;
   
-  // Animacja "pop" dla licznika
   const starDisplay = document.getElementById('stars-display');
   starDisplay.classList.add('pop');
   setTimeout(() => starDisplay.classList.remove('pop'), 300);
