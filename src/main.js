@@ -6,7 +6,8 @@ import { renderujPanelRodzica } from './panel.js';
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
-import { startMatma, wyjdzZMatmy } from './matma.js';
+// IMPORTUJEMY TAKŻE NAStepneZadanie
+import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -431,13 +432,17 @@ window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
   startMatma(dzialanie, () => {
     dodajGwiazdke(1);
+    // Resetujemy flagę, żeby kolejna poprawna odpowiedź też dała gwiazdkę
     setTimeout(() => {
-      document.getElementById('math-stars-count').innerText = gwiazdki;
+        czySlowoZaliczone = false; 
     }, 100);
   });
 };
 
 window.wyjdzZMatmy = wyjdzZMatmy;
+
+// UDOSTĘPNIAMY FUNKCJĘ DLA PRZYCISKU "NASTĘPNE ZADANIE"
+window.nastepneZadanie = nastepneZadanie;
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
