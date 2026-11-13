@@ -14,52 +14,106 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// --- NAWIGACJA ---
-window.pokazLanding = function() {
-  document.querySelectorAll('#app-view, #auth-login-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
-  document.getElementById('landing-view').style.display = 'block';
-  window.scrollTo(0, 0);
+// --- SŁOWNIKI SŁÓW ---
+const slowa = {
+  'R': [
+    { image: '🦀', word: 'RAK' },
+    { image: '🚲', word: 'ROWER' },
+    { image: '🐟', word: 'RYBA' },
+    { image: '🌹', word: 'RÓŻA' }
+  ],
+  'S': [
+    { image: '🦉', word: 'SOWA' },
+    { image: '🧀', word: 'SER' },
+    { image: '☀️', word: 'SŁOŃCE' },
+    { image: '🐘', word: 'SŁOŃ' }
+  ],
+  'C': [
+    { image: '🧅', word: 'CEBULA' },
+    { image: '🍋', word: 'CYTRYNA' },
+    { image: '🎯', word: 'CEL' },
+    { image: '🌷', word: 'CUKIER' }
+  ],
+  'L': [
+    { image: '🦁', word: 'LEW' },
+    { image: '🪆', word: 'LALKA' },
+    { image: '🍦', word: 'LODY' },
+    { image: '🌲', word: 'LAS' }
+  ]
 };
 
-window.pokazAplikacje = function() {
-  document.querySelectorAll('#landing-view, #auth-login-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
-  document.getElementById('app-view').style.display = 'block';
+let aktualnaGloska = 'R';
+let aktualneSlowoIndex = 0;
+
+// --- NAWIGACJA ---
+window.pokazGlowna = function() {
+  document.getElementById('main-view').style.display = 'block';
+  document.getElementById('exercise-view').style.display = 'none';
+  document.getElementById('auth-login-view').style.display = 'none';
+  document.getElementById('auth-register-view').style.display = 'none';
   window.scrollTo(0, 0);
-  odswiezDaty();
 };
 
 window.pokazLogowanie = function() {
-  document.querySelectorAll('#landing-view, #app-view, #auth-register-view, #invoice-view').forEach(el => el.style.display = 'none');
-  document.getElementById('auth-login-view').style.display = 'flex';
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('exercise-view').style.display = 'none';
+  document.getElementById('auth-login-view').style.display = 'block';
+  document.getElementById('auth-register-view').style.display = 'none';
   window.scrollTo(0, 0);
 };
 
 window.pokazRejestracje = function() {
-  document.querySelectorAll('#landing-view, #app-view, #auth-login-view, #invoice-view').forEach(el => el.style.display = 'none');
-  document.getElementById('auth-register-view').style.display = 'flex';
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('exercise-view').style.display = 'none';
+  document.getElementById('auth-login-view').style.display = 'none';
+  document.getElementById('auth-register-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
 
-window.pokazFaktury = function() {
-  document.querySelectorAll('#landing-view, #app-view, #auth-login-view, #auth-register-view').forEach(el => el.style.display = 'none');
-  document.getElementById('invoice-view').style.display = 'block';
+// --- LOGIKA ĆWICZENIA ---
+window.rozpocznijCwiczenie = function(gloska) {
+  aktualnaGloska = gloska;
+  aktualneSlowoIndex = 0;
+  
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('exercise-view').style.display = 'block';
+  
+  odswiezSlowo();
   window.scrollTo(0, 0);
 };
 
-window.pokazGlowna = function() {
-  document.getElementById('invoice-view').style.display = 'none';
-  document.getElementById('landing-view').style.display = 'block';
-  window.scrollTo(0, 0);
+function odswiezSlowo() {
+  const slowoObj = slowa[aktualnaGloska][aktualneSlowoIndex];
+  document.getElementById('ex-image').textContent = slowoObj.image;
+  document.getElementById('ex-word').textContent = slowoObj.word;
+  
+  document.getElementById('mic-hint').textContent = 'Kliknij mikrofon i powiedz słowo!';
+  document.getElementById('mic-hint').style.color = '#6b7280';
+}
+
+window.nastepneSlowo = function() {
+  const tablica = slowa[aktualnaGloska];
+  aktualneSlowoIndex = (aktualneSlowoIndex + 1) % tablica.length;
+  odswiezSlowo();
 };
 
-// --- LOGOWANIE FIREBASE (POPUP) ---
+window.symulujNagranie = function() {
+  const hint = document.getElementById('mic-hint');
+  hint.textContent = 'Słucham... 🎤';
+  hint.style.color = '#2563eb';
+  
+  setTimeout(() => {
+    hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
+    hint.style.color = '#10b981';
+  }, 2000);
+};
+
+// --- LOGOWANIE FIREBASE ---
 window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
   try {
-    // Wracamy do popupu, który jest stabilniejszy na telefonach
     const result = await signInWithPopup(auth, provider);
-    document.getElementById('user-email-display').textContent = result.user.email;
-    pokazAplikacje();
+    pokazGlowna();
   } catch (error) {
     alert("Błąd logowania Google: " + error.message);
   }
@@ -89,9 +143,8 @@ window.obsluzLogowanie = async function() {
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
 
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    document.getElementById('user-email-display').textContent = userCredential.user.email;
-    pokazAplikacje();
+    await signInWithEmailAndPassword(auth, email, password);
+    pokazGlowna();
   } catch (error) {
     msg.textContent = error.message; msg.style.color = '#dc2626';
   }
@@ -99,67 +152,25 @@ window.obsluzLogowanie = async function() {
 
 window.wyloguj = async function() {
   await signOut(auth);
-  document.getElementById('user-email-display').textContent = 'Niezalogowany';
-  pokazLanding();
+  pokazGlowna();
 };
 
 onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById('nav-login-btn');
+  const userInfo = document.getElementById('nav-user-info');
+  const emailDisplay = document.getElementById('user-email-display');
+
   if (user) {
-    document.getElementById('user-email-display').textContent = user.email;
+    loginBtn.style.display = 'none';
+    userInfo.style.display = 'flex';
+    emailDisplay.textContent = user.email.split('@')[0]; // Pokazujemy tylko początek maila, żeby było ładniej
+  } else {
+    loginBtn.style.display = 'block';
+    userInfo.style.display = 'none';
   }
 });
 
-// --- RESZTA KODU ---
-window.pokazPaywall = function(funkcja) {
-  const textElem = document.getElementById('paywall-text');
-  if (funkcja === "Generator Faktur") textElem.textContent = "Generator Faktur jest dostępny w planie PRO.";
-  else if (funkcja === "Powiadomienia Push") textElem.textContent = "Powiadomienia Push są dostępne w planie PRO.";
-  else textElem.textContent = "Ta funkcja jest dostępna w planie PRO.";
-  document.getElementById('paywall-modal').style.display = 'flex';
-};
-window.zamknijPaywall = function() { document.getElementById('paywall-modal').style.display = 'none'; };
-window.generujFakture = function() { window.pokazPaywall("Generator Faktur"); };
-
-function obliczDni(dzien) {
-  const dzisiaj = new Date();
-  let termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth(), dzien);
-  if (dzisiaj > termin) termin = new Date(dzisiaj.getFullYear(), dzisiaj.getMonth() + 1, dzien);
-  return Math.ceil((termin - dzisiaj) / (1000 * 60 * 60 * 24));
-}
-
-function odswiezDaty() {
-  const dZus = obliczDni(10), dPit = obliczDni(20), dVat = obliczDni(25);
-  const datas = document.querySelectorAll('.termin-data');
-  if (datas.length >= 3) {
-    datas[0].innerHTML = `Termin: 10. dzień <br><strong style="color:${dZus <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dZus} dni!</strong>`;
-    datas[1].innerHTML = `Termin: 20. dzień <br><strong style="color:${dPit <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dPit} dni!</strong>`;
-    datas[2].innerHTML = `Termin: 25. dzień <br><strong style="color:${dVat <= 3 ? '#dc2626' : '#16a34a'}">Zostało ${dVat} dni!</strong>`;
-  }
-}
-
-window.obliczPodatki = function() {
-  const income = parseFloat(document.getElementById('calc-income').value);
-  const type = document.getElementById('calc-type').value;
-  const resultBox = document.getElementById('calc-result');
-  if (isNaN(income) || income <= 0) { resultBox.style.display = 'none'; return; }
-  resultBox.style.display = 'block';
-  const zus = 1600; let tax = 0, net = 0;
-  if (type === 'liniowy') { tax = (income - zus) * 0.19; net = income - zus - tax; }
-  else if (type === 'ryczalt') { tax = income * 0.12; net = income - zus - tax; }
-  else { tax = (income - zus) * 0.12; net = income - zus - tax; }
-  if (tax < 0) tax = 0; if (net < 0) net = 0;
-  document.getElementById('res-zus').textContent = zus.toLocaleString('pl-PL') + ' zł';
-  document.getElementById('res-tax').textContent = Math.round(tax).toLocaleString('pl-PL') + ' zł';
-  document.getElementById('res-net').textContent = Math.round(net).toLocaleString('pl-PL') + ' zł';
-};
-
-window.obliczPoduszke = function() {
-  const income = parseFloat(document.getElementById('pillow-income').value);
-  const resultBox = document.getElementById('pillow-result');
-  if (isNaN(income) || income <= 0) { resultBox.style.display = 'none'; return; }
-  const zus = 1600; const tax = (income - zus) > 0 ? (income - zus) * 0.12 : 0;
-  const totalTax = zus + tax;
-  document.getElementById('pillow-tax').textContent = Math.round(totalTax).toLocaleString('pl-PL') + ' zł';
-  document.getElementById('pillow-safe').textContent = Math.round(income - totalTax).toLocaleString('pl-PL') + ' zł';
-  resultBox.style.display = 'block';
-};
+// Inicjalizacja
+document.addEventListener('DOMContentLoaded', () => {
+  pokazGlowna();
+});
