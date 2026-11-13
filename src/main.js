@@ -5,7 +5,8 @@ import { bazaSlow } from './dane.js';
 import { renderujPanelRodzica } from './panel.js'; 
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
-import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke } from './historyjki.js';
+// IMPORTUJEMY NOWE FUNKCJE Z HISTORYJEK
+import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke, nagrajHistoryjke, odtworzNagranie } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
 
@@ -492,9 +493,9 @@ window.pokazHistoryjki = function() {
   window.scrollTo(0, 0);
   
   // Uruchamiamy kreator
-  startHistoryjki((obrazki) => {
-    // Zapisujemy historyjkę w bazie
-    historyjki.push(obrazki);
+  startHistoryjki((daneHistoryjki) => {
+    // Zapisujemy historyjkę (obrazki + audio) w bazie
+    historyjki.push(daneHistoryjki);
     zapiszDaneDoBazy();
   });
 };
@@ -528,6 +529,8 @@ window.odtworzZgadnijDzwiek = odtworzDzwiekLektora;
 window.wyjdzZHistoryjek = wyjdzZHistoryjek;
 window.wyczyscHistoryjke = wyczyscHistoryjke;
 window.zapiszHistoryjke = zapiszHistoryjke;
+window.nagrajHistoryjke = nagrajHistoryjke;
+window.odtworzNagranie = odtworzNagranie;
 
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
