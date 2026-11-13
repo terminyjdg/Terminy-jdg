@@ -30,12 +30,13 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
-let czySlowoZaliczone = false; // Flaga blokująca wielokrotne klikanie
+let czySlowoZaliczone = false;
 
 // --- ZAPIS GWIAZDEK DO FIREBASE ---
 async function zapiszGwiazdkiDoBazy() {
   if (aktualnyUzytkownik) {
     try {
+      // Używamy await, żeby mieć pewność, że zapis się powiedzie
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
         gwiazdki: gwiazdki,
         email: aktualnyUzytkownik.email
@@ -46,13 +47,23 @@ async function zapiszGwiazdkiDoBazy() {
   }
 }
 
+// --- ODCZYT GWIAZDEK Z FIREBASE (WYMUSZONY SERWER) ---
 async function wczytajGwiazdkiZbazy() {
   if (aktualnyUzytkownik) {
     try {
-      const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid));
+      // KLUCZOWA ZMIANA: source: 'server' wymusza pobranie świeżych danych, a nie z cache
+      const docSnap = await getDoc(doc(db, "users", aktualnyUzytkownik.uid), { source: 'server' });
+      
       if (docSnap.exists()) {
-        gwiazdki = docSnap.data().gwiazdki || 0;
+        const dane = docSnap.data();
+        // Jeśli w bazie jest pole gwiazdki, ustawiamy je. W przeciwnym razie 0.
+        gwiazdki = dane.gwiazdki !== undefined ? dane.gwiazdki : 0;
         document.getElementById('stars-count').textContent = gwiazdki;
+      } else {
+        // Jeśli dokument nie istnieje, tworzymy go z zerem
+        gwiazdki = 0;
+        document.getElementById('stars-count').textContent = 0;
+        await setDoc(doc(db, "users", aktualnyUzytkownik.uid), { gwiazdki: 0, email: aktualnyUzytkownik.email }, { merge: true });
       }
     } catch (e) {
       console.error("Błąd odczytu z bazy:", e);
@@ -61,7 +72,7 @@ async function wczytajGwiazdkiZbazy() {
 }
 
 function dodajGwiazdke() {
-  if (czySlowoZaliczone) return; // Jeśli już zaliczone, nie dodawaj kolejnej
+  if (czySlowoZaliczone) return;
   czySlowoZaliczone = true;
   
   gwiazdki++;
@@ -170,7 +181,7 @@ function odswiezSlowo() {
   document.getElementById('draw-word').textContent = slowoObj.word;
   document.getElementById('mic-hint').textContent = 'Kliknij i powiedz słowo!';
   document.getElementById('mic-hint').className = 'mic-hint';
-  czySlowoZaliczone = false; // Reset flagi przy nowym słowie
+  czySlowoZaliczone = false;
 }
 
 window.nastepneSlowo = function() {
@@ -335,14 +346,12 @@ onAuthStateChanged(auth, async (user) => {
     userInfo.style.display = 'flex';
     emailDisplay.textContent = user.email.split('@')[0];
     
-    // Wczytujemy gwiazdki z bazy
+    // Wczytujemy dane z serwera przy każdym logowaniu/odświeżeniu
     await wczytajGwiazdkiZbazy();
   } else {
     aktualnyUzytkownik = null;
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
-    
-    // Resetujemy gwiazdki dla niezalogowanych
     gwiazdki = 0;
     document.getElementById('stars-count').textContent = '0';
   }
