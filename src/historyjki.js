@@ -84,6 +84,7 @@ function odswiezPlansze() {
 
     // Zarządzanie przyciskami
     const btnNagraj = document.getElementById('historyjki-nagraj-btn');
+    const btnOdtworz = document.getElementById('historyjki-odtworz-btn');
     const btnZapisz = document.getElementById('historyjki-zapisz-btn');
     const btnWyczysc = document.getElementById('historyjki-wyczysc-btn');
 
@@ -91,12 +92,15 @@ function odswiezPlansze() {
         btnNagraj.style.display = 'block';
         if (nagranieBase64) {
             btnZapisz.style.display = 'block';
+            btnOdtworz.style.display = 'block';
         } else {
             btnZapisz.style.display = 'none';
+            btnOdtworz.style.display = 'none';
         }
     } else {
         btnNagraj.style.display = 'none';
         btnZapisz.style.display = 'none';
+        btnOdtworz.style.display = 'none';
     }
 
     if (aktualnaHistoryjka.length > 0) {
