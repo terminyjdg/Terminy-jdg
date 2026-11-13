@@ -47,23 +47,27 @@
 
     /* Ekran Rysowania (Tablica) */
     #draw-view { display: none; text-align: center; }
-    .canvas-container { background: white; border-radius: 20px; padding: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    canvas { border: 2px dashed #cbd5e1; border-radius: 15px; touch-action: none; width: 100%; max-width: 500px; height: 300px; cursor: crosshair; }
+    .canvas-container { background: white; border-radius: 20px; padding: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+    
+    /* Poprawiony Canvas - responsywny */
+    canvas { 
+      border: 2px dashed #cbd5e1; 
+      border-radius: 15px; 
+      touch-action: none; 
+      width: 100%; 
+      height: 300px; 
+      cursor: crosshair;
+      display: block;
+    }
+
     .tools { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-    /* Sekcja Rodzica */
-    #parent-view { display: none; background: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-    #parent-view h2 { color: #db2777; margin-bottom: 15px; text-align: center; }
-    #parent-view p { margin-bottom: 15px; font-size: 16px; line-height: 1.5; color: #4b5563; }
-    #parent-view .premium-box { background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; border-radius: 15px; text-align: center; margin-top: 20px; }
-    #parent-view .premium-btn { background: #f59e0b; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 10px; }
-
     /* Reklamy (wizualne) */
     .ad-banner { background: #e5e7eb; color: #9ca3af; text-align: center; padding: 15px; border-radius: 10px; font-size: 12px; margin-top: 20px; border: 1px dashed #cbd5e1; }
 
-    /* Logowanie (skopiowane) */
+    /* Logowanie */
     #auth-login-view, #auth-register-view { display: none; padding: 40px 20px; min-height: 80vh; }
     .auth-box { background: white; padding: 30px 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; margin: 0 auto; }
     .auth-box h2 { color: #db2777; margin-bottom: 20px; font-size: 24px; }
@@ -144,7 +148,7 @@
     </div>
 
     <div class="canvas-container">
-      <canvas id="drawCanvas" width="500" height="300"></canvas>
+      <canvas id="drawCanvas"></canvas>
     </div>
 
     <div class="tools">
@@ -162,13 +166,11 @@
     <div class="auth-box">
       <h2>Zaloguj się</h2>
       <div id="login-msg"></div>
-      
       <button class="google-btn" onclick="zalogujPrzezGoogle()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
         Zaloguj przez Google
       </button>
       <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
-
       <input type="email" id="login-email" class="auth-input" placeholder="twój@email.pl" />
       <input type="password" id="login-password" class="auth-input" placeholder="Hasło" />
       <button class="auth-btn" onclick="obsluzLogowanie()">Zaloguj się</button>
@@ -182,13 +184,11 @@
     <div class="auth-box">
       <h2>Utwórz konto</h2>
       <div id="register-msg"></div>
-      
       <button class="google-btn" onclick="zalogujPrzezGoogle()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
         Zarejestruj przez Google
       </button>
       <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
-
       <input type="email" id="register-email" class="auth-input" placeholder="twój@email.pl" />
       <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)" />
       <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
