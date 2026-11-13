@@ -6,7 +6,6 @@ import { renderujPanelRodzica } from './panel.js';
 import { startMemory } from './gra-memory.js'; 
 import { initNagrywanie } from './nagrywanie.js'; 
 import { startHistoryjki } from './historyjki.js';
-// IMPORTUJEMY TAKŻE NAStepneZadanie
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 
 const firebaseConfig = {
@@ -32,7 +31,7 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
-let czySlowoZaliczone = false;
+window.czySlowoZaliczone = false; // Zmienione na window, aby matma.js miała dostęp
 
 let historiaCwiczen = {}; 
 let streak = 0;
@@ -239,8 +238,8 @@ function sprawdzOdznaki() {
 }
 
 function dodajGwiazdke(ilosc = 1) {
-  if (czySlowoZaliczone) return;
-  czySlowoZaliczone = true;
+  if (window.czySlowoZaliczone) return;
+  window.czySlowoZaliczone = true;
   
   gwiazdki += ilosc;
   
@@ -432,16 +431,11 @@ window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
   startMatma(dzialanie, () => {
     dodajGwiazdke(1);
-    // Resetujemy flagę, żeby kolejna poprawna odpowiedź też dała gwiazdkę
-    setTimeout(() => {
-        czySlowoZaliczone = false; 
-    }, 100);
   });
 };
 
 window.wyjdzZMatmy = wyjdzZMatmy;
 
-// UDOSTĘPNIAMY FUNKCJĘ DLA PRZYCISKU "NASTĘPNE ZADANIE"
 window.nastepneZadanie = nastepneZadanie;
 
 window.pokazPanelRodzica = function() {
@@ -507,7 +501,7 @@ function odswiezSlowo() {
   document.getElementById('draw-word').textContent = slowoObj.word;
   document.getElementById('mic-hint').textContent = 'Kliknij i powiedz słowo!';
   document.getElementById('mic-hint').className = 'mic-hint';
-  czySlowoZaliczone = false;
+  window.czySlowoZaliczone = false;
 }
 
 window.nastepneSlowo = function() {
@@ -550,7 +544,7 @@ function sprawdzWymowe(uslyszaneSlowo) {
 }
 
 window.rodzicZaliczyl = function() {
-  if (czySlowoZaliczone) {
+  if (window.czySlowoZaliczone) {
     alert("To słowo zostało już zaliczone! Kliknij 'Następne słowo'.");
     return;
   }
