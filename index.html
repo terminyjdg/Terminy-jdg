@@ -3,350 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TerminyJDG.pl – Twój asystent podatkowy</title>
-  
-  <!-- TWOJE LOGO (FAVICON) -->
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  
-  <!-- Meta tagi dla Facebooka i social mediów -->
-  <meta property="og:title" content="TerminyJDG.pl – Twój asystent podatkowy" />
-  <meta property="og:description" content="Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i obliczaj podatki w jednym miejscu." />
-  <meta property="og:image" content="/favicon.png" />
-  <meta property="og:type" content="website" />
-
+  <title>Gaduła - Trener Wymowy</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+    
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #1f2937; scroll-behavior: smooth; }
+    body { font-family: 'Fredoka', sans-serif; background: #fdf2f8; color: #1f2937; scroll-behavior: smooth; }
     
-    .beta-bar { background: #f59e0b; color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
+    /* Pasek górny */
+    nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+    .logo { font-weight: 700; font-size: 24px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-btn { background: white; color: #ec4899; border: none; padding: 10px 15px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+    /* Ekran startowy */
+    .container { max-width: 600px; margin: 20px auto; padding: 0 20px; }
+    .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; }
     
-    nav { background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
-    .logo { font-weight: 800; font-size: 20px; color: #2563eb; text-decoration: none; }
-    .nav-buttons { display: flex; gap: 10px; }
-    .nav-btn { background: #e5e7eb; color: #1f2937; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
-    .nav-btn-primary { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
-    .nav-btn-faktura { background: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .letter-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 8px 0 #fbcfe8; border: 2px solid #fbcfe8; transition: transform 0.1s; }
+    .letter-card:active { transform: translateY(4px); box-shadow: 0 4px 0 #fbcfe8; }
+    .letter-card .big-letter { font-size: 48px; font-weight: 700; color: #db2777; margin-bottom: 5px; display: block; }
+    .letter-card .desc { font-size: 14px; color: #6b7280; font-weight: 600; }
 
-    #landing-view { display: block; }
-    .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 50px 20px 60px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-    .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
-    .hero p { font-size: 16px; color: #bfdbfe; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    /* Ekran ćwiczenia */
+    #exercise-view { display: none; text-align: center; }
+    .back-btn { background: #f3f4f6; color: #4b5563; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; margin-bottom: 20px; display: inline-block; font-size: 16px; }
     
-    .hero-form-box { background: white; padding: 25px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 450px; margin: 0 auto; text-align: center; }
-    .hero-form-box h3 { color: #1e3a8a; font-size: 20px; margin-bottom: 10px; font-weight: 800; }
-    .hero-form-box p { color: #4b5563; font-size: 14px; margin-bottom: 20px; }
-    .waitlist-form { display: flex; flex-direction: column; gap: 10px; }
-    .waitlist-form input { width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; background: #f8fafc; }
-    .waitlist-form input:focus { border-color: #2563eb; }
-    .waitlist-form button { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-
-    .app-preview-btn { display: inline-block; margin-top: 30px; background: transparent; color: #bfdbfe; border: 1px solid #bfdbfe; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; }
-
-    .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
-    .marketing-section { margin-top: 40px; text-align: center; }
-    .marketing-section h2 { font-size: 24px; font-weight: 800; color: #1e3a8a; margin-bottom: 25px; }
-    .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
-    .feature-item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 4px solid #2563eb; }
-    .feature-item h3 { font-size: 18px; color: #111827; margin-bottom: 5px; }
-    .feature-item p { font-size: 14px; color: #6b7280; }
-
-    .notif-box { background: white; border: 2px solid #10b981; padding: 25px 20px; border-radius: 16px; text-align: center; margin-bottom: 40px; }
-    .notif-box h3 { font-size: 20px; color: #1e3a8a; margin-bottom: 10px; font-weight: 800; }
-    .notif-box p { font-size: 15px; color: #4b5563; margin-bottom: 20px; }
-    .notif-icons { display: flex; justify-content: space-between; gap: 10px; }
-    .notif-icon-item { background: #f0fdf4; padding: 15px 5px; border-radius: 12px; flex: 1; border: 1px solid #bbf7d0; }
-    .notif-icon-item span { display: block; font-size: 24px; margin-bottom: 5px; }
-    .notif-icon-item strong { display: block; color: #166534; font-size: 12px; line-height: 1.2; }
-
-    .premium-box { background: #1e3a8a; padding: 30px 20px; border-radius: 16px; color: white; text-align: center; margin-bottom: 40px; }
-    .premium-box h2 { font-size: 22px; margin-bottom: 10px; }
-    .premium-box p { font-size: 15px; color: #bfdbfe; margin-bottom: 20px; }
-    .premium-price { font-size: 28px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
-    .premium-box .main-cta { background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: 800; width: 100%; max-width: 300px; cursor: pointer; }
-
-    #auth-login-view, #auth-register-view { display: none; flex: 1; align-items: center; justify-content: center; padding: 40px 20px; background: #f3f4f6; min-height: 80vh; }
-    .auth-box { background: white; padding: 30px 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-    .auth-box h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 24px; }
-    .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
-    .auth-btn { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 15px; }
+    .word-display { background: white; border-radius: 30px; padding: 40px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .word-image { font-size: 80px; margin-bottom: 10px; }
+    .word-text { font-size: 36px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 2px; }
     
-    .google-btn { width: 100%; padding: 15px; background: white; color: #1f2937; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-    .google-btn:hover { background: #f9fafb; }
-    
-    .auth-switch { font-size: 14px; color: #6b7280; cursor: pointer; }
-    .auth-switch span { color: #2563eb; font-weight: 600; }
-    #login-msg, #register-msg { color: #dc2626; font-size: 14px; margin-bottom: 15px; min-height: 20px; }
+    /* Mikrofon / Przycisk akcji */
+    .mic-btn { background: #10b981; color: white; border: none; width: 100px; height: 100px; border-radius: 50%; font-size: 40px; cursor: pointer; box-shadow: 0 8px 0 #059669; transition: transform 0.1s; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+    .mic-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #059669; }
+    .mic-hint { font-size: 16px; color: #6b7280; font-weight: 600; }
 
-    #app-view { display: none; background: #f3f4f6; padding-bottom: 40px; }
-    .app-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .back-btn { background: #e5e7eb; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    
-    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .settings-section { background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
-    .settings-title { font-size: 14px; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; }
-    .settings-label { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; cursor: pointer; color: #1e3a8a; }
-    .settings-label input { width: 20px; height: 20px; accent-color: #2563eb; }
+    /* Nawigacja słówek */
+    .word-nav { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+    .word-nav button { background: #fbcfe8; color: #db2777; border: none; padding: 10px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; }
 
-    .termin-card { border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .termin-card strong { color: #1e3a8a; display: block; font-size: 16px; margin-bottom: 4px; }
-    .termin-data { font-size: 14px; color: #4b5563; display: block; }
-    .termin-card input[type="checkbox"] { width: 24px; height: 24px; accent-color: #2563eb; }
-    
-    .ksef-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db; }
-    .ksef-title { font-size: 16px; color: #1e3a8a; margin-bottom: 10px; font-weight: bold; }
-    .ksef-label { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; margin-bottom: 10px; cursor: pointer; }
-    .ksef-label input { width: 20px; height: 20px; margin-top: 2px; accent-color: #2563eb; flex-shrink: 0; }
-
-    .calc-title { font-size: 18px; color: #1e3a8a; margin-bottom: 15px; font-weight: 800; }
-    .calc-group { margin-bottom: 15px; }
-    .calc-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #475569; }
-    .calc-group input, .calc-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: #f8fafc; }
-    .calc-result { margin-top: 20px; padding: 15px; background: #1e3a8a; color: white; border-radius: 10px; display: none; }
-    .calc-result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #3b82f6; padding-bottom: 8px; }
-    .calc-result-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; font-weight: 800; font-size: 18px; color: #10b981; }
-
-    .pillow-input { width: 100%; padding: 15px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 15px; outline: none; }
-    .pillow-result { background: #ecfdf5; border: 1px solid #10b981; padding: 20px; border-radius: 10px; text-align: center; display: none; }
-    .pillow-result h3 { color: #047857; font-size: 16px; margin-bottom: 5px; }
-    .pillow-amount { font-size: 32px; font-weight: 800; color: #059669; margin-bottom: 10px; }
-    .pillow-text { font-size: 14px; color: #4b5563; }
-
-    .push-box { background: #fffbeb; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; text-align: center; }
-    .push-box h3 { font-size: 18px; color: #b45309; margin-bottom: 8px; font-weight: 800; }
-    .push-box p { font-size: 14px; color: #78350f; margin-bottom: 15px; }
-    .push-btn { background: #f59e0b; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; }
-
-    #invoice-view { display: none; padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 60px; }
-    .invoice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .invoice-form { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .invoice-form h2 { font-size: 20px; margin-bottom: 15px; color: #1e3a8a; }
-    .form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-    .form-row input { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
-    .invoice-preview { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; }
-    .invoice-preview h1 { font-size: 24px; color: #1e3a8a; margin-bottom: 20px; text-align: center; }
-    .preview-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .preview-total { font-weight: 800; font-size: 20px; color: #10b981; border-bottom: none; }
-
-    .main-cta { display: inline-block; width: 100%; padding: 18px; background: #10b981; color: white; border-radius: 12px; font-weight: 800; font-size: 18px; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); text-align: center; }
-
-    #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-    .modal-content { background: white; padding: 30px 20px; border-radius: 16px; text-align: center; max-width: 400px; width: 100%; }
-    .modal-content h2 { color: #1e3a8a; margin-bottom: 10px; font-size: 24px; }
-    .modal-content p { color: #6b7280; font-size: 15px; margin-bottom: 20px; }
-    .modal-price { font-size: 32px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
-    .modal-pro-btn { display: block; width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
-    .modal-close { background: #e5e7eb; color: #4b5563; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; }
-
-    footer { text-align: center; padding: 20px; font-size: 12px; color: #9ca3af; display: flex; flex-direction: column; gap: 10px; }
-    footer a { color: #6b7280; text-decoration: none; margin: 0 10px; }
+    /* Ekrany logowania - ukryte, na razie uproszczone */
+    #auth-view { display: none; }
   </style>
 </head>
 <body>
 
-  <div class="beta-bar">🚀 Wersja Beta – testujemy nowe funkcje!</div>
-
   <nav>
-    <a href="#" class="logo">TerminyJDG.pl</a>
-    <div class="nav-buttons">
-      <button class="nav-btn-faktura" onclick="pokazFaktury()">Faktura</button>
-      <button class="nav-btn" onclick="pokazAplikacje()">Aplikacja</button>
-      <button class="nav-btn-primary" id="nav-auth-btn" onclick="pokazLogowanie()">Zaloguj</button>
-    </div>
+    <a href="#" class="logo">🐶 Gaduła</a>
+    <button class="nav-btn" onclick="pokazLogowanie()">Zaloguj / Zapisz postęp</button>
   </nav>
 
-  <!-- STRONA GŁÓWNA -->
-  <div id="landing-view">
-    <div class="hero">
-      <h1>Twój osobisty asystent podatkowy</h1>
-      <p>Koniec z karami za spóźnienia. Śledź terminy ZUS, PIT i VAT, obsługuj KSeF i oblicz swoje podatki w jednym miejscu.</p>
-      
-      <div class="hero-form-box">
-        <h3>Zapisz się na listę oczekujących</h3>
-        <p>Uruchamiamy wersję Beta! Zostaw swój e-mail, aby jako pierwszy otrzymać dostęp do aplikacji.</p>
-        
-        <form action="https://formspree.io/f/mrpqgrpy" method="POST" class="waitlist-form">
-          <input type="email" name="email" placeholder="twój@email.pl" required />
-          <button type="submit">Zapisz mnie na listę</button>
-        </form>
+  <!-- EKRAN GŁÓWNY (WYBÓR GŁOSKI) -->
+  <div class="container" id="main-view">
+    <div class="welcome-text">Wybierz głoskę do ćwiczenia:</div>
+    
+    <div class="grid">
+      <div class="letter-card" onclick="rozpocznijCwiczenie('R')">
+        <span class="big-letter">R</span>
+        <span class="desc">np. RAK, ROWER</span>
       </div>
-
-      <button class="app-preview-btn" onclick="pokazAplikacje()">Zobacz podgląd aplikacji →</button>
-    </div>
-
-    <div class="container">
-      <div class="marketing-section">
-        <h2>Dlaczego TerminyJDG.pl?</h2>
-        <div class="feature-grid">
-          <div class="feature-item"><h3>⏰ Koniec z karami</h3><p>Automatycznie liczymy dni do zapłaty ZUS, PIT i VAT. Widzisz na żywo, ile czasu zostało.</p></div>
-          <div class="feature-item"><h3>💰 Poduszka finansowa</h3><p>Wiesz dokładnie, ile odłożyć na podatki, a ile możesz bezpiecznie wydać na siebie.</p></div>
-        </div>
-
-        <div class="notif-box">
-          <h3>Na pewno nie ominiesz powiadomienia</h3>
-          <p>Dotrzemy do Ciebie z każdej strony, zanim będzie za późno:</p>
-          <div class="notif-icons">
-            <div class="notif-icon-item"><span>📱</span><strong>SMS</strong></div>
-            <div class="notif-icon-item"><span>✉️</span><strong>E-mail</strong></div>
-            <div class="notif-icon-item"><span>🔔</span><strong>Push</strong></div>
-          </div>
-        </div>
-
-        <div class="premium-box">
-          <h2>Odblokuj pełnię możliwości</h2>
-          <p>Wersja PRO daje dostęp do Generatora Faktur, powiadomień SMS oraz Powiadomień Push w przeglądarce.</p>
-          <div class="premium-price">19 zł <span style="font-size:16px; color:#bfdbfe; font-weight:400;">/ mies.</span></div>
-          <button class="main-cta" onclick="pokazPaywall('Ogólny dostęp do funkcji PRO')">Przejdź na PRO</button>
-        </div>
+      <div class="letter-card" onclick="rozpocznijCwiczenie('S')">
+        <span class="big-letter">S</span>
+        <span class="desc">np. SOWA, SER</span>
+      </div>
+      <div class="letter-card" onclick="rozpocznijCwiczenie('C')">
+        <span class="big-letter">C</span>
+        <span class="desc">np. CEBULA, CYTRYNA</span>
+      </div>
+      <div class="letter-card" onclick="rozpocznijCwiczenie('L')">
+        <span class="big-letter">L</span>
+        <span class="desc">np. LEW, LALKA</span>
       </div>
     </div>
   </div>
 
-  <!-- EKRAN LOGOWANIA -->
-  <div id="auth-login-view">
-    <div class="auth-box">
-      <h2>Zaloguj się</h2>
-      <div id="login-msg"></div>
-      
-      <button class="google-btn" onclick="zalogujPrzezGoogle()">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
-        Zaloguj przez Google
-      </button>
-      <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
+  <!-- EKRAN ĆWICZENIA -->
+  <div class="container" id="exercise-view">
+    <button class="back-btn" onclick="pokazGlowna()">← Wróć do głosek</button>
+    
+    <div class="word-display">
+      <div class="word-image" id="ex-image">🦀</div>
+      <div class="word-text" id="ex-word">RAK</div>
+    </div>
 
-      <input type="email" id="login-email" class="auth-input" placeholder="twój@email.pl" />
-      <input type="password" id="login-password" class="auth-input" placeholder="Hasło" />
-      <button class="auth-btn" onclick="obsluzLogowanie()">Zaloguj się</button>
-      <div class="auth-switch" onclick="pokazRejestracje()">Nie masz konta? <span>Zarejestruj się</span></div>
+    <!-- Przycisk imitujący nagrywanie (na razie bez mikrofonu) -->
+    <button class="mic-btn" onclick="symulujNagranie()">🎤</button>
+    <div class="mic-hint" id="mic-hint">Kliknij i powiedz słowo!</div>
+
+    <div class="word-nav">
+      <button onclick="nastepneSlowo()">Następne słowo →</button>
     </div>
   </div>
 
-  <!-- EKRAN REJESTRACJI -->
-  <div id="auth-register-view">
-    <div class="auth-box">
-      <h2>Utwórz konto</h2>
-      <div id="register-msg"></div>
-      
-      <button class="google-btn" onclick="zalogujPrzezGoogle()">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
-        Zarejestruj przez Google
-      </button>
-      <div style="text-align: center; margin-bottom: 15px; color: #9ca3af; font-size: 14px;">lub e-mailem</div>
-
-      <input type="email" id="register-email" class="auth-input" placeholder="twój@email.pl" />
-      <input type="password" id="register-password" class="auth-input" placeholder="Hasło (min. 6 znaków)" />
-      <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
-      <div class="auth-switch" onclick="pokazLogowanie()">Masz już konto? <span>Zaloguj się</span></div>
-    </div>
+  <!-- EKRAN LOGOWANIA (Uproszczony na razie) -->
+  <div id="auth-view" class="container">
+    <button class="back-btn" onclick="pokazGlowna()">← Wróć</button>
+    <h2 style="text-align:center; margin-bottom:20px; color:#831843;">Zaloguj się, aby zapisywać postępy</h2>
+    <p style="text-align:center;">Logowanie jest w trakcie budowy. Wróć wkrótce!</p>
   </div>
-
-  <!-- APLIKACJA -->
-  <div id="app-view">
-    <div class="app-header">
-      <button class="back-btn" onclick="pokazLanding()">← Wróć</button>
-      <span style="font-weight: 800; color: #1e3a8a; font-size: 14px;" id="user-email-display">Niezalogowany</span>
-      <button class="back-btn" style="background: #ef4444; color: white;" onclick="wyloguj()">Wyloguj</button>
-    </div>
-
-    <div class="container">
-      <div class="card">
-        <div class="settings-section">
-          <div class="settings-title">Dostosuj aplikację</div>
-          <label class="settings-label"><input type="checkbox" id="setting-vat" checked /> Jestem podatnikiem VAT</label>
-        </div>
-
-        <h2 style="margin-bottom: 15px; color: #111827; font-size: 20px;">Twój Terminarz</h2>
-        
-        <div class="termin-card"><div><strong>ZUS</strong><span class="termin-data">Termin: 10. dzień</span></div><input type="checkbox" class="tracker-check" id="cb-zus" /></div>
-        <div class="termin-card"><div><strong>PIT (Zaliczka)</strong><span class="termin-data">Termin: 20. dzień</span></div><input type="checkbox" class="tracker-check" id="cb-pit" /></div>
-        <div class="termin-card" id="karta-vat"><div><strong>VAT</strong><span class="termin-data">Termin: 25. dzień</span></div><input type="checkbox" class="tracker-check" id="cb-vat" /></div>
-
-        <div class="ksef-section">
-          <div class="ksef-title">Bieżące obowiązki w KSeF</div>
-          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-1" /><span>Wysłałem wszystkie faktury sprzedaży do KSeF</span></label>
-          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-2" /><span>Pobrałem UPO (Urzędowe Poświadczenie Odbioru)</span></label>
-          <label class="ksef-label"><input type="checkbox" class="ksef-check" id="ksef-3" /><span>Sprawdziłem faktury zakupowe w systemie</span></label>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="calc-title">Kalkulator Podatkowy</div>
-        <div class="calc-group"><label>Twój miesięczny przychód (zł)</label><input type="number" id="calc-income" placeholder="np. 10000" oninput="obliczPodatki()" /></div>
-        <div class="calc-group"><label>Forma opodatkowania</label>
-          <select id="calc-type" onchange="obliczPodatki()">
-            <option value="skala">Skala podatkowa (12% / 32%)</option>
-            <option value="liniowy">Podatek liniowy (19%)</option>
-            <option value="ryczalt">Ryczałt (12% dla IT)</option>
-          </select>
-        </div>
-        <div class="calc-result" id="calc-result">
-          <div class="calc-result-row"><span>Składka ZUS:</span> <span id="res-zus">0 zł</span></div>
-          <div class="calc-result-row"><span>Podatek do zapłaty:</span> <span id="res-tax">0 zł</span></div>
-          <div class="calc-result-row"><span>Zostaje na rękę:</span> <span id="res-net">0 zł</span></div>
-        </div>
-      </div>
-
-      <div class="card" style="background: #ecfdf5; border: 2px solid #10b981;">
-        <h2 style="color: #047857; font-size: 18px; margin-bottom: 10px;">Poduszka Finansowa</h2>
-        <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Wpisz kwotę, jaka właśnie wpłynęła na Twoje konto.</p>
-        <input type="number" class="pillow-input" id="pillow-income" placeholder="Wpisz kwotę (np. 5000)" oninput="obliczPoduszke()" />
-        <div class="pillow-result" id="pillow-result">
-          <h3>Odłóż na podatki:</h3>
-          <div class="pillow-amount" id="pillow-tax">0 zł</div>
-          <div class="pillow-text">Możesz bezpiecznie wydać: <strong id="pillow-safe" style="color: #047857;">0 zł</strong></div>
-        </div>
-      </div>
-
-      <div class="card" style="background: #fffbeb; border: 2px solid #f59e0b;">
-        <h3 style="font-size: 18px; color: #b45309; margin-bottom: 8px; font-weight: 800;">Powiadomienia Push (PRO)</h3>
-        <p style="font-size: 14px; color: #78350f; margin-bottom: 15px;">Otrzymuj powiadomienia na telefon, nawet gdy strona jest zamknięta.</p>
-        <button class="push-btn" onclick="pokazPaywall('Powiadomienia Push')">Włącz powiadomienia Push</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- GENERATOR FAKTUR -->
-  <div id="invoice-view">
-    <div class="invoice-header"><button class="back-btn" onclick="pokazGlowna()">← Wróć</button><h2 style="color: #1e3a8a;">Generator Faktur</h2></div>
-    <div class="invoice-form">
-      <h2>Wpisz dane do faktury</h2>
-      <div class="form-row"><label>Nabywca</label><input type="text" id="inv-buyer" placeholder="np. Firma XYZ" /></div>
-      <div class="form-row"><label>NIP Nabywcy</label><input type="text" id="inv-nip" placeholder="np. 1234567890" /></div>
-      <div class="form-row"><label>Usługa</label><input type="text" id="inv-service" placeholder="np. Usługi IT" /></div>
-      <div class="form-row"><label>Kwota netto (zł)</label><input type="number" id="inv-amount" placeholder="np. 5000" /></div>
-      <button class="main-cta" onclick="generujFakture()">Wygeneruj Fakturę</button>
-    </div>
-    <div class="invoice-preview" id="invoice-preview">
-      <h1>Faktura VAT</h1>
-      <div class="preview-row"><span>Data:</span> <span id="prev-date">-</span></div>
-      <div class="preview-row"><span>Nabywca:</span> <span id="prev-buyer">-</span></div>
-      <div class="preview-row"><span>NIP:</span> <span id="prev-nip">-</span></div>
-      <div class="preview-row"><span>Usługa:</span> <span id="prev-service">-</span></div>
-      <div class="preview-row"><span>Netto:</span> <span id="prev-net">-</span></div>
-      <div class="preview-row"><span>VAT (23%):</span> <span id="prev-vat">-</span></div>
-      <div class="preview-row preview-total"><span>Brutto:</span> <span id="prev-gross">-</span></div>
-      <button class="main-cta" onclick="window.print()" style="background: #2563eb; margin-top: 20px;">Wydrukuj / PDF</button>
-    </div>
-  </div>
-
-  <!-- PAYWALL -->
-  <div id="paywall-modal">
-    <div class="modal-content">
-      <h2>Funkcja Premium</h2>
-      <p id="paywall-text">Ta funkcja jest dostępna w planie PRO.</p>
-      <div class="modal-price">19 zł <span>/ mies.</span></div>
-      <button class="modal-pro-btn" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
-      <button class="modal-close" onclick="zamknijPaywall()">Może później</button>
-    </div>
-  </div>
-
-  <footer>
-  <div>
-    <a href="/regulamin.html">Regulamin</a>
-    <a href="/polityka.html">Polityka Prywatności</a>
-  </div>
-  <div>&copy; 2026 TerminyJDG.pl.</div>
-</footer>
 
   <script type="module" src="/src/main.js"></script>
 </body>
