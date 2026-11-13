@@ -31,7 +31,7 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
-window.czySlowoZaliczone = false;
+let czySlowoZaliczone = false; // Cofnięte do zwykłej zmiennej lokalnej
 
 let historiaCwiczen = {}; 
 let streak = 0;
@@ -237,14 +237,10 @@ function sprawdzOdznaki() {
   }
 }
 
+// Funkcja dla ćwiczeń wymowy (z blokadą)
 function dodajGwiazdke(ilosc = 1) {
-  // Specjalny warunek: jeśli jesteśmy w matematyce, ignorujemy blokadę słowa
-  if (window.czySlowoZaliczone) {
-    // Jeśli blokada jest aktywna, sprawdzamy czy to na pewno my (matma)
-    // W matematyce zawsze chcemy dodać gwiazdkę
-  } else {
-    window.czySlowoZaliczone = true;
-  }
+  if (czySlowoZaliczone) return;
+  czySlowoZaliczone = true;
   
   gwiazdki += ilosc;
   
@@ -281,6 +277,24 @@ function dodajGwiazdke(ilosc = 1) {
   }
 
   sprawdzOdznaki(); 
+  zapiszDaneDoBazy();
+}
+
+// NOWA FUNKCJA: Tylko dla matematyki (bez blokad, z natychmiastową aktualizacją)
+function dodajGwiazdkeMatma() {
+  gwiazdki += 1;
+  
+  // Aktualizujemy liczniki
+  document.getElementById('stars-count').textContent = gwiazdki;
+  
+  const mathStarDisplay = document.getElementById('math-stars-count');
+  if (mathStarDisplay) {
+    mathStarDisplay.textContent = gwiazdki;
+  }
+
+  pokazKonfetti();
+  odtworzDzwiek(true);
+  sprawdzOdznaki();
   zapiszDaneDoBazy();
 }
 
@@ -434,18 +448,14 @@ window.pokazHistoryjki = function() {
 
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
-  // Resetujemy blokadę przed uruchomieniem matematyki
-  window.czySlowoZaliczone = false;
   
+  // Przekazujemy TYLKO NOWĄ funkcję dodającą gwiazdkę dla matmy
   startMatma(dzialanie, () => {
-    // Wywołujemy dodanie gwiazdki, ale najpierw upewniamy się, że blokada jest zdjęta
-    window.czySlowoZaliczone = false;
-    dodajGwiazdke(1);
+    dodajGwiazdkeMatma(); 
   });
 };
 
 window.wyjdzZMatmy = wyjdzZMatmy;
-
 window.nastepneZadanie = nastepneZadanie;
 
 window.pokazPanelRodzica = function() {
@@ -511,7 +521,7 @@ function odswiezSlowo() {
   document.getElementById('draw-word').textContent = slowoObj.word;
   document.getElementById('mic-hint').textContent = 'Kliknij i powiedz słowo!';
   document.getElementById('mic-hint').className = 'mic-hint';
-  window.czySlowoZaliczone = false;
+  czySlowoZaliczone = false;
 }
 
 window.nastepneSlowo = function() {
@@ -554,7 +564,7 @@ function sprawdzWymowe(uslyszaneSlowo) {
 }
 
 window.rodzicZaliczyl = function() {
-  if (window.czySlowoZaliczone) {
+  if (czySlowoZaliczone) {
     alert("To słowo zostało już zaliczone! Kliknij 'Następne słowo'.");
     return;
   }
