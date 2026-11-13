@@ -16,51 +16,147 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- BOGATSZE SŁOWNIKI SŁÓW Z PROSTYMI SZABLONAMI SVG ---
+// --- BOGATSZE SŁOWNIKI SŁÓW ZE SZCZEGÓŁOWYMI SZABLONAMI SVG ---
 const slowa = {
   'R': [ 
-    { image: '🦀', word: 'RAK', svg: '<path d="M 50 100 Q 100 50 150 100 M 50 120 Q 100 170 150 120 M 80 80 L 40 40 M 120 80 L 160 40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🚲', word: 'ROWER', svg: '<circle cx="50" cy="100" r="30" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="150" cy="100" r="30" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 50 100 L 100 60 L 150 100" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🐟', word: 'RYBA', svg: '<path d="M 50 100 Q 100 50 150 100 Q 100 150 50 100 M 150 100 L 180 80 L 180 120 Z" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🌹', word: 'RÓŻA', svg: '<path d="M 100 50 Q 150 50 150 100 Q 150 150 100 150 Q 50 150 50 100 Q 50 50 100 50 M 100 50 Q 120 100 100 150 M 100 150 L 100 190 M 100 180 L 80 160 M 100 170 L 120 150" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🦊', word: 'RYŚ', svg: '<path d="M 80 80 L 50 50 L 60 90 M 120 80 L 150 50 L 140 90 M 60 90 Q 100 150 140 90 M 80 110 Q 100 130 120 110 M 100 130 L 100 170" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🥕', word: 'MARCHEWKA', svg: '<path d="M 100 40 Q 140 100 100 160 Q 60 100 100 40 M 100 40 L 80 20 M 100 40 L 120 20" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }
+    { 
+      image: '🦀', word: 'RAK', 
+      svg: '<circle cx="100" cy="100" r="30" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 70 100 L 40 80 M 70 100 L 40 120 M 130 100 L 160 80 M 130 100 L 160 120 M 80 70 Q 100 50 120 70" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🚲', word: 'ROWER', 
+      svg: '<circle cx="60" cy="120" r="30" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="140" cy="120" r="30" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 60 120 L 90 80 L 140 120 M 90 80 L 100 80 M 100 80 L 110 60 M 110 60 L 130 60 M 100 80 L 100 100 L 140 120" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🐟', word: 'RYBA', 
+      svg: '<path d="M 50 100 Q 100 40 150 100 Q 100 160 50 100 M 150 100 L 180 80 L 180 120 Z" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="5" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🌹', word: 'RÓŻA', 
+      svg: '<path d="M 100 60 Q 140 60 140 100 Q 140 140 100 140 Q 60 140 60 100 Q 60 60 100 60 M 100 60 Q 120 100 100 140 M 100 140 L 100 180 M 100 160 L 80 140 M 100 170 L 120 150 M 80 80 Q 100 100 120 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🦊', word: 'RYŚ', 
+      svg: '<path d="M 80 80 L 50 50 L 60 90 M 120 80 L 150 50 L 140 90 M 60 90 Q 100 150 140 90 M 80 110 Q 100 130 120 110 M 100 130 L 100 170 M 90 100 Q 95 105 100 100 M 110 100 Q 105 105 100 100" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🥕', word: 'MARCHEWKA', 
+      svg: '<path d="M 100 40 Q 140 100 100 160 Q 60 100 100 40 M 100 40 L 80 20 M 100 40 L 120 20 M 80 80 L 100 90 M 120 80 L 100 90 M 85 110 L 105 120" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }
   ],
   'S': [ 
-    { image: '🦉', word: 'SOWA', svg: '<circle cx="100" cy="100" r="50" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="10" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="120" cy="90" r="10" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 90 120 L 110 120 L 100 130 Z" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🧀', word: 'SER', svg: '<polygon points="50,150 150,150 150,100 100,50 50,100" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="120" r="10" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '☀️', word: 'SŁOŃCE', svg: '<circle cx="100" cy="100" r="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 40 L 100 20 M 100 160 L 100 180 M 40 100 L 20 100 M 160 100 L 180 100 M 60 60 L 40 40 M 140 140 L 160 160 M 60 140 L 40 160 M 140 60 L 160 40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🐘', word: 'SŁOŃ', svg: '<circle cx="100" cy="100" r="50" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 60 100 Q 30 120 50 160 M 140 100 Q 170 120 150 160 M 100 150 L 100 180 M 80 180 L 120 180" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🌲', word: 'SOSNA', svg: '<polygon points="100,20 140,80 60,80 100,20" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="100,60 160,130 40,130 100,60" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="90" y="130" width="20" height="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🍎', word: 'SOK', svg: '<path d="M 80 50 L 80 150 L 120 150 L 120 50 Z" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 80 50 L 120 50 L 120 80 L 80 80 Z" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }
+    { 
+      image: '🦉', word: 'SOWA', 
+      svg: '<circle cx="100" cy="100" r="50" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="15" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="120" cy="90" r="15" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="5" stroke="#9ca3af" stroke-width="4" fill="none"/><circle cx="120" cy="90" r="5" stroke="#9ca3af" stroke-width="4" fill="none"/><path d="M 90 120 L 110 120 L 100 135 Z" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🧀', word: 'SER', 
+      svg: '<polygon points="50,150 150,150 150,100 100,50 50,100" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="120" r="10" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="8" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="120" cy="100" r="6" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '☀️', word: 'SŁOŃCE', 
+      svg: '<circle cx="100" cy="100" r="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 40 L 100 20 M 100 160 L 100 180 M 40 100 L 20 100 M 160 100 L 180 100 M 60 60 L 40 40 M 140 140 L 160 160 M 60 140 L 40 160 M 140 60 L 160 40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🐘', word: 'SŁOŃ', 
+      svg: '<circle cx="100" cy="100" r="50" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 60 100 Q 30 120 50 160 M 140 100 Q 170 120 150 160 M 100 150 L 100 180 M 80 180 L 120 180 M 80 80 Q 100 60 120 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🌲', word: 'SOSNA', 
+      svg: '<polygon points="100,20 140,80 60,80 100,20" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="100,60 160,130 40,130 100,60" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="90" y="130" width="20" height="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🍎', word: 'SOK', 
+      svg: '<path d="M 80 50 L 80 150 L 120 150 L 120 50 Z" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 80 50 L 120 50 L 120 80 L 80 80 Z" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 50 L 110 30" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }
   ],
   'C': [ 
-    { image: '🧅', word: 'CEBULA', svg: '<path d="M 100 50 Q 150 100 100 150 Q 50 100 100 50 M 100 50 L 100 20 M 100 50 L 80 30 M 100 50 L 120 30" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🍋', word: 'CYTRYNA', svg: '<ellipse cx="100" cy="100" rx="60" ry="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 40 100 L 20 80 M 160 100 L 180 120" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🎯', word: 'CEL', svg: '<circle cx="100" cy="100" r="60" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="20" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🌷', word: 'CUKIER', svg: '<path d="M 100 80 Q 150 50 150 100 Q 150 150 100 120 Q 50 150 50 100 Q 50 50 100 80 Z M 100 120 L 100 180" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🍪', word: 'CIASTKO', svg: '<circle cx="100" cy="100" r="60" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="80" r="5" stroke="black" stroke-width="2" fill="none"/><circle cx="120" cy="90" r="5" stroke="black" stroke-width="2" fill="none"/><circle cx="90" cy="120" r="5" stroke="black" stroke-width="2" fill="none"/>' },
-    { image: '🧹', word: 'CIASTO', svg: '<path d="M 40 150 L 160 50 M 120 90 L 160 130 M 140 70 L 180 110" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }
+    { 
+      image: '🧅', word: 'CEBULA', 
+      svg: '<path d="M 100 50 Q 150 100 100 150 Q 50 100 100 50 M 100 50 L 100 20 M 100 50 L 80 30 M 100 50 L 120 30 M 100 80 Q 120 100 100 120 Q 80 100 100 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🍋', word: 'CYTRYNA', 
+      svg: '<ellipse cx="100" cy="100" rx="60" ry="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 40 100 L 20 80 M 160 100 L 180 120" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🎯', word: 'CEL', 
+      svg: '<circle cx="100" cy="100" r="60" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="20" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="5" stroke="#9ca3af" stroke-width="4" fill="none"/>' 
+    }, 
+    { 
+      image: '🌷', word: 'CUKIER', 
+      svg: '<path d="M 100 80 Q 150 50 150 100 Q 150 150 100 120 Q 50 150 50 100 Q 50 50 100 80 Z M 100 120 L 100 180 M 80 140 L 100 120 M 120 140 L 100 120 M 80 60 L 100 80 M 120 60 L 100 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🍪', word: 'CIASTKO', 
+      svg: '<circle cx="100" cy="100" r="60" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="80" cy="80" r="5" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="120" cy="90" r="5" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="90" cy="120" r="5" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="130" cy="120" r="5" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🧹', word: 'CIASTO', 
+      svg: '<path d="M 50 50 L 150 150 M 140 40 L 160 60 M 40 140 L 60 160 M 100 100 L 120 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }
   ],
   'L': [ 
-    { image: '🦁', word: 'LEW', svg: '<circle cx="100" cy="100" r="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 60 L 100 40 M 100 140 L 100 160 M 60 100 L 40 100 M 140 100 L 160 100 M 75 75 L 50 50 M 125 125 L 150 150 M 75 125 L 50 150 M 125 75 L 150 50" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🪆', word: 'LALKA', svg: '<circle cx="100" cy="70" r="30" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 100 L 100 150 M 70 130 L 130 130 M 100 150 L 80 190 M 100 150 L 120 190" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🍦', word: 'LODY', svg: '<path d="M 80 100 L 120 100 L 100 180 Z M 80 100 Q 100 50 120 100" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }, 
-    { image: '🌲', word: 'LAS', svg: '<polygon points="100,20 140,80 60,80 100,20" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="100,60 160,130 40,130 100,60" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="90" y="130" width="20" height="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🛏️', word: 'ŁÓŻKO', svg: '<rect x="50" y="100" width="100" height="50" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="50" y="80" width="30" height="20" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🥄', word: 'ŁYŻKA', svg: '<ellipse cx="100" cy="60" rx="20" ry="30" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 90 L 100 180" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }
+    { 
+      image: '🦁', word: 'LEW', 
+      svg: '<circle cx="100" cy="100" r="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 60 L 100 40 M 100 140 L 100 160 M 60 100 L 40 100 M 140 100 L 160 100 M 75 75 L 50 50 M 125 125 L 150 150 M 75 125 L 50 150 M 125 75 L 150 50 M 80 90 Q 90 85 100 90 M 100 90 Q 110 85 120 90 M 90 110 Q 100 120 110 110" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🪆', word: 'LALKA', 
+      svg: '<circle cx="100" cy="70" r="30" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 100 L 100 150 M 70 130 L 130 130 M 100 150 L 80 190 M 100 150 L 120 190 M 85 70 Q 100 60 115 70" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🍦', word: 'LODY', 
+      svg: '<path d="M 80 100 L 120 100 L 100 180 Z M 80 100 Q 100 50 120 100 M 90 80 Q 100 70 110 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }, 
+    { 
+      image: '🌲', word: 'LAS', 
+      svg: '<polygon points="100,20 140,80 60,80 100,20" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="100,60 160,130 40,130 100,60" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="90" y="130" width="20" height="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🛏️', word: 'ŁÓŻKO', 
+      svg: '<rect x="50" y="100" width="100" height="50" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="50" y="80" width="30" height="20" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 50 150 L 50 160 M 150 150 L 150 160" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🥄', word: 'ŁYŻKA', 
+      svg: '<ellipse cx="100" cy="60" rx="20" ry="30" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 100 90 L 100 180" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }
   ],
   'SZ': [ 
-    { image: '🧣', word: 'SZALIK', svg: '<path d="M 60 50 Q 100 100 60 150 M 140 50 Q 100 100 140 150 M 60 50 L 140 50 M 60 150 L 140 150" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🐱', word: 'KOT', svg: '<circle cx="100" cy="100" r="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="70,70 50,40 80,60" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="130,70 150,40 120,60" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🍎', word: 'GRUSZKA', svg: '<path d="M 100 60 Q 120 60 120 90 Q 140 120 120 150 Q 100 170 80 150 Q 60 120 80 90 Q 80 60 100 60 Z M 100 60 L 100 40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🚌', word: 'AUTOBUS', svg: '<rect x="40" y="50" width="120" height="80" rx="10" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="70" cy="140" r="15" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="130" cy="140" r="15" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }
+    { 
+      image: '🧣', word: 'SZALIK', 
+      svg: '<path d="M 60 50 Q 100 100 60 150 M 140 50 Q 100 100 140 150 M 60 50 L 140 50 M 60 150 L 140 150 M 80 100 L 120 100" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🐱', word: 'KOT', 
+      svg: '<circle cx="100" cy="100" r="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="70,70 50,40 80,60" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><polygon points="130,70 150,40 120,60" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><path d="M 80 100 Q 90 90 100 100 M 100 100 Q 110 90 120 100" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🍎', word: 'GRUSZKA', 
+      svg: '<path d="M 100 60 Q 120 60 120 90 Q 140 120 120 150 Q 100 170 80 150 Q 60 120 80 90 Q 80 60 100 60 Z M 100 60 L 100 40 M 100 40 Q 110 30 120 40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🚌', word: 'AUTOBUS', 
+      svg: '<rect x="40" y="50" width="120" height="80" rx="10" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="70" cy="140" r="15" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="130" cy="140" r="15" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><rect x="60" y="60" width="20" height="20" stroke="#9ca3af" stroke-width="2" fill="none"/><rect x="90" y="60" width="20" height="20" stroke="#9ca3af" stroke-width="2" fill="none"/><rect x="120" y="60" width="20" height="20" stroke="#9ca3af" stroke-width="2" fill="none"/>' 
+    }
   ],
   'Ż': [ 
-    { image: '🐸', word: 'ŻABA', svg: '<circle cx="100" cy="100" r="40" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="70" cy="80" r="15" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="130" cy="80" r="15" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🦒', word: 'ŻYRAFA', svg: '<path d="M 80 120 L 80 50 L 120 30 L 120 120 M 80 120 L 60 180 M 120 120 L 140 180" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🍞', word: 'ŻYTNI', svg: '<path d="M 60 60 Q 100 40 140 60 L 140 140 Q 100 160 60 140 Z" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' },
-    { image: '🔥', word: 'ŻAR', svg: '<path d="M 100 40 Q 140 80 120 120 Q 100 160 80 120 Q 60 80 100 40 Z" stroke="black" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' }
+    { 
+      image: '🐸', word: 'ŻABA', 
+      svg: '<circle cx="100" cy="100" r="40" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="70" cy="80" r="15" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="130" cy="80" r="15" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/><circle cx="70" cy="80" r="5" stroke="#9ca3af" stroke-width="4" fill="none"/><circle cx="130" cy="80" r="5" stroke="#9ca3af" stroke-width="4" fill="none"/><path d="M 80 120 Q 100 140 120 120" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🦒', word: 'ŻYRAFA', 
+      svg: '<path d="M 80 120 L 80 50 L 120 30 L 120 120 M 80 120 L 60 180 M 120 120 L 140 180 M 80 50 L 70 40 M 120 30 L 130 20 M 85 70 L 95 70 M 85 90 L 95 90 M 105 70 L 115 70" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🍞', word: 'ŻYTNI', 
+      svg: '<path d="M 60 60 Q 100 40 140 60 L 140 140 Q 100 160 60 140 Z M 80 80 L 120 80 M 80 100 L 120 100 M 80 120 L 120 120" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    },
+    { 
+      image: '🔥', word: 'ŻAR', 
+      svg: '<path d="M 100 40 Q 140 80 120 120 Q 100 160 80 120 Q 60 80 100 40 Z M 100 80 Q 110 100 100 120 Q 90 100 100 80" stroke="#9ca3af" stroke-width="4" fill="none" stroke-dasharray="8,8"/>' 
+    }
   ]
 };
 
@@ -311,9 +407,8 @@ function inicjujCanvas() {
   if (!canvas) return;
   ctx = canvas.getContext('2d');
   
-  // Ustawiamy wymiary płótna na podstawie kontenera
   const container = canvas.parentElement;
-  canvas.width = container.clientWidth - 20; // - padding
+  canvas.width = container.clientWidth - 20;
   canvas.height = container.clientHeight - 20; 
 
   ctx.lineWidth = 4;
@@ -321,16 +416,14 @@ function inicjujCanvas() {
   ctx.strokeStyle = kolor;
   rysowanie = false;
 
-  // Wstawianie podkładu SVG
   const slowoObj = slowa[aktualnaGloska][aktualneSlowoIndex];
   const svgContainer = document.getElementById('draw-guide');
   if (slowoObj.svg) {
     svgContainer.innerHTML = slowoObj.svg;
   } else {
-    svgContainer.innerHTML = ''; // Brak podkładu dla tego słowa
+    svgContainer.innerHTML = ''; 
   }
 
-  // Obsługa zdarzeń myszy i dotyku
   canvas.onmousedown = (e) => { rysowanie = true; rysuj(e); };
   canvas.onmousemove = (e) => { if(rysowanie) rysuj(e); };
   canvas.onmouseup = () => { rysowanie = false; ctx.beginPath(); };
