@@ -18,7 +18,6 @@
 
     #landing-view { display: block; }
     
-    /* HERO SECTION */
     .hero { background: linear-gradient(135deg, #db2777 0%, #ec4899 100%); color: white; padding: 60px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 38px; font-weight: 700; margin-bottom: 15px; line-height: 1.2; }
     .hero p { font-size: 18px; color: #fbcfe8; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5; }
@@ -29,7 +28,6 @@
     .marketing-section { margin-top: 40px; text-align: center; padding-bottom: 40px; }
     .marketing-section h2 { font-size: 28px; font-weight: 700; color: #831843; margin-bottom: 25px; }
     
-    /* KARTY NA STRONIE GŁÓWNEJ */
     .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
     .feature-card { background: white; padding: 20px 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #fdf2f8; }
     .feature-card .icon { font-size: 40px; margin-bottom: 10px; }
@@ -49,7 +47,6 @@
     .premium-price span { font-size: 16px; color: #fbcfe8; font-weight: 400; }
     .premium-box .main-cta { background: #ec4899; max-width: 300px; font-size: 18px; box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4); }
 
-    /* MENU WYBORU */
     #menu-view { display: none; padding-top: 30px; }
     .section-title { font-size: 20px; color: #831843; font-weight: 700; margin-bottom: 15px; margin-top: 25px; text-align: left; border-bottom: 2px solid #fbcfe8; padding-bottom: 5px; }
     .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -109,8 +106,14 @@
     .memory-card.flipped { background: white; color: #1f2937; border: 2px solid #ec4899; }
     .memory-card.matched { background: #10b981; color: white; cursor: default; }
 
-    /* EKRAN HISTORYJEK */
-    #historyjki-view { display: none; padding: 20px; }
+    /* NOWY EKRAN: KREATOR HISTORYJEK */
+    #historyjki-view { display: none; padding-top: 20px; text-align: center; }
+    .historyjki-plansza { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+    .historyjki-slot { width: 100px; height: 100px; border-radius: 20px; border: 3px dashed #fbcfe8; display: flex; justify-content: center; align-items: center; font-size: 50px; transition: all 0.3s; }
+    .historyjki-baza { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+    .historyjki-obrazek-btn { width: 60px; height: 60px; font-size: 35px; border-radius: 15px; border: 2px solid #fbcfe8; background: #fdf2f8; cursor: pointer; transition: transform 0.1s; display: flex; justify-content: center; align-items: center; }
+    .historyjki-obrazek-btn:active { transform: scale(0.9); }
+    .historyjki-actions { display: flex; flex-direction: column; gap: 15px; align-items: center; }
 
     /* EKRAN GRY MATEMATYCZNEJ (PRO) */
     #math-view, #zgadnij-view { display: none; text-align: center; padding-top: 20px; }
@@ -331,7 +334,7 @@
     <button id="math-next-btn" class="main-cta" style="background: #ec4899; display: none; margin-top: 30px; font-size: 18px;" onclick="nastepneZadanie()">Następne zadanie →</button>
   </div>
 
-  <!-- NOWY EKRAN: ZGADNIJ DŹWIĘK (PRO) -->
+  <!-- EKRAN: ZGADNIJ DŹWIĘK (PRO) -->
   <div class="container" id="zgadnij-view">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
       <button class="nav-btn" style="background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="wyjdzZZgadnij()">← Wróć do menu</button>
@@ -413,10 +416,28 @@
     <div class="memory-grid" id="memory-grid"></div>
   </div>
 
-  <!-- EKRAN HISTORYJEK -->
+  <!-- NOWY EKRAN: KREATOR HISTORYJEK -->
   <div class="container" id="historyjki-view">
-    <button class="nav-btn" style="margin-bottom: 20px; background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazMenu()">← Wróć do menu</button>
-    <div style="text-align: center; color: #831843; font-weight: 700; font-size: 24px;">Tu wkrótce pojawią się historyjki!</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="wyjdzZHistoryjek()">← Wróć do menu</button>
+      <span style="font-weight:700; color:#f59e0b; font-size:18px;">Kreator</span>
+    </div>
+
+    <h2 style="color: #831843; font-size: 24px; text-align: center; margin-bottom: 20px;">Ułóż swoją historyjkę</h2>
+    
+    <div id="historyjki-plansza" class="historyjki-plansza">
+      <!-- Sloty generowane przez JS -->
+    </div>
+
+    <p style="text-align: center; color: #6b7280; font-weight: 600; margin-bottom: 15px;">Wybierz obrazki z bazy poniżej:</p>
+    <div id="historyjki-baza" class="historyjki-baza">
+      <!-- Obrazki generowane przez JS -->
+    </div>
+
+    <div class="historyjki-actions">
+      <button id="historyjki-zapisz-btn" class="main-cta" style="background: #10b981; display: none; margin-top: 10px;" onclick="zapiszHistoryjke()">💾 Zapisz historyjkę</button>
+      <button id="historyjki-wyczysc-btn" class="nav-btn" style="background: #ef4444; color: white; display: none; width: 100%; max-width: 350px;" onclick="wyczyscHistoryjke()">Wyczyść planszę</button>
+    </div>
   </div>
 
   <!-- PANEL RODZICA -->
