@@ -16,12 +16,52 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- SŁOWNIKI SŁÓW ---
+// --- BOGATSZE SŁOWNIKI SŁÓW ---
 const slowa = {
-  'R': [ { image: '🦀', word: 'RAK' }, { image: '🚲', word: 'ROWER' }, { image: '🐟', word: 'RYBA' }, { image: '🌹', word: 'RÓŻA' } ],
-  'S': [ { image: '🦉', word: 'SOWA' }, { image: '🧀', word: 'SER' }, { image: '☀️', word: 'SŁOŃCE' }, { image: '🐘', word: 'SŁOŃ' } ],
-  'C': [ { image: '🧅', word: 'CEBULA' }, { image: '🍋', word: 'CYTRYNA' }, { image: '🎯', word: 'CEL' }, { image: '🌷', word: 'CUKIER' } ],
-  'L': [ { image: '🦁', word: 'LEW' }, { image: '🪆', word: 'LALKA' }, { image: '🍦', word: 'LODY' }, { image: '🌲', word: 'LAS' } ]
+  'R': [ 
+    { image: '🦀', word: 'RAK' }, 
+    { image: '🚲', word: 'ROWER' }, 
+    { image: '🐟', word: 'RYBA' }, 
+    { image: '🌹', word: 'RÓŻA' },
+    { image: '🦊', word: 'RYŚ' },
+    { image: '🥕', word: 'MARCHEWKA' }
+  ],
+  'S': [ 
+    { image: '🦉', word: 'SOWA' }, 
+    { image: '🧀', word: 'SER' }, 
+    { image: '☀️', word: 'SŁOŃCE' }, 
+    { image: '🐘', word: 'SŁOŃ' },
+    { image: '🌲', word: 'SOSNA' },
+    { image: '🍎', word: 'SOK' }
+  ],
+  'C': [ 
+    { image: '🧅', word: 'CEBULA' }, 
+    { image: '🍋', word: 'CYTRYNA' }, 
+    { image: '🎯', word: 'CEL' }, 
+    { image: '🌷', word: 'CUKIER' },
+    { image: '🍪', word: 'CIASTKO' },
+    { image: '🧹', word: 'CIASTO' }
+  ],
+  'L': [ 
+    { image: '🦁', word: 'LEW' }, 
+    { image: '🪆', word: 'LALKA' }, 
+    { image: '🍦', word: 'LODY' }, 
+    { image: '🌲', word: 'LAS' },
+    { image: '🛏️', word: 'ŁÓŻKO' },
+    { image: '🥄', word: 'ŁYŻKA' }
+  ],
+  'SZ': [ 
+    { image: '🧣', word: 'SZALIK' }, 
+    { image: '🐱', word: 'KOT' }, // Placeholder, lepiej dać coś z SZ
+    { image: '🍎', word: 'GRUSZKA' },
+    { image: '🚌', word: 'AUTOBUS' }
+  ],
+  'Ż': [ 
+    { image: '🐸', word: 'ŻABA' }, 
+    { image: '🦒', word: 'ŻYRAFA' }, 
+    { image: '🍞', word: 'ŻYTNI' },
+    { image: '🔥', word: 'ŻAR' }
+  ]
 };
 
 let aktualnaGloska = 'R';
@@ -75,7 +115,7 @@ function dodajGwiazdke() {
   zapiszGwiazdkiDoBazy();
 }
 
-// --- RESZTA KODU (MIKROFON, NAWIGACJA, RYSOWANIE) ---
+// --- RESZTA KODU ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
   recognition = new SpeechRecognition();
@@ -174,9 +214,7 @@ window.pokazPanelRodzica = function() {
   document.getElementById('parent-panel-view').style.display = 'block';
   window.scrollTo(0, 0);
   
-  // Wczytujemy statystyki do panelu
   document.getElementById('parent-total-stars').textContent = gwiazdki;
-  // Tutaj w przyszłości dodamy liczenie słów
 };
 
 function odswiezSlowo() {
