@@ -25,6 +25,37 @@ const slowa = {
 let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
 let gwiazdki = 0;
+let recognition = null;
+
+// Sprawdzenie, czy przeglądarka wspiera rozpoznawanie mowy
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = 'pl-PL';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = function() {
+    document.getElementById('mic-button').classList.add('listening');
+    document.getElementById('mic-hint').textContent = 'Słucham... Powiedz słowo!';
+    document.getElementById('mic-hint').className = 'mic-hint';
+  };
+
+  recognition.onresult = function(event) {
+    const uslyszaneSlowo = event.results[0][0].transcript.toUpperCase();
+    sprawdzWymowe(uslyszaneSlowo);
+  };
+
+  recognition.onerror = function(event) {
+    document.getElementById('mic-button').classList.remove('listening');
+    document.getElementById('mic-hint').textContent = 'Nie udało się nagrać. Spróbuj jeszcze raz!';
+    document.getElementById('mic-hint').className = 'mic-hint error';
+  };
+
+  recognition.onend = function() {
+    document.getElementById('mic-button').classList.remove('listening');
+  };
+}
 
 // --- NAWIGACJA ---
 function ukryjWszystko() {
@@ -69,8 +100,8 @@ function odswiezSlowo() {
   document.getElementById('ex-image').textContent = slowoObj.image;
   document.getElementById('ex-word').textContent = slowoObj.word;
   document.getElementById('draw-word').textContent = slowoObj.word;
-  document.getElementById('mic-hint').textContent = 'Kliknij mikrofon i powiedz słowo!';
-  document.getElementById('mic-hint').style.color = '#6b7280';
+  document.getElementById('mic-hint').textContent = 'Kliknij i powiedz słowo!';
+  document.getElementById('mic-hint').className = 'mic-hint';
 }
 
 window.nastepneSlowo = function() {
@@ -79,31 +110,43 @@ window.nastepneSlowo = function() {
   odswiezSlowo();
 };
 
-window.symulujNagranie = function() {
-  const hint = document.getElementById('mic-hint');
-  const starDisplay = document.getElementById('stars-count');
+// --- PRAWDZIWE NAGRYWANIE I SPRAWDZANIE ---
+window.nagrajIWymow = function() {
+  if (!recognition) {
+    alert("Twoja przeglądarka nie wspiera rozpoznawania mowy. Spróbuj w Chrome na Androidzie.");
+    return;
+  }
   
-  hint.textContent = 'Słucham... 🎤';
-  hint.style.color = '#2563eb';
+  // Zatrzymujemy poprzednie nasłuchiwanie, jeśli trwało
+  try { recognition.stop(); } catch(e) {}
   
-  setTimeout(() => {
-    hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
-    hint.style.color = '#10b981';
-    
-    // POPRAWIONE DODAWANIE GWIAZDEK
-    gwiazdki++;
-    if(starDisplay) starDisplay.textContent = gwiazdki;
-  }, 2000);
+  // Startujemy nowe
+  recognition.start();
 };
 
-// --- RYSOWANIE (POPRAWIONY CANVAS RESPONSYWNY) ---
+function sprawdzWymowe(uslyszaneSlowo) {
+  const doceloweSlowo = slowa[aktualnaGloska][aktualneSlowoIndex].word;
+  const hint = document.getElementById('mic-hint');
+  
+  // Prosta logika: jeśli usłyszane słowo zawiera docelowe (np. "rak" w "rak.") lub jest bardzo podobne
+  if (uslyszaneSlowo.includes(doceloweSlowo) || doceloweSlowo.includes(uslyszaneSlowo)) {
+    hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
+    hint.className = 'mic-hint success';
+    
+    gwiazdki++;
+    document.getElementById('stars-count').textContent = gwiazdki;
+  } else {
+    hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz głośno: ${doceloweSlowo}`;
+    hint.className = 'mic-hint error';
+  }
+}
+
+// --- RYSOWANIE ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
 
 window.pokazRysowanie = function() {
   ukryjWszystko();
   document.getElementById('draw-view').style.display = 'block';
-  
-  // Inicjalizacja canvas po pokazaniu widoku (ważne dla responsywności)
   setTimeout(inicjujCanvas, 50);
   window.scrollTo(0, 0);
 };
@@ -111,26 +154,19 @@ window.pokazRysowanie = function() {
 function inicjujCanvas() {
   canvas = document.getElementById('drawCanvas');
   ctx = canvas.getContext('2d');
-  
-  // Ustawiamy rozmiar płótna na podstawie rozmiaru kontenera
   const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width - 20; // Odejmujemy padding
+  canvas.width = rect.width - 20;
   canvas.height = 300;
-  
   ctx.lineWidth = 4;
   ctx.lineCap = 'round';
   ctx.strokeStyle = kolor;
-
-  // Reset pozycji rysowania
   rysowanie = false;
 
-  // Obsługa myszy
   canvas.onmousedown = (e) => { rysowanie = true; rysuj(e); };
   canvas.onmousemove = (e) => { if(rysowanie) rysuj(e); };
   canvas.onmouseup = () => { rysowanie = false; ctx.beginPath(); };
   canvas.onmouseout = () => { rysowanie = false; ctx.beginPath(); };
 
-  // Obsługa dotyku
   canvas.ontouchstart = (e) => { e.preventDefault(); rysowanie = true; rysujDotyk(e); };
   canvas.ontouchmove = (e) => { e.preventDefault(); if(rysowanie) rysujDotyk(e); };
   canvas.ontouchend = () => { rysowanie = false; ctx.beginPath(); };
@@ -140,7 +176,6 @@ function rysuj(e) {
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-  
   ctx.lineTo(x, y);
   ctx.stroke();
   ctx.beginPath();
@@ -152,7 +187,6 @@ function rysujDotyk(e) {
   const touch = e.touches[0];
   const x = touch.clientX - rect.left;
   const y = touch.clientY - rect.top;
-  
   ctx.lineTo(x, y);
   ctx.stroke();
   ctx.beginPath();
@@ -183,9 +217,7 @@ window.obsluzRejestracje = async function() {
   const email = document.getElementById('register-email').value;
   const password = document.getElementById('register-password').value;
   const msg = document.getElementById('register-msg');
-  
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
-
   try {
     await createUserWithEmailAndPassword(auth, email, password);
     msg.textContent = 'Konto utworzone! Możesz się zalogować.'; msg.style.color = '#16a34a';
@@ -199,9 +231,7 @@ window.obsluzLogowanie = async function() {
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
   const msg = document.getElementById('login-msg');
-
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
-
   try {
     await signInWithEmailAndPassword(auth, email, password);
     pokazGlowna();
@@ -219,7 +249,6 @@ onAuthStateChanged(auth, (user) => {
   const loginBtn = document.getElementById('nav-login-btn');
   const userInfo = document.getElementById('nav-user-info');
   const emailDisplay = document.getElementById('user-email-display');
-
   if (user) {
     loginBtn.style.display = 'none';
     userInfo.style.display = 'flex';
@@ -230,7 +259,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Inicjalizacja
 document.addEventListener('DOMContentLoaded', () => {
   pokazGlowna();
 });
