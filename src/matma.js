@@ -101,7 +101,8 @@ function sprawdzOdpowiedz(odp, btn) {
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.3);
 
-        if (callbackSukces) callbackSukces();
+        // Przekazujemy nazwę działania do funkcji w main.js
+        if (callbackSukces) callbackSukces(aktualnyDzialanie);
         
         setTimeout(() => {
             document.getElementById('math-stars-count').innerText = document.getElementById('stars-count').innerText;
