@@ -16,56 +16,35 @@ const auth = getAuth(app);
 
 // --- SŁOWNIKI SŁÓW ---
 const slowa = {
-  'R': [
-    { image: '🦀', word: 'RAK' },
-    { image: '🚲', word: 'ROWER' },
-    { image: '🐟', word: 'RYBA' },
-    { image: '🌹', word: 'RÓŻA' }
-  ],
-  'S': [
-    { image: '🦉', word: 'SOWA' },
-    { image: '🧀', word: 'SER' },
-    { image: '☀️', word: 'SŁOŃCE' },
-    { image: '🐘', word: 'SŁOŃ' }
-  ],
-  'C': [
-    { image: '🧅', word: 'CEBULA' },
-    { image: '🍋', word: 'CYTRYNA' },
-    { image: '🎯', word: 'CEL' },
-    { image: '🌷', word: 'CUKIER' }
-  ],
-  'L': [
-    { image: '🦁', word: 'LEW' },
-    { image: '🪆', word: 'LALKA' },
-    { image: '🍦', word: 'LODY' },
-    { image: '🌲', word: 'LAS' }
-  ]
+  'R': [ { image: '🦀', word: 'RAK' }, { image: '🚲', word: 'ROWER' }, { image: '🐟', word: 'RYBA' }, { image: '🌹', word: 'RÓŻA' } ],
+  'S': [ { image: '🦉', word: 'SOWA' }, { image: '🧀', word: 'SER' }, { image: '☀️', word: 'SŁOŃCE' }, { image: '🐘', word: 'SŁOŃ' } ],
+  'C': [ { image: '🧅', word: 'CEBULA' }, { image: '🍋', word: 'CYTRYNA' }, { image: '🎯', word: 'CEL' }, { image: '🌷', word: 'CUKIER' } ],
+  'L': [ { image: '🦁', word: 'LEW' }, { image: '🪆', word: 'LALKA' }, { image: '🍦', word: 'LODY' }, { image: '🌲', word: 'LAS' } ]
 };
 
 let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
+let gwiazdki = 0;
 
 // --- NAWIGACJA ---
+function ukryjWszystko() {
+  document.querySelectorAll('.container, #auth-login-view, #auth-register-view').forEach(el => el.style.display = 'none');
+}
+
 window.pokazGlowna = function() {
+  ukryjWszystko();
   document.getElementById('main-view').style.display = 'block';
-  document.getElementById('exercise-view').style.display = 'none';
-  document.getElementById('auth-login-view').style.display = 'none';
-  document.getElementById('auth-register-view').style.display = 'none';
   window.scrollTo(0, 0);
 };
 
 window.pokazLogowanie = function() {
-  document.getElementById('main-view').style.display = 'none';
-  document.getElementById('exercise-view').style.display = 'none';
+  ukryjWszystko();
   document.getElementById('auth-login-view').style.display = 'block';
-  document.getElementById('auth-register-view').style.display = 'none';
   window.scrollTo(0, 0);
 };
 
 window.pokazRejestracje = function() {
-  document.getElementById('main-view').style.display = 'none';
-  document.getElementById('exercise-view').style.display = 'none';
-  document.getElementById('auth-login-view').style.display = 'none';
+  ukryjWszystko();
   document.getElementById('auth-register-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
@@ -74,11 +53,15 @@ window.pokazRejestracje = function() {
 window.rozpocznijCwiczenie = function(gloska) {
   aktualnaGloska = gloska;
   aktualneSlowoIndex = 0;
-  
-  document.getElementById('main-view').style.display = 'none';
+  ukryjWszystko();
   document.getElementById('exercise-view').style.display = 'block';
-  
   odswiezSlowo();
+  window.scrollTo(0, 0);
+};
+
+window.pokazCwiczenie = function() {
+  ukryjWszystko();
+  document.getElementById('exercise-view').style.display = 'block';
   window.scrollTo(0, 0);
 };
 
@@ -86,6 +69,7 @@ function odswiezSlowo() {
   const slowoObj = slowa[aktualnaGloska][aktualneSlowoIndex];
   document.getElementById('ex-image').textContent = slowoObj.image;
   document.getElementById('ex-word').textContent = slowoObj.word;
+  document.getElementById('draw-word').textContent = slowoObj.word;
   
   document.getElementById('mic-hint').textContent = 'Kliknij mikrofon i powiedz słowo!';
   document.getElementById('mic-hint').style.color = '#6b7280';
@@ -105,14 +89,84 @@ window.symulujNagranie = function() {
   setTimeout(() => {
     hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
     hint.style.color = '#10b981';
+    
+    // Dodajemy gwiazdkę
+    gwiazdki++;
+    document.getElementById('stars-count').textContent = gwiazdki;
   }, 2000);
+};
+
+// --- RYSOWANIE (TABLICA) ---
+let canvas, ctx, rysowanie = false, kolor = '#db2777';
+
+window.pokazRysowanie = function() {
+  ukryjWszystko();
+  document.getElementById('draw-view').style.display = 'block';
+  inicjujCanvas();
+  window.scrollTo(0, 0);
+};
+
+function inicjujCanvas() {
+  canvas = document.getElementById('drawCanvas');
+  ctx = canvas.getContext('2d');
+  
+  // Reset canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Ustawienia rysowania
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = kolor;
+
+  // Obsługa myszy
+  canvas.onmousedown = (e) => { rysowanie = true; rysuj(e); };
+  canvas.onmousemove = (e) => { if(rysowanie) rysuj(e); };
+  canvas.onmouseup = () => { rysowanie = false; ctx.beginPath(); };
+  canvas.onmouseout = () => { rysowanie = false; ctx.beginPath(); };
+
+  // Obsługa dotyku
+  canvas.ontouchstart = (e) => { e.preventDefault(); rysowanie = true; rysujDotyk(e); };
+  canvas.ontouchmove = (e) => { e.preventDefault(); if(rysowanie) rysujDotyk(e); };
+  canvas.ontouchend = () => { rysowanie = false; ctx.beginPath(); };
+}
+
+function rysuj(e) {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+function rysujDotyk(e) {
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+  
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+window.zmienKolor = function(nowyKolor) {
+  kolor = nowyKolor;
+  if(ctx) ctx.strokeStyle = kolor;
+};
+
+window.wyczyscCanvas = function() {
+  if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
 // --- LOGOWANIE FIREBASE ---
 window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
   try {
-    const result = await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, provider);
     pokazGlowna();
   } catch (error) {
     alert("Błąd logowania Google: " + error.message);
@@ -163,7 +217,7 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     loginBtn.style.display = 'none';
     userInfo.style.display = 'flex';
-    emailDisplay.textContent = user.email.split('@')[0]; // Pokazujemy tylko początek maila, żeby było ładniej
+    emailDisplay.textContent = user.email.split('@')[0];
   } else {
     loginBtn.style.display = 'block';
     userInfo.style.display = 'none';
