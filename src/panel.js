@@ -4,8 +4,8 @@ export function renderujPanelRodzica(dane) {
 
   const odznaki = dane.odznaki || {};
   const celTygodniowy = dane.celTygodniowy || 0;
+  const statystykiGier = dane.statystykiGier || {}; // Odczyt nowych statystyk
   
-  // Zabezpieczenie przed dzieleniem przez zero
   const postepProcent = celTygodniowy > 0 ? Math.min((dane.gwiazdkiWTygodniu / celTygodniowy) * 100, 100) : 0;
 
   kontener.innerHTML = `
@@ -53,10 +53,36 @@ export function renderujPanelRodzica(dane) {
       </div>
     </div>
 
+    <!-- SZCZEGÓŁOWE STATYSTYKI GIER -->
+    <div class="stats-card">
+      <h2>📊 Skąd mamy gwiazdki?</h2>
+      <div class="history-list" style="margin-top: 10px;">
+        <div class="history-item">
+          <span>🎤 Ćwiczenia wymowy</span>
+          <span style="font-weight: bold; color: #db2777;">${statystykiGier.mowa || 0} ⭐</span>
+        </div>
+        <div class="history-item">
+          <span>➕ Dodawanie</span>
+          <span style="font-weight: bold; color: #f59e0b;">${statystykiGier.dodawanie || 0} ⭐</span>
+        </div>
+        <div class="history-item">
+          <span>➖ Odejmowanie</span>
+          <span style="font-weight: bold; color: #8b5cf6;">${statystykiGier.odejmowanie || 0} ⭐</span>
+        </div>
+        <div class="history-item">
+          <span>✖️ Mnożenie</span>
+          <span style="font-weight: bold; color: #10b981;">${statystykiGier.mnozenie || 0} ⭐</span>
+        </div>
+        <div class="history-item">
+          <span>➗ Dzielenie</span>
+          <span style="font-weight: bold; color: #ef4444;">${statystykiGier.dzielenie || 0} ⭐</span>
+        </div>
+      </div>
+    </div>
+
     <!-- ODZNAKI -->
     <div class="stats-card">
       <h2>Twoje Odznaki</h2>
-      <p>Zdobywaj osiągnięcia za systematyczną pracę!</p>
       <div style="display: flex; justify-content: space-around; margin-top: 20px; font-size: 45px;">
         <div title="Pierwszy krok (1 gwiazdka)" style="opacity: ${odznaki['pierwszy_krok'] ? 1 : 0.2}; transform: ${odznaki['pierwszy_krok'] ? 'scale(1.1)' : 'scale(1)'}; transition: all 0.3s;">${odznaki['pierwszy_krok'] ? '🏅' : '🔒'}</div>
         <div title="Konsekwencja (3 dni z rzędu)" style="opacity: ${odznaki['konsekwencja'] ? 1 : 0.2}; transform: ${odznaki['konsekwencja'] ? 'scale(1.1)' : 'scale(1)'}; transition: all 0.3s;">${odznaki['konsekwencja'] ? '🔥' : '🔒'}</div>
@@ -67,7 +93,6 @@ export function renderujPanelRodzica(dane) {
     <!-- ALBUM NAKLEJEK -->
     <div class="stats-card">
       <h2>Album Naklejek</h2>
-      <p>Zbieraj gwiazdki, aby odblokować wszystkie naklejki!</p>
       <div class="album-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
         <div class="sticker ${dane.gwiazdki >= 10 ? 'unlocked' : ''}" title="10 gwiazdek">🦁</div>
         <div class="sticker ${dane.gwiazdki >= 25 ? 'unlocked' : ''}" title="25 gwiazdek">🚀</div>
@@ -78,14 +103,12 @@ export function renderujPanelRodzica(dane) {
       </div>
     </div>
 
-    <!-- HISTORIA -->
+    <!-- HISTORIA GŁOSEK -->
     <div class="stats-card">
       <h2>Szczegóły ćwiczeń wymowy</h2>
       <div class="history-list" id="parent-history-list" style="margin-top: 10px;">
         ${dane.historiaHTML}
       </div>
     </div>
-
-    <button class="back-to-app-btn" onclick="window.pokazMenu()" style="background: #ec4899; color: white; border: none; padding: 15px; border-radius: 15px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px;">← Wróć do Menu</button>
   `;
 }
