@@ -4,7 +4,8 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { bazaSlow } from './dane.js'; 
 import { renderujPanelRodzica } from './panel.js'; 
 import { startMemory } from './gra-memory.js'; 
-import { initNagrywanie } from './nagrywanie.js'; // IMPORT NAGRYWANIA
+import { initNagrywanie } from './nagrywanie.js'; 
+import { startHistoryjki } from './historyjki.js'; // IMPORT HISTORYJEK
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -36,6 +37,7 @@ let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 let odznaki = {}; 
+let historyjki = []; // NOWA TABLICA
 
 // --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
@@ -79,7 +81,8 @@ async function zapiszDaneDoBazy() {
         streak: streak,
         ostatniaData: ostatniaDataCwiczenia,
         celTygodniowy: celTygodniowy,
-        odznaki: odznaki
+        odznaki: odznaki,
+        historyjki: historyjki // ZAPIS HISTORYJEK
       }, { merge: true });
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
@@ -99,6 +102,7 @@ async function wczytajDaneZbazy() {
         ostatniaDataCwiczenia = dane.ostatniaData || null;
         celTygodniowy = dane.celTygodniowy || 0;
         odznaki = dane.odznaki || {};
+        historyjki = dane.historyjki || []; // ODCZYT HISTORYJEK
       } else {
         gwiazdki = 0;
         historiaCwiczen = {};
@@ -106,6 +110,7 @@ async function wczytajDaneZbazy() {
         ostatniaDataCwiczenia = null;
         celTygodniowy = 0;
         odznaki = {};
+        historyjki = [];
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           email: aktualnyUzytkownik.email,
@@ -113,7 +118,8 @@ async function wczytajDaneZbazy() {
           streak: 0,
           ostatniaData: null,
           celTygodniowy: 0,
-          odznaki: {}
+          odznaki: {},
+          historyjki: []
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -278,6 +284,7 @@ function ukryjWszystkieWidoki() {
   document.getElementById('auth-login-view').style.display = 'none';
   document.getElementById('auth-register-view').style.display = 'none';
   document.getElementById('parent-panel-view').style.display = 'none';
+  document.getElementById('historyjki-view').style.display = 'none';
 }
 
 window.pokazLanding = function() {
@@ -338,6 +345,17 @@ window.pokazMemory = function() {
     pokazKonfetti();
     odtworzDzwiek(true);
     sprawdzOdznaki();
+    zapiszDaneDoBazy();
+  });
+};
+
+window.pokazHistoryjki = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('historyjki-view').style.display = 'block';
+  window.scrollTo(0, 0);
+  
+  startHistoryjki(bazaSlow, (nowaHistoryjka) => {
+    historyjki.push(nowaHistoryjka);
     zapiszDaneDoBazy();
   });
 };
@@ -596,6 +614,7 @@ onAuthStateChanged(auth, async (user) => {
     ostatniaDataCwiczenia = null;
     celTygodniowy = 0;
     odznaki = {};
+    historyjki = [];
     document.getElementById('stars-count').textContent = '0';
     renderujKafelki();
   }
@@ -603,6 +622,6 @@ onAuthStateChanged(auth, async (user) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderujKafelki(); 
-  initNagrywanie(); // INICJALIZACJA NAGRYWANIA
+  initNagrywanie(); 
   pokazLanding();
 });
