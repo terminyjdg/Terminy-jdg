@@ -49,7 +49,6 @@ window.pokazRejestracje = function() {
   window.scrollTo(0, 0);
 };
 
-// --- LOGIKA ĆWICZENIA ---
 window.rozpocznijCwiczenie = function(gloska) {
   aktualnaGloska = gloska;
   aktualneSlowoIndex = 0;
@@ -70,7 +69,6 @@ function odswiezSlowo() {
   document.getElementById('ex-image').textContent = slowoObj.image;
   document.getElementById('ex-word').textContent = slowoObj.word;
   document.getElementById('draw-word').textContent = slowoObj.word;
-  
   document.getElementById('mic-hint').textContent = 'Kliknij mikrofon i powiedz słowo!';
   document.getElementById('mic-hint').style.color = '#6b7280';
 }
@@ -83,6 +81,8 @@ window.nastepneSlowo = function() {
 
 window.symulujNagranie = function() {
   const hint = document.getElementById('mic-hint');
+  const starDisplay = document.getElementById('stars-count');
+  
   hint.textContent = 'Słucham... 🎤';
   hint.style.color = '#2563eb';
   
@@ -90,19 +90,21 @@ window.symulujNagranie = function() {
     hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
     hint.style.color = '#10b981';
     
-    // Dodajemy gwiazdkę
+    // POPRAWIONE DODAWANIE GWIAZDEK
     gwiazdki++;
-    document.getElementById('stars-count').textContent = gwiazdki;
+    if(starDisplay) starDisplay.textContent = gwiazdki;
   }, 2000);
 };
 
-// --- RYSOWANIE (TABLICA) ---
+// --- RYSOWANIE (POPRAWIONY CANVAS RESPONSYWNY) ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
 
 window.pokazRysowanie = function() {
   ukryjWszystko();
   document.getElementById('draw-view').style.display = 'block';
-  inicjujCanvas();
+  
+  // Inicjalizacja canvas po pokazaniu widoku (ważne dla responsywności)
+  setTimeout(inicjujCanvas, 50);
   window.scrollTo(0, 0);
 };
 
@@ -110,13 +112,17 @@ function inicjujCanvas() {
   canvas = document.getElementById('drawCanvas');
   ctx = canvas.getContext('2d');
   
-  // Reset canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Ustawiamy rozmiar płótna na podstawie rozmiaru kontenera
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width - 20; // Odejmujemy padding
+  canvas.height = 300;
   
-  // Ustawienia rysowania
   ctx.lineWidth = 4;
   ctx.lineCap = 'round';
   ctx.strokeStyle = kolor;
+
+  // Reset pozycji rysowania
+  rysowanie = false;
 
   // Obsługa myszy
   canvas.onmousedown = (e) => { rysowanie = true; rysuj(e); };
