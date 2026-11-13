@@ -85,7 +85,7 @@ if (SpeechRecognition) {
   };
 }
 
-// --- NAWIGACJA (NAPRAWIONA - BEZPOŚREDNIE STEROWANIE) ---
+// --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
   document.getElementById('landing-view').style.display = 'none';
   document.getElementById('main-view').style.display = 'none';
