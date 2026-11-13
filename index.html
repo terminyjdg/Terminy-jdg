@@ -29,15 +29,23 @@
     .marketing-section { margin-top: 40px; text-align: center; padding-bottom: 40px; }
     .marketing-section h2 { font-size: 28px; font-weight: 700; color: #831843; margin-bottom: 25px; }
     
-    .feature-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-    .feature-item { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; border-left: 6px solid #ec4899; }
-    .feature-item h3 { font-size: 18px; color: #831843; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
-    .feature-item p { font-size: 15px; color: #6b7280; line-height: 1.5; }
+    /* NOWY UKŁAD KART (Kafelki) */
+    .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+    .feature-card { background: white; padding: 20px 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .feature-card .icon { font-size: 40px; margin-bottom: 10px; }
+    .feature-card h3 { font-size: 16px; color: #831843; margin-bottom: 5px; font-weight: 700; }
+    .feature-card p { font-size: 13px; color: #6b7280; line-height: 1.4; }
     
-    .feature-item.pro-feature { border-left-color: #8b5cf6; background: #f5f3ff; }
-    .feature-item.pro-feature h3 { color: #5b21b6; }
+    .feature-card.full-width { grid-column: span 2; flex-direction: row; text-align: left; gap: 15px; padding: 20px; }
+    .feature-card.full-width .icon { font-size: 45px; margin-bottom: 0; }
+    .feature-card.full-width .text-wrapper h3 { font-size: 18px; margin-bottom: 5px; }
+    .feature-card.full-width .text-wrapper p { font-size: 14px; }
 
-    .section-divider { font-size: 20px; color: #831843; font-weight: 700; margin: 30px 0 15px 0; text-align: left; border-bottom: 2px solid #fbcfe8; padding-bottom: 5px; }
+    .feature-card.pro-feature { background: #f5f3ff; border: 2px solid #ddd6fe; }
+    .feature-card.pro-feature h3 { color: #5b21b6; }
+
+    .section-divider { font-size: 20px; color: #831843; font-weight: 700; margin: 30px 0 15px 0; text-align: left; border-bottom: 2px solid #fbcfe8; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: flex-end;}
+    .section-divider span { font-size: 14px; color: #ec4899; font-weight: 600; }
 
     .premium-box { background: #831843; padding: 30px 20px; border-radius: 20px; color: white; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(131, 24, 67, 0.3); }
     .premium-box h2 { font-size: 26px; margin-bottom: 10px; color: #fbcfe8; }
@@ -205,30 +213,37 @@
         <h2>Co znajdziesz w Gaduła?</h2>
         
         <div class="section-divider">🗣️ Mowa i Kreatywność</div>
-        <div class="feature-grid">
-          <div class="feature-item">
-            <h3>🎤 Prawdziwy trener wymowy</h3>
-            <p>Dziecko mówi do mikrofonu, a aplikacja sprawdza poprawność. Gwiazdki i konfetti motywują do dalszej pracy nad głoskami.</p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="icon">🎤</div>
+            <h3>Trener wymowy</h3>
+            <p>Zabawa z mikrofonem i gwiazdkami za poprawne słowa.</p>
           </div>
-          <div class="feature-item">
-            <h3>🎨 Kreatywna tablica</h3>
-            <p>Po opanowaniu słowa, dziecko może je narysować na interaktywnym płótnie. To świetny sposób na utrwalanie słownictwa i rozwijanie wyobraźni.</p>
+          <div class="feature-card">
+            <div class="icon">🎨</div>
+            <h3>Kreatywna tablica</h3>
+            <p>Rysowanie poznanych słów wspiera wyobraźnię.</p>
           </div>
-          <div class="feature-item">
-            <h3>📖 Kreator Historyjek</h3>
-            <p>Pozwól dziecku puścić wodze fantazji i stworzyć własne opowieści z ulubionymi postaciami i nagrywać do nich głos.</p>
+          <div class="feature-card full-width">
+            <div class="icon">📖</div>
+            <div class="text-wrapper">
+              <h3>Kreator Historyjek</h3>
+              <p>Pozwól dziecku stworzyć własne opowieści i nagrać do nich głos. Kreatywność na wyciągnięcie ręki.</p>
+            </div>
           </div>
         </div>
 
-        <div class="section-divider">🧠 Logika i Matematyka (Wersja PRO)</div>
-        <div class="feature-grid">
-          <div class="feature-item pro-feature">
-            <h3>➕ Matematyka w formie gry</h3>
-            <p>Dodawanie, odejmowanie, mnożenie i dzielenie. Za poprawną odpowiedź dziecko dostaje gwiazdkę, za błędną ją traci – uczy to skupienia!</p>
+        <div class="section-divider">🧠 Logika i Matematyka <span>(Wersja PRO)</span></div>
+        <div class="features-grid">
+          <div class="feature-card pro-feature">
+            <div class="icon">➕</div>
+            <h3>Matematyka</h3>
+            <p>Dodawanie, odejmowanie i więcej. Uczy skupienia za pomocą systemu nagród.</p>
           </div>
-          <div class="feature-item pro-feature">
-            <h3>👂 Zgadnij dźwięk</h3>
-            <p>Gra słuchowa, w której dziecko rozpoznaje dźwięki zwierząt i przedmiotów, wybierając odpowiedni obrazek.</p>
+          <div class="feature-card pro-feature">
+            <div class="icon">👂</div>
+            <h3>Zgadnij dźwięk</h3>
+            <p>Gra słuchowa rozwijająca spostrzegawczość.</p>
           </div>
         </div>
 
