@@ -28,6 +28,25 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 
+// --- ZAPIS GWIAZDEK (Local Storage) ---
+function wczytajGwiazdki() {
+  const zapisane = localStorage.getItem('gadula_gwiazdki');
+  if (zapisane) {
+    gwiazdki = parseInt(zapisane);
+    document.getElementById('stars-count').textContent = gwiazdki;
+  }
+}
+
+function zapiszGwiazdki() {
+  localStorage.setItem('gadula_gwiazdki', gwiazdki);
+}
+
+function dodajGwiazdke() {
+  gwiazdki++;
+  document.getElementById('stars-count').textContent = gwiazdki;
+  zapiszGwiazdki();
+}
+
 // Sprawdzenie, czy przeglądarka wspiera rozpoznawanie mowy
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
@@ -41,14 +60,15 @@ if (SpeechRecognition) {
     document.getElementById('mic-hint').textContent = 'Słucham... Powiedz słowo!';
     document.getElementById('mic-hint').className = 'mic-hint';
     
-    // Wymuszamy zakończenie nasłuchiwania po 2 sekundach (jeśli dziecko nic nie powie)
     timeoutId = setTimeout(() => {
       recognition.stop();
-    }, 3000); 
+      document.getElementById('mic-hint').textContent = 'Spróbuj jeszcze raz lub poproś rodzica o zaliczenie.';
+      document.getElementById('mic-hint').className = 'mic-hint error';
+    }, 4000); 
   };
 
   recognition.onresult = function(event) {
-    clearTimeout(timeoutId); // Anulujemy timer, bo mamy wynik
+    clearTimeout(timeoutId);
     const uslyszaneSlowo = event.results[0][0].transcript.toUpperCase();
     sprawdzWymowe(uslyszaneSlowo);
   };
@@ -56,7 +76,7 @@ if (SpeechRecognition) {
   recognition.onerror = function(event) {
     clearTimeout(timeoutId);
     document.getElementById('mic-button').classList.remove('listening');
-    document.getElementById('mic-hint').textContent = 'Nie udało się nagrać. Spróbuj jeszcze raz!';
+    document.getElementById('mic-hint').textContent = 'Mikrofon nie usłyszał. Kliknij "Rodzic: Dobrze powiedziane", jeśli jest OK.';
     document.getElementById('mic-hint').className = 'mic-hint error';
   };
 
@@ -119,7 +139,7 @@ window.nastepneSlowo = function() {
   odswiezSlowo();
 };
 
-// --- PRAWDZIWE NAGRYWANIE I SPRAWDZANIE ---
+// --- MIKROFON ---
 window.nagrajIWymow = function() {
   if (!recognition) {
     alert("Twoja przeglądarka nie wspiera rozpoznawania mowy. Spróbuj w Chrome na Androidzie.");
@@ -127,25 +147,34 @@ window.nagrajIWymow = function() {
   }
   
   try { recognition.stop(); } catch(e) {}
-  setTimeout(() => { recognition.start(); }, 100);
+  setTimeout(() => { 
+    try { recognition.start(); } catch(e) { 
+      alert("Błąd mikrofonu. Użyj przycisku dla rodzica.");
+    } 
+  }, 100);
 };
 
 function sprawdzWymowe(uslyszaneSlowo) {
   const doceloweSlowo = slowa[aktualnaGloska][aktualneSlowoIndex].word;
   const hint = document.getElementById('mic-hint');
   
-  // Prostsza logika: sprawdzamy, czy docelowe słowo jest w tym, co usłyszał mikrofon
   if (uslyszaneSlowo.includes(doceloweSlowo)) {
     hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
     hint.className = 'mic-hint success';
-    
-    gwiazdki++;
-    document.getElementById('stars-count').textContent = gwiazdki;
+    dodajGwiazdke();
   } else {
-    hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz głośno: ${doceloweSlowo}`;
+    hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz: ${doceloweSlowo}`;
     hint.className = 'mic-hint error';
   }
 }
+
+// --- FUNKCJA DLA RODZICA ---
+window.rodzicZaliczyl = function() {
+  const hint = document.getElementById('mic-hint');
+  hint.textContent = 'Zaliczone przez rodzica! ⭐';
+  hint.className = 'mic-hint success';
+  dodajGwiazdke();
+};
 
 // --- RYSOWANIE ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
@@ -208,6 +237,15 @@ window.wyczyscCanvas = function() {
   if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
+// --- PAYWALL ---
+window.pokazPaywall = function() {
+  document.getElementById('paywall-modal').style.display = 'flex';
+};
+
+window.zamknijPaywall = function() {
+  document.getElementById('paywall-modal').style.display = 'none';
+};
+
 // --- LOGOWANIE FIREBASE ---
 window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
@@ -267,4 +305,5 @@ onAuthStateChanged(auth, (user) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   pokazGlowna();
+  wczytajGwiazdki();
 });
