@@ -272,28 +272,27 @@
     <!-- SEKCJA: GRY PRO -->
     <div class="section-title">🧠 Gry Logiczne i Matematyka <span style="font-size: 14px; color: #ec4899;">(Wersja PRO)</span></div>
     <div class="menu-grid">
-      <div class="menu-card" onclick="pokazPaywall()" style="border: 2px solid #fbcfe8; box-shadow: 0 8px 0 #fbcfe8;">
+      <div id="card-zgadnij" class="menu-card" onclick="sprawdzDostepPro()" style="border: 2px solid #fbcfe8; box-shadow: 0 8px 0 #fbcfe8;">
         <span class="pro-badge">🔒</span>
         <span class="icon">👂</span>
         <div class="title" style="color: #db2777;">Zgadnij dźwięk</div>
       </div>
-      <!-- ZMIENIONO ONCLICK NA URUCHOMIENIE GRY -->
-      <div class="menu-card" onclick="uruchomMatme('dodawanie')" style="border: 2px solid #fde68a; box-shadow: 0 8px 0 #fde68a;">
+      <div id="card-dodawanie" class="menu-card" onclick="sprawdzDostepPro()" style="border: 2px solid #fde68a; box-shadow: 0 8px 0 #fde68a;">
         <span class="pro-badge">🔒</span>
         <span class="icon">➕</span>
         <div class="title" style="color: #f59e0b;">Dodawanie</div>
       </div>
-      <div class="menu-card" onclick="uruchomMatme('odejmowanie')" style="border: 2px solid #ddd6fe; box-shadow: 0 8px 0 #ddd6fe;">
+      <div id="card-odejmowanie" class="menu-card" onclick="sprawdzDostepPro()" style="border: 2px solid #ddd6fe; box-shadow: 0 8px 0 #ddd6fe;">
         <span class="pro-badge">🔒</span>
         <span class="icon">➖</span>
         <div class="title" style="color: #8b5cf6;">Odejmowanie</div>
       </div>
-      <div class="menu-card" onclick="uruchomMatme('mnozenie')" style="border: 2px solid #a7f3d0; box-shadow: 0 8px 0 #a7f3d0;">
+      <div id="card-mnozenie" class="menu-card" onclick="sprawdzDostepPro()" style="border: 2px solid #a7f3d0; box-shadow: 0 8px 0 #a7f3d0;">
         <span class="pro-badge">🔒</span>
         <span class="icon">✖️</span>
         <div class="title" style="color: #10b981;">Mnożenie</div>
       </div>
-      <div class="menu-card" onclick="uruchomMatme('dzielenie')" style="border: 2px solid #fecaca; box-shadow: 0 8px 0 #fecaca;">
+      <div id="card-dzielenie" class="menu-card" onclick="sprawdzDostepPro()" style="border: 2px solid #fecaca; box-shadow: 0 8px 0 #fecaca;">
         <span class="pro-badge">🔒</span>
         <span class="icon">➗</span>
         <div class="title" style="color: #ef4444;">Dzielenie</div>
