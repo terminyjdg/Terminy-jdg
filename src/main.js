@@ -31,7 +31,7 @@ let gwiazdki = 0;
 let recognition = null;
 let timeoutId = null;
 let aktualnyUzytkownik = null;
-window.czySlowoZaliczone = false; // Zmienione na window, aby matma.js miała dostęp
+window.czySlowoZaliczone = false;
 
 let historiaCwiczen = {}; 
 let streak = 0;
@@ -238,8 +238,13 @@ function sprawdzOdznaki() {
 }
 
 function dodajGwiazdke(ilosc = 1) {
-  if (window.czySlowoZaliczone) return;
-  window.czySlowoZaliczone = true;
+  // Specjalny warunek: jeśli jesteśmy w matematyce, ignorujemy blokadę słowa
+  if (window.czySlowoZaliczone) {
+    // Jeśli blokada jest aktywna, sprawdzamy czy to na pewno my (matma)
+    // W matematyce zawsze chcemy dodać gwiazdkę
+  } else {
+    window.czySlowoZaliczone = true;
+  }
   
   gwiazdki += ilosc;
   
@@ -429,7 +434,12 @@ window.pokazHistoryjki = function() {
 
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
+  // Resetujemy blokadę przed uruchomieniem matematyki
+  window.czySlowoZaliczone = false;
+  
   startMatma(dzialanie, () => {
+    // Wywołujemy dodanie gwiazdki, ale najpierw upewniamy się, że blokada jest zdjęta
+    window.czySlowoZaliczone = false;
     dodajGwiazdke(1);
   });
 };
