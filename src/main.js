@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { bazaSlow } from './dane.js'; 
+import { renderujPanelRodzica } from './panel.js'; // IMPORTUJEMY PANEL
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -28,12 +29,11 @@ let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
 let historiaCwiczen = {};
-
-// NOWE: Zmienne dla Streaka
 let streak = 0;
 let ostatniaDataCwiczenia = null;
+let celTygodniowy = 0; // NOWA ZMIENNA
 
-// --- GENEROWANIE KAFELKÓW Z SORTOWANIEM ---
+// --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
   grid.innerHTML = ''; 
@@ -72,7 +72,8 @@ async function zapiszDaneDoBazy() {
         email: aktualnyUzytkownik.email,
         historia: historiaCwiczen,
         streak: streak,
-        ostatniaData: ostatniaDataCwiczenia
+        ostatniaData: ostatniaDataCwiczenia,
+        celTygodniowy: celTygodniowy
       }, { merge: true });
     } catch (e) {
       console.error("Błąd zapisu do bazy:", e);
@@ -90,17 +91,20 @@ async function wczytajDaneZbazy() {
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
+        celTygodniowy = dane.celTygodniowy || 0;
       } else {
         gwiazdki = 0;
         historiaCwiczen = {};
         streak = 0;
         ostatniaDataCwiczenia = null;
+        celTygodniowy = 0;
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
           gwiazdki: 0,
           email: aktualnyUzytkownik.email,
           historia: {},
           streak: 0,
-          ostatniaData: null
+          ostatniaData: null,
+          celTygodniowy: 0
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -122,23 +126,20 @@ function dodajGwiazdke() {
   }
   historiaCwiczen[aktualnaGloska]++;
 
-  // STREAK LOGIC
   const dzisiaj = new Date().toISOString().split('T')[0];
   
   if (ostatniaDataCwiczenia !== dzisiaj) {
-    // To jest nowy dzień ćwiczeń
     const wczoraj = new Date();
     wczoraj.setDate(wczoraj.getDate() - 1);
     const wczorajStr = wczoraj.toISOString().split('T')[0];
 
     if (ostatniaDataCwiczenia === wczorajStr) {
-      streak++; // Kontynuacja serii
+      streak++; 
     } else {
-      streak = 1; // Nowa seria
+      streak = 1; 
     }
     ostatniaDataCwiczenia = dzisiaj;
     
-    // BONUS ZA STREAK (np. +1 gwiazdka za każdy dzień z rzędu)
     if (streak > 1) {
       gwiazdki += streak;
       document.getElementById('stars-count').textContent = gwiazdki;
@@ -248,38 +249,38 @@ window.pokazPanelRodzica = function() {
   document.getElementById('parent-panel-view').style.display = 'block';
   window.scrollTo(0, 0);
   
-  document.getElementById('parent-total-stars').textContent = gwiazdki;
-  document.getElementById('streak-count').textContent = streak;
-  
+  // Obliczamy słowa i historię
   let totalWords = 0;
   for (const gloska in historiaCwiczen) {
     totalWords += historiaCwiczen[gloska];
   }
-  document.getElementById('parent-words-count').textContent = totalWords;
 
-  const historyList = document.getElementById('parent-history-list');
-  historyList.innerHTML = ''; 
-  
+  let historyHTML = '';
   const gloskiKlucze = Object.keys(historiaCwiczen);
   if (gloskiKlucze.length === 0) {
-    historyList.innerHTML = '<div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>';
+    historyHTML = '<div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>';
   } else {
     gloskiKlucze.forEach(gloska => {
       const ilosc = historiaCwiczen[gloska];
-      const div = document.createElement('div');
-      div.className = 'history-item';
-      div.innerHTML = `<span>Głoska: <strong>${gloska}</strong></span> <span>${ilosc} razy</span>`;
-      historyList.appendChild(div);
+      historyHTML += `<div class="history-item"><span>Głoska: <strong>${gloska}</strong></span> <span>${ilosc} razy</span></div>`;
     });
   }
 
-  // ODBLOKOWYWANIE NAKLEJEK
-  if (gwiazdki >= 10) document.getElementById('sticker-1').classList.add('unlocked');
-  if (gwiazdki >= 25) document.getElementById('sticker-2').classList.add('unlocked');
-  if (gwiazdki >= 50) document.getElementById('sticker-3').classList.add('unlocked');
-  if (gwiazdki >= 100) document.getElementById('sticker-4').classList.add('unlocked');
-  if (gwiazdki >= 200) document.getElementById('sticker-5').classList.add('unlocked');
-  if (gwiazdki >= 500) document.getElementById('sticker-6').classList.add('unlocked');
+  // Wywołujemy funkcję z panel.js, przekazując dane
+  renderujPanelRodzica({
+    gwiazdki: gwiazdki,
+    streak: streak,
+    celTygodniowy: celTygodniowy,
+    totalWords: totalWords,
+    historiaHTML: historyHTML
+  });
+};
+
+// FUNKCJA DO ZAPISU CELU (wywoływana z panel.js)
+window.zapiszCelWTle = function(targetValue) {
+  celTygodniowy = targetValue;
+  zapiszDaneDoBazy();
+  pokazPanelRodzica(); // Odśwież panel, aby pokazać pasek
 };
 
 function odswiezSlowo() {
@@ -471,6 +472,7 @@ onAuthStateChanged(auth, async (user) => {
     historiaCwiczen = {};
     streak = 0;
     ostatniaDataCwiczenia = null;
+    celTygodniowy = 0;
     document.getElementById('stars-count').textContent = '0';
     renderujKafelki();
   }
