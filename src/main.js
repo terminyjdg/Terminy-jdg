@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { bazaSlow } from './dane.js'; // IMPORTUJEMY NASZE SŁOWA
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -16,149 +17,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- BOGATSZE SŁOWNIKI SŁÓW Z PRAWDZIWYMI KSZTAŁTAMI SVG ---
-const slowa = {
-  'R': [ 
-    { 
-      image: '🦀', word: 'RAK', 
-      svg: '<path d="M60,80 Q80,60 100,80 Q120,60 140,80 L130,110 Q100,130 70,110 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M50,100 L40,110 M50,110 L40,120 M150,100 L160,110 M150,110 L160,120" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🚲', word: 'ROWER', 
-      svg: '<circle cx="60" cy="120" r="30" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="140" cy="120" r="30" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M60,120 L100,80 L140,120 M100,80 L115,60 L130,60 M100,80 L100,100 L140,120 M60,120 L90,80 M90,80 L100,80" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🐟', word: 'RYBA', 
-      svg: '<path d="M50,100 Q80,50 120,100 Q80,150 50,100 Z M120,100 L160,80 L160,120 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="70" cy="90" r="3" fill="#9ca3af"/>' 
-    }, 
-    { 
-      image: '🌹', word: 'RÓŻA', 
-      svg: '<path d="M100,40 C140,40 140,90 100,90 C60,90 60,40 100,40 Z M100,90 L100,160 M100,120 Q80,100 70,130 M100,130 Q120,110 130,140" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🦊', word: 'RYŚ', 
-      svg: '<path d="M70,60 L50,40 L60,80 M130,60 L150,40 L140,80 M60,80 Q100,140 140,80 M80,110 Q100,130 120,110 M100,130 L100,170" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🥕', word: 'MARCHEWKA', 
-      svg: '<path d="M100,40 Q140,100 100,160 Q60,100 100,40 M100,40 L80,20 M100,40 L120,20 M80,80 L100,90 M120,80 L100,90 M85,110 L105,120" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }
-  ],
-  'S': [ 
-    { 
-      image: '🦉', word: 'SOWA', 
-      svg: '<circle cx="100" cy="100" r="50" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="15" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="120" cy="90" r="15" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="5" fill="#9ca3af"/><circle cx="120" cy="90" r="5" fill="#9ca3af"/><path d="M90,120 L110,120 L100,135 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🧀', word: 'SER', 
-      svg: '<polygon points="50,150 150,150 150,100 100,50 50,100" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="100" cy="120" r="10" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="80" cy="90" r="8" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '☀️', word: 'SŁOŃCE', 
-      svg: '<circle cx="100" cy="100" r="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M100,40 L100,20 M100,160 L100,180 M40,100 L20,100 M160,100 L180,100 M60,60 L40,40 M140,140 L160,160 M60,140 L40,160 M140,60 L160,40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🐘', word: 'SŁOŃ', 
-      svg: '<circle cx="100" cy="100" r="50" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M60,100 Q30,120 50,160 M140,100 Q170,120 150,160 M100,150 L100,180 M80,180 L120,180" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🌲', word: 'SOSNA', 
-      svg: '<polygon points="100,20 140,80 60,80 100,20" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><polygon points="100,60 160,130 40,130 100,60" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><rect x="90" y="130" width="20" height="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🍎', word: 'SOK', 
-      svg: '<path d="M80,50 L80,150 L120,150 L120,50 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M80,50 L120,50 L120,80 L80,80 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }
-  ],
-  'C': [ 
-    { 
-      image: '🧅', word: 'CEBULA', 
-      svg: '<path d="M100,50 Q150,100 100,150 Q50,100 100,50 M100,50 L100,20 M100,50 L80,30 M100,50 L120,30" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🍋', word: 'CYTRYNA', 
-      svg: '<ellipse cx="100" cy="100" rx="60" ry="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M40,100 L20,80 M160,100 L180,120" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🎯', word: 'CEL', 
-      svg: '<circle cx="100" cy="100" r="60" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="100" cy="100" r="20" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🌷', word: 'CUKIER', 
-      svg: '<path d="M100,80 Q150,50 150,100 Q150,150 100,120 Q50,150 50,100 Q50,50 100,80 Z M100,120 L100,180" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🍪', word: 'CIASTKO', 
-      svg: '<circle cx="100" cy="100" r="60" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="80" cy="80" r="5" fill="#9ca3af"/><circle cx="120" cy="90" r="5" fill="#9ca3af"/><circle cx="90" cy="120" r="5" fill="#9ca3af"/>' 
-    },
-    { 
-      image: '🧹', word: 'CIASTO', 
-      svg: '<path d="M50,50 L150,150 M140,40 L160,60 M40,140 L60,160" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }
-  ],
-  'L': [ 
-    { 
-      image: '🦁', word: 'LEW', 
-      svg: '<circle cx="100" cy="100" r="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M100,60 L100,40 M100,140 L100,160 M60,100 L40,100 M140,100 L160,100 M75,75 L50,50 M125,125 L150,150 M75,125 L50,150 M125,75 L150,50" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🪆', word: 'LALKA', 
-      svg: '<circle cx="100" cy="70" r="30" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M100,100 L100,150 M70,130 L130,130 M100,150 L80,190 M100,150 L120,190" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🍦', word: 'LODY', 
-      svg: '<path d="M80,100 L120,100 L100,180 Z M80,100 Q100,50 120,100" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }, 
-    { 
-      image: '🌲', word: 'LAS', 
-      svg: '<polygon points="100,20 140,80 60,80 100,20" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><polygon points="100,60 160,130 40,130 100,60" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><rect x="90" y="130" width="20" height="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🛏️', word: 'ŁÓŻKO', 
-      svg: '<rect x="50" y="100" width="100" height="50" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><rect x="50" y="80" width="30" height="20" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🥄', word: 'ŁYŻKA', 
-      svg: '<ellipse cx="100" cy="60" rx="20" ry="30" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><path d="M100,90 L100,180" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }
-  ],
-  'SZ': [ 
-    { 
-      image: '🧣', word: 'SZALIK', 
-      svg: '<path d="M60,50 Q100,100 60,150 M140,50 Q100,100 140,150 M60,50 L140,50 M60,150 L140,150" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🐱', word: 'KOT', 
-      svg: '<circle cx="100" cy="100" r="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><polygon points="70,70 50,40 80,60" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><polygon points="130,70 150,40 120,60" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🍎', word: 'GRUSZKA', 
-      svg: '<path d="M100,60 Q120,60 120,90 Q140,120 120,150 Q100,170 80,150 Q60,120 80,90 Q80,60 100,60 Z M100,60 L100,40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🚌', word: 'AUTOBUS', 
-      svg: '<rect x="40" y="50" width="120" height="80" rx="10" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="70" cy="140" r="15" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="130" cy="140" r="15" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }
-  ],
-  'Ż': [ 
-    { 
-      image: '🐸', word: 'ŻABA', 
-      svg: '<circle cx="100" cy="100" r="40" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="70" cy="80" r="15" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/><circle cx="130" cy="80" r="15" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🦒', word: 'ŻYRAFA', 
-      svg: '<path d="M80,120 L80,50 L120,30 L120,120 M80,120 L60,180 M120,120 L140,180" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🍞', word: 'ŻYTNI', 
-      svg: '<path d="M60,60 Q100,40 140,60 L140,140 Q100,160 60,140 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    },
-    { 
-      image: '🔥', word: 'ŻAR', 
-      svg: '<path d="M100,40 Q140,80 120,120 Q100,160 80,120 Q60,80 100,40 Z" fill="none" stroke="#9ca3af" stroke-width="4" stroke-dasharray="8,8"/>' 
-    }
-  ]
-};
+// UŻYWAMY IMPORTU ZAMIAST DEFINICJI
+const slowa = bazaSlow;
 
 let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
