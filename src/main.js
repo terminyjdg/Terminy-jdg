@@ -376,7 +376,6 @@ window.pokazPanelRodzica = function() {
     raportTekst = `W tym tygodniu Twoje dziecko poprawnie wypowiedziało ${totalWords} słów. Najczęściej ćwiczyło głoskę ${najczestszaGloska}. Świetna robota!`;
   }
 
-  // WYWOŁANIE IMPORTU Z PANEL.JS
   renderujPanelRodzica({
     gwiazdki: gwiazdki,
     streak: streak,
