@@ -64,45 +64,16 @@
     .word-nav { display: flex; justify-content: center; gap: 15px; }
     .word-nav button { background: #fbcfe8; color: #db2777; border: none; padding: 10px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; }
 
-    /* --- RYSOWANIE Z PODKŁADEM --- */
+    /* RYSOWANIE */
     #draw-view { display: none; text-align: center; }
-    .canvas-container { 
-      position: relative; 
-      background: white; 
-      border-radius: 20px; 
-      padding: 10px; 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-      margin-bottom: 20px; 
-      overflow: hidden; 
-      height: 300px;
-    }
-    
-    /* Warstwa podkładu z przerywanym konturem */
-    .svg-guide {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: calc(100% - 20px);
-      height: calc(100% - 20px);
-      pointer-events: none; /* Pozwala klikać "przez" podkład na canvas */
-      z-index: 1;
-      opacity: 0.3; /* Delikatny szary */
-    }
-
-    canvas { 
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      touch-action: none; 
-      cursor: crosshair; 
-      display: block; 
-      z-index: 2; /* Canvas jest nad podkładem */
-    }
-
+    .canvas-container { position: relative; background: white; border-radius: 20px; padding: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; height: 300px; }
+    .svg-guide { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: calc(100% - 20px); pointer-events: none; z-index: 1; opacity: 0.3; }
+    canvas { position: absolute; top: 10px; left: 10px; touch-action: none; cursor: crosshair; display: block; z-index: 2; }
     .tools { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
     .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #cbd5e1; cursor: pointer; }
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
+    /* PANEL RODZICA */
     #parent-panel-view { display: none; padding: 20px; }
     .stats-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
     .stats-card h2 { color: #831843; margin-bottom: 15px; font-size: 22px; }
@@ -117,15 +88,25 @@
 
     .back-to-app-btn { display: block; width: 100%; padding: 15px; background: #ec4899; color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; text-decoration: none; margin-top: 20px; }
 
+    /* PAYWALL MODAL (Zaktualizowane) */
     #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     .modal-content { background: white; padding: 30px 20px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .modal-content h2 { color: #db2777; margin-bottom: 10px; font-size: 24px; }
     .modal-content p { color: #4b5563; font-size: 16px; margin-bottom: 20px; line-height: 1.5; }
-    .modal-price { font-size: 32px; font-weight: 700; color: #10b981; margin-bottom: 20px; }
-    .modal-price span { font-size: 16px; color: #6b7280; font-weight: 400; }
+    
+    .plan-options { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+    .plan-box { border: 2px solid #e5e7eb; border-radius: 15px; padding: 15px; cursor: pointer; transition: border-color 0.2s; position: relative; }
+    .plan-box:hover { border-color: #ec4899; }
+    .plan-box.selected { border-color: #10b981; background: #f0fdf4; }
+    .plan-box h3 { color: #831843; font-size: 18px; margin-bottom: 5px; }
+    .plan-box .price { font-size: 24px; font-weight: 700; color: #10b981; }
+    .plan-box .price span { font-size: 14px; color: #6b7280; font-weight: 400; }
+    .plan-box .badge { position: absolute; top: -10px; right: 15px; background: #ec4899; color: white; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+
     .modal-pro-btn { display: block; width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
     .modal-close { background: #f3f4f6; color: #4b5563; border: none; padding: 12px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; }
 
+    /* LOGOWANIE */
     #auth-login-view, #auth-register-view { display: none; padding: 40px 20px; min-height: 80vh; }
     .auth-box { background: white; padding: 30px 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; margin: 0 auto; }
     .auth-box h2 { color: #db2777; margin-bottom: 20px; font-size: 24px; }
@@ -249,12 +230,7 @@
     </div>
     
     <div class="canvas-container">
-      <!-- PODKŁAD (SVG) - wyświetla przerywany kontur -->
-      <svg id="draw-guide" class="svg-guide" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <!-- Domyślnie pusty, wypełniany w JS -->
-      </svg>
-      
-      <!-- PŁÓTNO DO RYSOWANIA -->
+      <svg id="draw-guide" class="svg-guide" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
       <canvas id="drawCanvas"></canvas>
     </div>
     
@@ -341,13 +317,25 @@
     </div>
   </div>
 
-  <!-- PAYWALL MODAL -->
+  <!-- PAYWALL MODAL (ZAKTUALIZOWANY WYBÓR PLANU) -->
   <div id="paywall-modal">
     <div class="modal-content">
-      <h2>Wersja PRO</h2>
-      <p>Odblokuj wszystkie głoski (SZ, Ż, L, itp.), wyłącz reklamy i zapisuj szczegółowe statystyki postępów Twojego dziecka.</p>
-      <div class="modal-price">19 zł <span>/ mies.</span></div>
-      <button class="modal-pro-btn" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
+      <h2>Wybierz swój plan</h2>
+      <p>Odblokuj wszystkie głoski (SZ, Ż, L, itp.) i wyłącz reklamy.</p>
+      
+      <div class="plan-options">
+        <div class="plan-box" onclick="wybierzPlan('miesieczny')">
+          <h3>Miesięcznie</h3>
+          <div class="price">19 zł <span>/ mies.</span></div>
+        </div>
+        <div class="plan-box selected" onclick="wybierzPlan('roczny')">
+          <div class="badge">Oszczędzasz 30%</div>
+          <h3>Rocznie</h3>
+          <div class="price">159 zł <span>/ rok</span></div>
+        </div>
+      </div>
+
+      <button class="modal-pro-btn" onclick="rozpocznijPlatnosc()">Zapłać i odblokuj PRO</button>
       <button class="modal-close" onclick="zamknijPaywall()">Może później</button>
     </div>
   </div>
