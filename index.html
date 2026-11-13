@@ -6,7 +6,6 @@
   <title>Gaduła - Trener Wymowy</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
-    
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Fredoka', sans-serif; background: #fdf2f8; color: #1f2937; scroll-behavior: smooth; }
     
@@ -20,10 +19,11 @@
     .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 600; }
     
     .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    .letter-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 8px 0 #fbcfe8; border: 2px solid #fbcfe8; transition: transform 0.1s; }
+    .letter-card { background: white; border-radius: 20px; padding: 25px 15px; text-align: center; cursor: pointer; box-shadow: 0 8px 0 #fbcfe8; border: 2px solid #fbcfe8; transition: transform 0.1s; position: relative; }
     .letter-card:active { transform: translateY(4px); box-shadow: 0 4px 0 #fbcfe8; }
     .letter-card .big-letter { font-size: 48px; font-weight: 700; color: #db2777; margin-bottom: 5px; display: block; }
     .letter-card .desc { font-size: 14px; color: #6b7280; font-weight: 600; }
+    .lock-icon { position: absolute; top: 10px; right: 10px; font-size: 18px; }
 
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 10px 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .stars-display { font-size: 24px; font-weight: 700; color: #f59e0b; }
@@ -37,13 +37,13 @@
     .mic-btn { background: #10b981; color: white; border: none; width: 100px; height: 100px; border-radius: 50%; font-size: 40px; cursor: pointer; box-shadow: 0 8px 0 #059669; transition: transform 0.1s; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
     .mic-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #059669; }
     .mic-btn.listening { animation: pulse 1s infinite; background: #ef4444; box-shadow: 0 8px 0 #b91c1c; }
-    
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-    .mic-hint { font-size: 16px; color: #6b7280; font-weight: 600; margin-bottom: 20px; min-height: 24px; }
+    .mic-hint { font-size: 16px; color: #6b7280; font-weight: 600; margin-bottom: 10px; min-height: 24px; }
     .mic-hint.success { color: #10b981; }
     .mic-hint.error { color: #ef4444; }
 
+    .parent-check-btn { background: #f3f4f6; color: #4b5563; border: 1px dashed #cbd5e1; padding: 8px 15px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; margin-bottom: 20px; display: inline-block; }
     .word-nav { display: flex; justify-content: center; gap: 15px; }
     .word-nav button { background: #fbcfe8; color: #db2777; border: none; padding: 10px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; }
 
@@ -55,6 +55,16 @@
     .clear-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
     .ad-banner { background: #e5e7eb; color: #9ca3af; text-align: center; padding: 15px; border-radius: 10px; font-size: 12px; margin-top: 20px; border: 1px dashed #cbd5e1; }
+
+    /* PAYWALL MODAL */
+    #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: white; padding: 30px 20px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .modal-content h2 { color: #db2777; margin-bottom: 10px; font-size: 24px; }
+    .modal-content p { color: #4b5563; font-size: 16px; margin-bottom: 20px; line-height: 1.5; }
+    .modal-price { font-size: 32px; font-weight: 700; color: #10b981; margin-bottom: 20px; }
+    .modal-price span { font-size: 16px; color: #6b7280; font-weight: 400; }
+    .modal-pro-btn { display: block; width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
+    .modal-close { background: #f3f4f6; color: #4b5563; border: none; padding: 12px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; }
 
     #auth-login-view, #auth-register-view { display: none; padding: 40px 20px; min-height: 80vh; }
     .auth-box { background: white; padding: 30px 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; margin: 0 auto; }
@@ -93,9 +103,11 @@
         <span class="big-letter">C</span>
         <span class="desc">np. CEBULA, CYTRYNA</span>
       </div>
-      <div class="letter-card" onclick="rozpocznijCwiczenie('L')">
+      <!-- Zablokowana głoska (przykład Paywalla) -->
+      <div class="letter-card" onclick="pokazPaywall()" style="opacity: 0.7;">
+        <span class="lock-icon">🔒</span>
         <span class="big-letter">L</span>
-        <span class="desc">np. LEW, LALKA</span>
+        <span class="desc">Dostępne w PRO</span>
       </div>
     </div>
     <div class="ad-banner">Miejsce na reklamę (Google AdSense) – widoczne w wersji darmowej</div>
@@ -114,6 +126,8 @@
 
     <button class="mic-btn" id="mic-button" onclick="nagrajIWymow()">🎤</button>
     <div class="mic-hint" id="mic-hint">Kliknij i powiedz słowo!</div>
+    
+    <button class="parent-check-btn" onclick="rodzicZaliczyl()">Rodzic: Dobrze powiedziane</button>
 
     <div class="word-nav">
       <button onclick="nastepneSlowo()">Następne słowo →</button>
@@ -170,6 +184,17 @@
       <button class="auth-btn" onclick="obsluzRejestracje()">Zarejestruj się</button>
       <div class="auth-switch" onclick="pokazLogowanie()">Masz już konto? <span>Zaloguj się</span></div>
       <div style="margin-top: 15px;"><a href="#" onclick="pokazGlowna()" style="color:#6b7280; font-size:14px;">Wróć do ćwiczeń</a></div>
+    </div>
+  </div>
+
+  <!-- PAYWALL MODAL -->
+  <div id="paywall-modal">
+    <div class="modal-content">
+      <h2>Wersja PRO</h2>
+      <p>Odblokuj wszystkie głoski (S, C, L, R, itp.), wyłącz reklamy i zapisuj szczegółowe statystyki postępów Twojego dziecka.</p>
+      <div class="modal-price">19 zł <span>/ mies.</span></div>
+      <button class="modal-pro-btn" onclick="alert('Wkrótce uruchomimy płatności!')">Przejdź na PRO</button>
+      <button class="modal-close" onclick="zamknijPaywall()">Może później</button>
     </div>
   </div>
 
