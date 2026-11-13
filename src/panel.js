@@ -2,6 +2,8 @@ export function renderujPanelRodzica(dane) {
   const kontener = document.getElementById('parent-panel-view');
   if (!kontener) return;
 
+  const odznaki = dane.odznaki || {};
+
   kontener.innerHTML = `
     <h1 style="text-align: center; color: #831843; margin-bottom: 20px;">Panel Rodzica</h1>
     
@@ -11,6 +13,17 @@ export function renderujPanelRodzica(dane) {
       <p style="color: #065f46; font-weight: 600; font-size: 16px;">${dane.raportTekst}</p>
     </div>
 
+    <!-- ODZNAKI -->
+    <div class="stats-card">
+      <h2>Twoje Odznaki</h2>
+      <p>Zdobywaj osiągnięcia za systematyczną pracę!</p>
+      <div style="display: flex; justify-content: space-around; margin-top: 15px; font-size: 40px;">
+        <div title="Pierwszy krok (1 gwiazdka)" style="opacity: ${odznaki['pierwszy_krok'] ? 1 : 0.2}">${odznaki['pierwszy_krok'] ? '🏅' : '🔒'}</div>
+        <div title="Konsekwencja (3 dni z rzędu)" style="opacity: ${odznaki['konsekwencja'] ? 1 : 0.2}">${odznaki['konsekwencja'] ? '🔥' : '🔒'}</div>
+        <div title="Kolekcjoner (50 gwiazdek)" style="opacity: ${odznaki['kolekcjoner'] ? 1 : 0.2}">${odznaki['kolekcjoner'] ? '🏆' : '🔒'}</div>
+      </div>
+    </div>
+
     <!-- CEL TYGODNIOWY -->
     <div class="mission-box">
       <h2>🎯 Cel Tygodniowy</h2>
@@ -18,12 +31,12 @@ export function renderujPanelRodzica(dane) {
       
       <div class="mission-input-group">
         <input type="number" id="mission-target" placeholder="np. 50" value="${dane.celTygodniowy > 0 ? dane.celTygodniowy : ''}" />
-        <button onclick="window.ustawCel()">Ustaw cel</button>
+        <button onclick="window.zapiszCelWTle(parseInt(document.getElementById('mission-target').value))">Ustaw cel</button>
       </div>
 
       <div id="mission-progress" style="display: ${dane.celTygodniowy > 0 ? 'block' : 'none'};">
         <div class="progress-bar-container">
-          <div class="progress-bar-fill" id="progress-fill" style="width: ${Math.min((dane.gwiazdki / dane.celTygodniowy) * 100, 100)}%"></div>
+          <div class="progress-bar-fill" style="width: ${Math.min((dane.gwiazdki / dane.celTygodniowy) * 100, 100)}%"></div>
         </div>
         <div class="progress-text" id="progress-text">${dane.gwiazdki} / ${dane.celTygodniowy} gwiazdek</div>
       </div>
@@ -76,18 +89,3 @@ export function renderujPanelRodzica(dane) {
     <button class="back-to-app-btn" onclick="window.pokazGlowna()">← Wróć do ćwiczeń</button>
   `;
 }
-
-window.ustawCel = function() {
-  const targetInput = document.getElementById('mission-target');
-  const targetValue = parseInt(targetInput.value);
-  
-  if (isNaN(targetValue) || targetValue <= 0) {
-    alert('Podaj poprawną liczbę gwiazdek (np. 50).');
-    return;
-  }
-
-  if (window.zapiszCelWTle) {
-    window.zapiszCelWTle(targetValue);
-    alert('Cel ustawiony!');
-  }
-};
