@@ -2,7 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { bazaSlow } from './dane.js'; 
-import { renderujPanelRodzica } from './panel.js'; // IMPORTUJEMY PANEL
+import { renderujPanelRodzica } from './panel.js'; 
+import { startMemory } from './gra-memory.js'; // IMPORTUJEMY GRĘ
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -31,7 +32,7 @@ let czySlowoZaliczone = false;
 let historiaCwiczen = {};
 let streak = 0;
 let ostatniaDataCwiczenia = null;
-let celTygodniowy = 0; // NOWA ZMIENNA
+let celTygodniowy = 0;
 
 // --- GENEROWANIE KAFELKÓW ---
 function renderujKafelki() {
@@ -114,11 +115,11 @@ async function wczytajDaneZbazy() {
   }
 }
 
-function dodajGwiazdke() {
+function dodajGwiazdke(ilosc = 1) {
   if (czySlowoZaliczone) return;
   czySlowoZaliczone = true;
   
-  gwiazdki++;
+  gwiazdki += ilosc;
   document.getElementById('stars-count').textContent = gwiazdki;
   
   if (!historiaCwiczen[aktualnaGloska]) {
@@ -192,6 +193,7 @@ function ukryjWszystkieWidoki() {
   document.getElementById('main-view').style.display = 'none';
   document.getElementById('exercise-view').style.display = 'none';
   document.getElementById('draw-view').style.display = 'none';
+  document.getElementById('memory-view').style.display = 'none';
   document.getElementById('auth-login-view').style.display = 'none';
   document.getElementById('auth-register-view').style.display = 'none';
   document.getElementById('parent-panel-view').style.display = 'none';
@@ -244,12 +246,22 @@ window.pokazRysowanie = function() {
   window.scrollTo(0, 0);
 };
 
+window.pokazMemory = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('memory-view').style.display = 'block';
+  window.scrollTo(0, 0);
+  
+  // Uruchamiamy grę z pliku gra-memory.js
+  startMemory(bazaSlow, aktualnaGloska, () => {
+    dodajGwiazdke(5); // Bonus: +5 gwiazdek za wygraną
+  });
+};
+
 window.pokazPanelRodzica = function() {
   ukryjWszystkieWidoki();
   document.getElementById('parent-panel-view').style.display = 'block';
   window.scrollTo(0, 0);
   
-  // Obliczamy słowa i historię
   let totalWords = 0;
   for (const gloska in historiaCwiczen) {
     totalWords += historiaCwiczen[gloska];
@@ -266,7 +278,6 @@ window.pokazPanelRodzica = function() {
     });
   }
 
-  // Wywołujemy funkcję z panel.js, przekazując dane
   renderujPanelRodzica({
     gwiazdki: gwiazdki,
     streak: streak,
@@ -276,11 +287,10 @@ window.pokazPanelRodzica = function() {
   });
 };
 
-// FUNKCJA DO ZAPISU CELU (wywoływana z panel.js)
 window.zapiszCelWTle = function(targetValue) {
   celTygodniowy = targetValue;
   zapiszDaneDoBazy();
-  pokazPanelRodzica(); // Odśwież panel, aby pokazać pasek
+  pokazPanelRodzica(); 
 };
 
 function odswiezSlowo() {
@@ -318,7 +328,7 @@ function sprawdzWymowe(uslyszaneSlowo) {
   if (uslyszaneSlowo.includes(doceloweSlowo)) {
     hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
     hint.className = 'mic-hint success';
-    dodajGwiazdke();
+    dodajGwiazdke(1);
   } else {
     hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz: ${doceloweSlowo}`;
     hint.className = 'mic-hint error';
@@ -333,7 +343,7 @@ window.rodzicZaliczyl = function() {
   const hint = document.getElementById('mic-hint');
   hint.textContent = 'Zaliczone przez rodzica! ⭐';
   hint.className = 'mic-hint success';
-  dodajGwiazdke();
+  dodajGwiazdke(1);
 };
 
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
