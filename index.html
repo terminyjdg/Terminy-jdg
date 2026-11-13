@@ -29,13 +29,12 @@
     .marketing-section { margin-top: 40px; text-align: center; padding-bottom: 40px; }
     .marketing-section h2 { font-size: 28px; font-weight: 700; color: #831843; margin-bottom: 25px; }
     
-    /* NOWY UKŁAD KART */
+    /* KARTY NA STRONIE GŁÓWNEJ */
     .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
     .feature-card { background: white; padding: 20px 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #fdf2f8; }
     .feature-card .icon { font-size: 40px; margin-bottom: 10px; }
     .feature-card h3 { font-size: 16px; color: #831843; margin-bottom: 5px; font-weight: 700; }
     .feature-card p { font-size: 13px; color: #6b7280; line-height: 1.4; }
-    
     .feature-card.full-width { grid-column: span 2; flex-direction: row; text-align: left; gap: 15px; padding: 20px; }
     .feature-card.full-width .icon { font-size: 45px; margin-bottom: 0; }
     .feature-card.full-width .text-wrapper h3 { font-size: 18px; margin-bottom: 5px; }
@@ -43,7 +42,6 @@
 
     .section-divider { font-size: 20px; color: #831843; font-weight: 700; margin: 30px 0 15px 0; text-align: left; border-bottom: 2px solid #fbcfe8; padding-bottom: 5px; display: flex; align-items: center; gap: 10px;}
 
-    /* PREMIUM BOX */
     .premium-box { background: #831843; padding: 30px 20px; border-radius: 20px; color: white; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(131, 24, 67, 0.3); }
     .premium-box h2 { font-size: 26px; margin-bottom: 10px; color: #fbcfe8; }
     .premium-box p { font-size: 16px; color: #fbcfe8; margin-bottom: 20px; line-height: 1.5; }
@@ -115,7 +113,7 @@
     #historyjki-view { display: none; padding: 20px; }
 
     /* EKRAN GRY MATEMATYCZNEJ (PRO) */
-    #math-view { display: none; text-align: center; padding-top: 20px; }
+    #math-view, #zgadnij-view { display: none; text-align: center; padding-top: 20px; }
     .math-answer-btn { background: white; color: #db2777; border: 3px solid #fbcfe8; border-radius: 20px; padding: 20px; font-size: 32px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 0 #fbcfe8; transition: transform 0.1s; font-family: 'Fredoka', sans-serif; }
     .math-answer-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #fbcfe8; }
     .math-answer-btn:disabled { cursor: default; transform: translateY(4px); box-shadow: none; }
@@ -197,7 +195,7 @@
     </div>
   </nav>
 
-  <!-- PRZEBUDOWANA STRONA GŁÓWNA (LANDING) -->
+  <!-- STRONA GŁÓWNA (LANDING) -->
   <div id="landing-view">
     <div class="hero">
       <h1>Rozwój i zabawa w jednym miejscu</h1>
@@ -209,7 +207,6 @@
       <div class="marketing-section">
         <h2>Co znajdziesz w Gaduła?</h2>
         
-        <!-- SEKCJA: MOWA -->
         <div class="section-divider">🗣️ Rozwój Mowy</div>
         <div class="features-grid">
           <div class="feature-card">
@@ -224,7 +221,6 @@
           </div>
         </div>
 
-        <!-- SEKCJA: LOGIKA I ZABAWA -->
         <div class="section-divider">🧠 Logika i Zabawa</div>
         <div class="features-grid">
           <div class="feature-card">
@@ -246,7 +242,6 @@
           </div>
         </div>
 
-        <!-- SEKCJA PRO -->
         <div class="premium-box">
           <h2>Odblokuj pełnię możliwości</h2>
           <p>Wersja PRO daje dostęp do wszystkich głosek, gier logicznych, matematyki oraz szczegółowych statystyk postępów dla rodzica.</p>
@@ -262,7 +257,6 @@
   <div class="container" id="menu-view">
     <div class="welcome-text" style="font-size: 28px; margin-top: 10px; margin-bottom: 10px;">Co dzisiaj robimy?</div>
     
-    <!-- SEKCJA: MOWA -->
     <div class="section-title">🗣️ Mowa i Kreatywność</div>
     <div class="menu-grid">
       <div class="menu-card" onclick="pokazGlowna()" style="border: 2px solid #fbcfe8; box-shadow: 0 8px 0 #fbcfe8;">
@@ -282,7 +276,6 @@
       </div>
     </div>
 
-    <!-- SEKCJA: GRY PRO -->
     <div class="section-title">🧠 Gry Logiczne i Matematyka <span style="font-size: 14px; color: #ec4899;">(Wersja PRO)</span></div>
     <div class="menu-grid">
       <div id="card-zgadnij" class="menu-card" onclick="sprawdzDostepPro('zgadnij')" style="border: 2px solid #fbcfe8; box-shadow: 0 8px 0 #fbcfe8;">
@@ -333,11 +326,29 @@
     </div>
 
     <div id="math-answers" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 400px; margin: 0 auto;">
-      <!-- Tutaj JavaScript wstawi przyciski z odpowiedziami -->
     </div>
 
-    <!-- PRZYCISK DALEJ -->
     <button id="math-next-btn" class="main-cta" style="background: #ec4899; display: none; margin-top: 30px; font-size: 18px;" onclick="nastepneZadanie()">Następne zadanie →</button>
+  </div>
+
+  <!-- NOWY EKRAN: ZGADNIJ DŹWIĘK (PRO) -->
+  <div class="container" id="zgadnij-view">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="wyjdzZZgadnij()">← Wróć do menu</button>
+      <div class="stars-display">⭐ <span id="zgadnij-stars-count">0</span></div>
+    </div>
+
+    <h2 style="color: #831843; font-size: 28px; margin-bottom: 20px; text-align: center;">Zgadnij dźwięk</h2>
+
+    <button id="play-sound-btn" class="mic-btn" style="margin-bottom: 30px; background: #8b5cf6; box-shadow: 0 8px 0 #6d28d9;" onclick="odtworzZgadnijDzwiek()">
+      🔊
+    </button>
+    <p style="text-align: center; color: #6b7280; font-weight: 600; margin-bottom: 20px;">Kliknij głośnik, aby usłyszeć dźwięk, a potem wybierz odpowiedni obrazek.</p>
+
+    <div id="zgadnij-answers" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 400px; margin: 0 auto;">
+    </div>
+
+    <button id="zgadnij-next-btn" class="main-cta" style="background: #ec4899; display: none; margin-top: 30px; font-size: 18px;" onclick="nastepneZgadnij()">Następny dźwięk →</button>
   </div>
 
   <!-- EKRAN GŁÓWNY (WYBÓR GŁOSKI) -->
