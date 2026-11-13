@@ -84,7 +84,6 @@ function aktualizujStatusPro(user) {
 window.sprawdzDostepPro = function(akcja) {
   if (czyMaPro) {
     if (akcja === 'zgadnij') {
-      // NAPRAWIONO: Zamiast alertu uruchamiamy grę
       uruchomZgadnij();
     } else {
       uruchomMatme(akcja);
