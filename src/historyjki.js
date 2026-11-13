@@ -1,48 +1,115 @@
-export function startHistoryjki(bazaSlow, callbackZapis) {
-  const kontener = document.getElementById('historyjki-view');
-  if (!kontener) return;
+// src/historyjki.js
 
-  // Losujemy 3 słowa z całej bazy
-  const wszystkieSlowa = [];
-  Object.values(bazaSlow).forEach(tablica => {
-    tablica.forEach(slowo => wszystkieSlowa.push(slowo));
-  });
+const dostepneObrazki = ['🐶', '🚗', '🏠', '☀️', '🌳', '🐱', '🍎', '🚀', '🌙', '⭐', '🎈', '🎁', '🦄', '🐉', '🍦'];
+let aktualnaHistoryjka = [];
+let callbackZapisu = null;
 
-  const losowe = wszystkieSlowa.sort(() => 0.5 - Math.random()).slice(0, 3);
+export function startHistoryjki(onZapisz) {
+    callbackZapisu = onZapisz;
+    aktualnaHistoryjka = [];
+    
+    document.getElementById('menu-view').style.display = 'none';
+    document.getElementById('historyjki-view').style.display = 'block';
+    
+    generujWyborObrazkow();
+    odswiezPlansze();
+}
 
-  kontener.innerHTML = `
-    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-      <button class="nav-btn" style="background: #f3f4f6; color: #4b5563;" onclick="window.pokazGlowna()">← Wróć</button>
-      <span style="font-weight:700; color:#db2777; font-size:18px;">Kreator Historyjek</span>
-    </div>
+export function wyjdzZHistoryjek() {
+    document.getElementById('historyjki-view').style.display = 'none';
+    document.getElementById('menu-view').style.display = 'block';
+    aktualnaHistoryjka = [];
+}
 
-    <div class="stats-card">
-      <h2>Ułóż historyjkę z tych obrazków:</h2>
-      
-      <div style="display: flex; justify-content: center; gap: 15px; margin: 20px 0; font-size: 60px;">
-        <div>${losowe[0].image}</div>
-        <div>${losowe[1].image}</div>
-        <div>${losowe[2].image}</div>
-      </div>
+function generujWyborObrazkow() {
+    const baza = document.getElementById('historyjki-baza');
+    baza.innerHTML = '';
+    
+    dostepneObrazki.forEach(obrazek => {
+        const btn = document.createElement('button');
+        btn.className = 'historyjki-obrazek-btn';
+        btn.innerText = obrazek;
+        btn.onclick = () => dodajDoHistoryjki(obrazek);
+        baza.appendChild(btn);
+    });
+}
 
-      <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
-        (${losowe[0].word}, ${losowe[1].word}, ${losowe[2].word})
-      </p>
-
-      <textarea id="historyjka-input" placeholder="Wpisz tutaj historyjkę ułożoną przez dziecko..." style="width: 100%; height: 100px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; font-size: 16px; margin-bottom: 15px;"></textarea>
-      
-      <button class="cta-btn" style="background: #10b981; width: 100%;" onclick="window.zapiszHistoryjke('${losowe[0].word}', '${losowe[1].word}', '${losowe[2].word}')">Zapisz historyjkę</button>
-    </div>
-  `;
-
-  window.zapiszHistoryjke = function(slowo1, slowo2, slowo3) {
-    const tekst = document.getElementById('historyjka-input').value;
-    if (!tekst) {
-      alert('Wpisz historyjkę przed zapisaniem!');
-      return;
+function dodajDoHistoryjki(obrazek) {
+    if (aktualnaHistoryjka.length >= 3) {
+        alert("Historyjka może mieć maksymalnie 3 obrazki! Kliknij 'Wyczyść', aby zacząć od nowa.");
+        return;
     }
-    callbackZapis(`Historyjka (${slowo1}, ${slowo2}, ${slowo3}): ${tekst}`);
-    alert('Historyjka zapisana! Możesz ją zobaczyć w Panelu Rodzica.');
-    window.pokazGlowna();
-  };
+    
+    aktualnaHistoryjka.push(obrazek);
+    odswiezPlansze();
+}
+
+function odswiezPlansze() {
+    const plansza = document.getElementById('historyjki-plansza');
+    plansza.innerHTML = '';
+    
+    for (let i = 0; i < 3; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'historyjki-slot';
+        
+        if (aktualnaHistoryjka[i]) {
+            slot.innerText = aktualnaHistoryjka[i];
+            slot.style.background = '#fdf2f8';
+            slot.style.cursor = 'pointer';
+            slot.title = "Kliknij, aby usunąć";
+            slot.onclick = () => {
+                aktualnaHistoryjka.splice(i, 1);
+                odswiezPlansze();
+            };
+        } else {
+            slot.innerText = '+';
+            slot.style.color = '#cbd5e1';
+            slot.style.background = '#f9fafb';
+        }
+        
+        plansza.appendChild(slot);
+    }
+
+    // Zarządzanie przyciskami
+    const btnZapisz = document.getElementById('historyjki-zapisz-btn');
+    const btnWyczysc = document.getElementById('historyjki-wyczysc-btn');
+
+    if (aktualnaHistoryjka.length === 3) {
+        btnZapisz.style.display = 'block';
+    } else {
+        btnZapisz.style.display = 'none';
+    }
+
+    if (aktualnaHistoryjka.length > 0) {
+        btnWyczysc.style.display = 'block';
+    } else {
+        btnWyczysc.style.display = 'none';
+    }
+}
+
+export function wyczyscHistoryjke() {
+    aktualnaHistoryjka = [];
+    odswiezPlansze();
+}
+
+export function zapiszHistoryjke() {
+    if (aktualnaHistoryjka.length === 3) {
+        if (callbackZapisu) {
+            callbackZapisu([...aktualnaHistoryjka]); // Przekazujemy kopię
+            
+            // Efekt sukcesu
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+            oscillator.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); 
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.3);
+
+            alert("Historyjka zapisana! Możesz ją zobaczyć w Panelu Rodzica.");
+            aktualnaHistoryjka = [];
+            odswiezPlansze();
+        }
+    }
 }
