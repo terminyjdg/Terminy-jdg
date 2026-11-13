@@ -30,15 +30,15 @@ let timeoutId = null;
 let aktualnyUzytkownik = null;
 let czySlowoZaliczone = false;
 
-// STATYSTYKI DO RAPORTU
-let historiaCwiczen = {}; // { 'A': { proby: 5, sukcesy: 3 } }
+let historiaCwiczen = {}; 
 let streak = 0;
 let ostatniaDataCwiczenia = null;
 let celTygodniowy = 0;
 
-// --- GENEROWANIE KAFELKÓW ---
+// --- GENEROWANIE KAFELKÓW (POPRAWIONA) ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
+  if (!grid) return;
   grid.innerHTML = ''; 
 
   const posortowaneGloski = Object.keys(slowa).sort();
@@ -56,11 +56,12 @@ function renderujKafelki() {
       card.onclick = () => window.rozpocznijCwiczenie(gloska);
     }
 
+    // Używamy bez polskich znaków w nazwie zmiennej
     const przykladoweSlowo = slowa[gloska][0].word;
 
     card.innerHTML += `
       <span class="big-letter">${gloska}</span>
-      <span class="desc">np. ${przykładoweSlowo}</span>
+      <span class="desc">np. ${przykladoweSlowo}</span>
     `;
     grid.appendChild(card);
   });
@@ -166,15 +167,16 @@ function dodajGwiazdke(ilosc = 1) {
   gwiazdki += ilosc;
   
   const starDisplay = document.getElementById('stars-display');
-  starDisplay.classList.add('pop');
-  setTimeout(() => starDisplay.classList.remove('pop'), 300);
+  if (starDisplay) {
+    starDisplay.classList.add('pop');
+    setTimeout(() => starDisplay.classList.remove('pop'), 300);
+  }
   
   document.getElementById('stars-count').textContent = gwiazdki;
   
   pokazKonfetti();
   odtworzDzwiek(true);
 
-  // Aktualizacja statystyk
   if (!historiaCwiczen[aktualnaGloska]) {
     historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
   }
@@ -318,7 +320,6 @@ window.pokazPanelRodzica = function() {
   let najczestszaGloska = '-';
   let maxProb = 0;
 
-  // Generowanie Raportu i Historii
   let historyHTML = '';
   const gloskiKlucze = Object.keys(historiaCwiczen);
   
@@ -340,7 +341,6 @@ window.pokazPanelRodzica = function() {
     });
   }
 
-  // Raport tekstowy
   let raportTekst = "Zacznij ćwiczyć, aby zobaczyć raport!";
   if (totalWords > 0) {
     raportTekst = `W tym tygodniu Twoje dziecko poprawnie wypowiedziało ${totalWords} słów. Najczęściej ćwiczyło głoskę ${najczestszaGloska}. Świetna robota!`;
@@ -351,7 +351,7 @@ window.pokazPanelRodzica = function() {
     streak: streak,
     celTygodniowy: celTygodniowy,
     totalWords: totalWords,
-    historiaHTML: historyHTML,
+    historiaHTML: historiaHTML,
     raportTekst: raportTekst
   });
 };
@@ -403,7 +403,6 @@ function sprawdzWymowe(uslyszaneSlowo) {
     hint.className = 'mic-hint error';
     odtworzDzwiek(false);
     
-    // Zapisujemy nieudaną próbę
     if (!historiaCwiczen[aktualnaGloska]) {
       historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
     }
