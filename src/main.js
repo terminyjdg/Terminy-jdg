@@ -26,6 +26,7 @@ let aktualnaGloska = 'R';
 let aktualneSlowoIndex = 0;
 let gwiazdki = 0;
 let recognition = null;
+let timeoutId = null;
 
 // Sprawdzenie, czy przeglądarka wspiera rozpoznawanie mowy
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -39,20 +40,28 @@ if (SpeechRecognition) {
     document.getElementById('mic-button').classList.add('listening');
     document.getElementById('mic-hint').textContent = 'Słucham... Powiedz słowo!';
     document.getElementById('mic-hint').className = 'mic-hint';
+    
+    // Wymuszamy zakończenie nasłuchiwania po 2 sekundach (jeśli dziecko nic nie powie)
+    timeoutId = setTimeout(() => {
+      recognition.stop();
+    }, 3000); 
   };
 
   recognition.onresult = function(event) {
+    clearTimeout(timeoutId); // Anulujemy timer, bo mamy wynik
     const uslyszaneSlowo = event.results[0][0].transcript.toUpperCase();
     sprawdzWymowe(uslyszaneSlowo);
   };
 
   recognition.onerror = function(event) {
+    clearTimeout(timeoutId);
     document.getElementById('mic-button').classList.remove('listening');
     document.getElementById('mic-hint').textContent = 'Nie udało się nagrać. Spróbuj jeszcze raz!';
     document.getElementById('mic-hint').className = 'mic-hint error';
   };
 
   recognition.onend = function() {
+    clearTimeout(timeoutId);
     document.getElementById('mic-button').classList.remove('listening');
   };
 }
@@ -117,19 +126,16 @@ window.nagrajIWymow = function() {
     return;
   }
   
-  // Zatrzymujemy poprzednie nasłuchiwanie, jeśli trwało
   try { recognition.stop(); } catch(e) {}
-  
-  // Startujemy nowe
-  recognition.start();
+  setTimeout(() => { recognition.start(); }, 100);
 };
 
 function sprawdzWymowe(uslyszaneSlowo) {
   const doceloweSlowo = slowa[aktualnaGloska][aktualneSlowoIndex].word;
   const hint = document.getElementById('mic-hint');
   
-  // Prosta logika: jeśli usłyszane słowo zawiera docelowe (np. "rak" w "rak.") lub jest bardzo podobne
-  if (uslyszaneSlowo.includes(doceloweSlowo) || doceloweSlowo.includes(uslyszaneSlowo)) {
+  // Prostsza logika: sprawdzamy, czy docelowe słowo jest w tym, co usłyszał mikrofon
+  if (uslyszaneSlowo.includes(doceloweSlowo)) {
     hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
     hint.className = 'mic-hint success';
     
