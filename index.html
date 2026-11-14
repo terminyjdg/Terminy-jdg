@@ -98,8 +98,13 @@
     .memory-card.matched { background: #10b981; color: white; cursor: default; }
 
     /* PUZZLE STYLE */
-    .puzzle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 300px; margin: 0 auto; aspect-ratio: 1; background: #f3f4f6; padding: 10px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-    .puzzle-tile { display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 10px; cursor: pointer; transition: transform 0.1s; }
+    .puzzle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 300px; margin: 0 auto; aspect-ratio: 1; background: #f3f4f6; padding: 10px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 20px;}
+    .puzzle-slot { display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 10px; background: #e5e7eb; border: 2px dashed #9ca3af; color: #9ca3af; transition: all 0.3s; }
+    
+    /* NOWA BAZA PUZZLI */
+    #puzzle-baza { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 15px; background: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 100px; }
+    .puzzle-tile { width: 50px; height: 50px; font-size: 30px; border-radius: 10px; border: 2px solid #db2777; background: #fce7f3; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 0 #db2777; transition: transform 0.1s; }
+    .puzzle-tile:active { transform: translateY(4px); box-shadow: 0 1px 0 #db2777; }
 
     /* POZOSTAŁE STYLE */
     #main-view { display: none; }
@@ -321,13 +326,19 @@
       <div class="memory-grid" id="memory-grid"></div>
     </div>
 
-    <!-- NOWY EKRAN: PUZZLE -->
+    <!-- NOWY EKRAN: PUZZLE (Przeciąganie) -->
     <div class="container game-view" id="puzzle-view">
       <div class="top-bar">
         <button class="nav-btn" onclick="wyjdzZPuzzli()">← Wróć</button>
         <span style="font-weight:700; color:#ea580c; font-size:18px;">Ułóż puzzle</span>
       </div>
+      
+      <!-- Miejsce docelowe -->
       <div id="puzzle-grid" class="puzzle-grid"></div>
+
+      <!-- Kafelki do przeciągnięcia -->
+      <p style="color: #6b7280; font-weight: 600; margin: 15px 0 10px;">Przeciągnij lub kliknij obrazek:</p>
+      <div id="puzzle-baza"></div>
     </div>
 
     <!-- EKRAN ĆWICZENIA MOWY -->
@@ -453,6 +464,6 @@
 
   </div> <!-- KONIEC APP-CONTAINER -->
 
-  <script type="module" src="/src/main.js?v=5"></script>
+  <script type="module" src="/src/main.js?v=6"></script>
 </body>
 </html>
