@@ -1,10 +1,7 @@
 // src/puzzle.js
 
-// Prosty obrazek podzielony na 9 części (3x3). Ostatni element to puste pole.
-const obrazekPuzzle = ['🐶', '🐶', '🐶', '🐶', '🐶', '🐶', '🐶', '🐶', '']; 
-// Indeksy: 0 1 2
-//           3 4 5
-//           6 7 8
+// Tablica puzzli 3x3. Każdy element to inny fragment obrazka.
+const obrazekPuzzle = ['🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🐼', '🐨', '']; 
 
 let aktualnaPlansza = [];
 let callbackSukces = null;
@@ -24,10 +21,10 @@ export function wyjdzZPuzzli() {
 }
 
 function generujNowaPlansze() {
-    // Tasujemy kafelki, żeby za każdym razem było inne wyzwanie (proste tasowanie)
+    // Resetujemy planszę do stanu początkowego
     aktualnaPlansza = [...obrazekPuzzle];
     
-    // Mieszamy elementy, ale zostawiamy puste pole na końcu
+    // Mieszamy elementy (proste tasowanie Fishera-Yatesa), ale zostawiamy puste pole na końcu
     for (let i = aktualnaPlansza.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [aktualnaPlansza[i], aktualnaPlansza[j]] = [aktualnaPlansza[j], aktualnaPlansza[i]];
@@ -47,6 +44,7 @@ function renderujPlansze() {
         if (element === '') {
             tile.style.background = 'transparent';
             tile.style.border = 'none';
+            tile.style.cursor = 'default';
         } else {
             tile.innerText = element;
             tile.style.background = '#fce7f3';
@@ -59,14 +57,12 @@ function renderujPlansze() {
 }
 
 function przesunKafelek(kliknietyIndex) {
-    // Znajdź indeks pustego pola
     const pustyIndex = aktualnaPlansza.indexOf('');
     
-    // Sprawdź, czy kliknięty kafelek sąsiaduje z pustym polem
     const czySasiaduje = sprawdzSasiedztwo(kliknietyIndex, pustyIndex);
     
     if (czySasiaduje) {
-        // Zamień miejscami
+        // Zamień miejscami kliknięty kafelek z pustym polem
         [aktualnaPlansza[pustyIndex], aktualnaPlansza[kliknietyIndex]] = [aktualnaPlansza[kliknietyIndex], aktualnaPlansza[pustyIndex]];
         renderujPlansze();
         sprawdzWygrana();
@@ -74,8 +70,6 @@ function przesunKafelek(kliknietyIndex) {
 }
 
 function sprawdzSasiedztwo(index1, index2) {
-    // Logika dla siatki 3x3 (indeksy 0-8)
-    // Sąsiedzi to: góra (-3), dół (+3), lewo (-1), prawo (+1)
     const roznica = Math.abs(index1 - index2);
     
     // Ten sam rząd (różnica 1) i nie przekracza granicy rzędu
@@ -88,10 +82,10 @@ function sprawdzSasiedztwo(index1, index2) {
 }
 
 function sprawdzWygrana() {
-    // Sprawdzamy, czy plansza jest ułożona (kolejność 0-8, gdzie 8 to puste)
     let wygrana = true;
+    // Sprawdzamy, czy kolejność jest prawidłowa (od 0 do 8, gdzie 8 to puste pole)
     for (let i = 0; i < 8; i++) {
-        if (aktualnaPlansza[i] !== '🐶') {
+        if (aktualnaPlansza[i] !== obrazekPuzzle[i]) {
             wygrana = false;
             break;
         }
