@@ -1,10 +1,11 @@
 // src/puzzle.js
 
-// Tablica puzzli 3x3. Każdy element to inny fragment obrazka.
-const obrazekPuzzle = ['🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🐼', '🐨', '']; 
+// Obrazki, z których będziemy układać puzzle
+const zwierzeta = ['🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🐼', '🐨']; 
+const aktualnyObrazek = '🐶'; // Domyślny obrazek puzzli
 
-let aktualnaPlansza = [];
 let callbackSukces = null;
+let aktualnyStan = []; // 8 elementów, null oznacza puste miejsce (jeszcze nie ułożone)
 
 export function startPuzzle(onSukces) {
     callbackSukces = onSukces;
@@ -21,88 +22,124 @@ export function wyjdzZPuzzli() {
 }
 
 function generujNowaPlansze() {
-    // Resetujemy planszę do stanu początkowego
-    aktualnaPlansza = [...obrazekPuzzle];
+    // Resetujemy planszę (8 elementów do ułożenia, 1 puste)
+    aktualnyStan = Array(8).fill(null); 
     
-    // Mieszamy elementy (proste tasowanie Fishera-Yatesa), ale zostawiamy puste pole na końcu
-    for (let i = aktualnaPlansza.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [aktualnaPlansza[i], aktualnaPlansza[j]] = [aktualnaPlansza[j], aktualnaPlansza[i]];
-    }
+    // Mieszamy dostępne elementy
+    let elementyDoUlozenia = [...zwierzeta];
+    elementyDoUlozenia.sort(() => Math.random() - 0.5);
     
-    renderujPlansze();
-}
-
-function renderujPlansze() {
+    // Renderujemy planszę (miejsce docelowe)
     const grid = document.getElementById('puzzle-grid');
     grid.innerHTML = '';
     
-    aktualnaPlansza.forEach((element, index) => {
+    for (let i = 0; i < 8; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'puzzle-slot';
+        slot.dataset.index = i;
+        slot.ondragover = (e) => e.preventDefault(); // Pozwalamy na upuszczanie
+        slot.ondrop = (e) => upuscElement(e, i);
+        grid.appendChild(slot);
+    }
+    
+    // Renderujemy bazę z kafelkami do przeciągania
+    const baza = document.getElementById('puzzle-baza');
+    baza.innerHTML = '';
+    
+    elementyDoUlozenia.forEach(zwierze => {
         const tile = document.createElement('div');
         tile.className = 'puzzle-tile';
+        tile.innerText = zwierze;
+        tile.draggable = true;
+        tile.dataset.value = zwierze;
         
-        if (element === '') {
-            tile.style.background = 'transparent';
-            tile.style.border = 'none';
-            tile.style.cursor = 'default';
-        } else {
-            tile.innerText = element;
-            tile.style.background = '#fce7f3';
-            tile.style.border = '2px solid #db2777';
-            tile.onclick = () => przesunKafelek(index);
-        }
+        // Obsługa Drag & Drop dla dotyku (mobile)
+        tile.ontouchstart = (e) => {
+            // Na mobile to trudniejsze, na razie upraszczamy: kliknięcie przenosi do pierwszego wolnego
+            // W prawdziwym D&D na mobile używa się pointer events, ale to skomplikowane.
+        };
         
-        grid.appendChild(tile);
+        // Uproszczenie dla mobile: kliknięcie kafelka wkłada go w pierwsze wolne miejsce
+        tile.onclick = () => {
+            if (tile.parentElement.id === 'puzzle-baza') {
+                // Znajdź pierwsze wolne miejsce
+                const wolneMiejsce = aktualnyStan.indexOf(null);
+                if (wolneMiejsce !== -1) {
+                    umiescElement(zwierze, wolneMiejsce, tile);
+                }
+            }
+        };
+
+        baza.appendChild(tile);
     });
 }
 
-function przesunKafelek(kliknietyIndex) {
-    const pustyIndex = aktualnaPlansza.indexOf('');
-    
-    const czySasiaduje = sprawdzSasiedztwo(kliknietyIndex, pustyIndex);
-    
-    if (czySasiaduje) {
-        // Zamień miejscami kliknięty kafelek z pustym polem
-        [aktualnaPlansza[pustyIndex], aktualnaPlansza[kliknietyIndex]] = [aktualnaPlansza[kliknietyIndex], aktualnaPlansza[pustyIndex]];
-        renderujPlansze();
-        sprawdzWygrana();
+function upuscElement(e, index) {
+    e.preventDefault();
+    const wartosc = e.dataTransfer.getData("text");
+    if (wartosc) {
+        umiescElement(wartosc, index);
     }
 }
 
-function sprawdzSasiedztwo(index1, index2) {
-    const roznica = Math.abs(index1 - index2);
-    
-    // Ten sam rząd (różnica 1) i nie przekracza granicy rzędu
-    const tenSamRzad = Math.floor(index1 / 3) === Math.floor(index2 / 3) && roznica === 1;
-    
-    // Ta sama kolumna (różnica 3)
-    const taSamaKolumna = roznica === 3;
-    
-    return tenSamRzad || taSamaKolumna;
-}
+function umiescElement(zwierze, index, tileElement = null) {
+    // Jeśli miejsce jest już zajęte, ignorujemy
+    if (aktualnyStan[index] !== null) return;
 
-function sprawdzWygrana() {
-    let wygrana = true;
-    // Sprawdzamy, czy kolejność jest prawidłowa (od 0 do 8, gdzie 8 to puste pole)
-    for (let i = 0; i < 8; i++) {
-        if (aktualnaPlansza[i] !== obrazekPuzzle[i]) {
-            wygrana = false;
-            break;
+    aktualnyStan[index] = zwierze;
+    
+    // Znajdź slot i wstaw tam kafelek
+    const slot = document.querySelector(`.puzzle-slot[data-index="${index}"]`);
+    slot.innerText = zwierze;
+    slot.style.background = '#fce7f3';
+    slot.style.border = '2px solid #db2777';
+    slot.style.cursor = 'default';
+    
+    // Usuń kafelek z bazy (jeśli był kliknięty)
+    if (tileElement) {
+        tileElement.remove();
+    } else {
+        // Jeśli to Drag & Drop, musimy znaleźć i usunąć element z bazy
+        const baza = document.getElementById('puzzle-baza');
+        const elementy = baza.querySelectorAll('.puzzle-tile');
+        for (let el of elementy) {
+            if (el.innerText === zwierze) {
+                el.remove();
+                break;
+            }
         }
     }
     
-    if (wygrana && aktualnaPlansza[8] === '') {
+    // Dźwięk "pstryknięcia"
+    odtworzDzwiekPstrykniecia();
+    
+    // Sprawdź, czy wygraliśmy
+    sprawdzWygrana();
+}
+
+function sprawdzWygrana() {
+    // Sprawdzamy, czy wszystkie pola są zapełnione
+    if (aktualnyStan.every(el => el !== null)) {
         // Sukces!
         pokazKonfetti();
         odtworzDzwiekSukcesu();
         if (callbackSukces) callbackSukces();
         
-        // Po chwili resetujemy planszę
         setTimeout(() => {
             alert("Brawo! Ułożyłeś puzzle!");
             generujNowaPlansze();
         }, 500);
     }
+}
+
+function odtworzDzwiekPstrykniecia() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+    oscillator.connect(audioCtx.destination);
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.05);
 }
 
 function pokazKonfetti() {
