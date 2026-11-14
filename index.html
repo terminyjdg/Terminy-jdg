@@ -8,26 +8,9 @@
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     
-    /* TŁO DLA PC */
-    body { 
-      font-family: 'Fredoka', sans-serif; 
-      background: #e5e7eb; 
-      display: flex; 
-      justify-content: center; 
-      align-items: flex-start;
-      min-height: 100vh;
-    }
+    body { font-family: 'Fredoka', sans-serif; background: #e5e7eb; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
 
-    /* GŁÓWNY KONTENER APLIKACJI */
-    .app-container {
-      background: #fdf2f8;
-      width: 100%;
-      max-width: 480px;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
+    .app-container { background: #fdf2f8; width: 100%; max-width: 480px; min-height: 100vh; position: relative; overflow-x: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
     
     nav { background: #ec4899; padding: 15px 20px; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
     .logo { font-weight: 700; font-size: 20px; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
@@ -37,7 +20,6 @@
     .logout-btn { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 11px; }
 
     #landing-view { display: block; }
-    
     .hero { background: linear-gradient(135deg, #db2777 0%, #ec4899 100%); color: white; padding: 50px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
     .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 15px; line-height: 1.2; }
     .hero p { font-size: 16px; color: #fbcfe8; margin-bottom: 30px; line-height: 1.5; }
@@ -63,30 +45,18 @@
     .premium-price span { font-size: 14px; color: #fbcfe8; font-weight: 400; }
     .premium-box .main-cta { background: #ec4899; font-size: 16px; }
 
-    /* NOWE MENU GŁÓWNE (8 KATEGORII) */
+    /* MENU KATEGORII */
     #menu-view { display: none; padding-top: 20px; }
     .welcome-text { text-align: center; font-size: 22px; color: #831843; margin-bottom: 20px; font-weight: 700; }
     
     .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
     
-    .category-card { 
-      border-radius: 20px; 
-      padding: 15px 10px; 
-      text-align: center; 
-      cursor: pointer; 
-      transition: transform 0.1s; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 120px;
-    }
+    .category-card { border-radius: 20px; padding: 15px 10px; text-align: center; cursor: pointer; transition: transform 0.1s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; }
     .category-card:active { transform: scale(0.95); }
     .category-card .cat-icon { font-size: 40px; margin-bottom: 8px; }
     .category-card .cat-title { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
     .category-card .cat-desc { font-size: 11px; font-weight: 600; opacity: 0.8; }
 
-    /* Kolorystyka kafelków */
     .cat-mowa { background: #fce7f3; color: #db2777; }
     .cat-kreatywnosc { background: #ede9fe; color: #8b5cf6; }
     .cat-pamiec { background: #fef3c7; color: #d97706; }
@@ -96,36 +66,38 @@
     .cat-puzzle { background: #ffedd5; color: #ea580c; }
     .cat-swiat { background: #e0f2fe; color: #0284c7; }
 
+    /* POD-MENU (np. Pamięć i Logika) */
+    .submenu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+    .submenu-card { background: white; border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; border-left: 6px solid #d97706; }
+    .submenu-card:active { transform: scale(0.98); }
+    .submenu-card .sub-icon { font-size: 45px; }
+    .submenu-card .sub-text h3 { color: #831843; font-size: 20px; margin-bottom: 5px; }
+    .submenu-card .sub-text p { color: #6b7280; font-size: 14px; }
+
     /* MODAL "WKRÓTCE" */
     #coming-soon-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     .coming-soon-box { background: white; padding: 30px 20px; border-radius: 20px; text-align: center; max-width: 300px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .coming-soon-box h2 { color: #db2777; margin-bottom: 10px; font-size: 24px; }
     .coming-soon-box p { color: #4b5563; font-size: 15px; margin-bottom: 20px; }
 
-    /* WIDOKI GIER (Bez zmian) */
+    /* RESZTA WIDOKÓW GIER */
     .game-view { display: none; text-align: center; padding-top: 15px; padding-bottom: 20px; }
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 10px 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .stars-display { font-size: 20px; font-weight: 700; color: #f59e0b; }
-    
     .question-box { background: white; border-radius: 20px; padding: 30px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); margin-bottom: 20px; }
     #math-question { font-size: 40px; font-weight: 700; color: #1e3a8a; }
-    
     .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 350px; margin: 0 auto; }
-    
-    .math-answer-btn { 
-      background: white; color: #db2777; border: 3px solid #fbcfe8; border-radius: 20px; padding: 20px 10px; 
-      font-size: 28px; font-weight: 700; cursor: pointer; box-shadow: 0 5px 0 #fbcfe8; transition: transform 0.1s; 
-      font-family: 'Fredoka', sans-serif;
-    }
+    .math-answer-btn { background: white; color: #db2777; border: 3px solid #fbcfe8; border-radius: 20px; padding: 20px 10px; font-size: 28px; font-weight: 700; cursor: pointer; box-shadow: 0 5px 0 #fbcfe8; transition: transform 0.1s; font-family: 'Fredoka', sans-serif; }
     .math-answer-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #fbcfe8; }
     .math-answer-btn:disabled { cursor: default; transform: translateY(4px); box-shadow: none; }
 
-    .historyjki-plansza { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-    .historyjki-slot { width: 80px; height: 80px; border-radius: 15px; border: 3px dashed #fbcfe8; display: flex; justify-content: center; align-items: center; font-size: 40px; background: white; }
-    .historyjki-baza { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
-    .historyjki-obrazek-btn { width: 50px; height: 50px; font-size: 30px; border-radius: 10px; border: 2px solid #fbcfe8; background: #fdf2f8; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-    .historyjki-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+    /* MEMORY STYLE */
+    .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 350px; margin: 0 auto; }
+    .memory-card { background: #ec4899; border-radius: 10px; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 30px; cursor: pointer; color: transparent; user-select: none; transition: background 0.2s, transform 0.2s; }
+    .memory-card.flipped { background: white; color: #1f2937; border: 2px solid #ec4899; }
+    .memory-card.matched { background: #10b981; color: white; cursor: default; }
 
+    /* POZOSTAŁE STYLE (Mowa, Matematyka, Historyjki, itp.) */
     #main-view { display: none; }
     .welcome-text-small { text-align: center; font-size: 18px; color: #831843; margin-bottom: 15px; font-weight: 600; margin-top: 15px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 20px; }
@@ -141,17 +113,13 @@
     .mic-btn { background: #10b981; color: white; border: none; width: 80px; height: 80px; border-radius: 50%; font-size: 35px; cursor: pointer; box-shadow: 0 6px 0 #059669; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; }
     .mic-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #059669; }
     
-    #paywall-modal, #auth-login-view, #auth-register-view { 
-      display: none; 
-      position: fixed; 
-      top: 0; left: 0; width: 100%; height: 100%; 
-      background: rgba(0,0,0,0.7); 
-      z-index: 1000; 
-      align-items: center; 
-      justify-content: center; 
-      padding: 20px; 
-    }
-    
+    .historyjki-plansza { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .historyjki-slot { width: 80px; height: 80px; border-radius: 15px; border: 3px dashed #fbcfe8; display: flex; justify-content: center; align-items: center; font-size: 40px; background: white; }
+    .historyjki-baza { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
+    .historyjki-obrazek-btn { width: 50px; height: 50px; font-size: 30px; border-radius: 10px; border: 2px solid #fbcfe8; background: #fdf2f8; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .historyjki-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+    #paywall-modal, #auth-login-view, #auth-register-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
     .auth-box, .modal-content { background: white; padding: 20px; border-radius: 20px; text-align: center; max-width: 350px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .auth-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #fbcfe8; border-radius: 10px; font-size: 15px; outline: none; }
     .auth-btn, .modal-pro-btn { width: 100%; padding: 12px; background: #ec4899; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; margin-bottom: 10px; }
@@ -210,61 +178,53 @@
       </div>
     </div>
 
-    <!-- NOWE MENU GŁÓWNE Z 8 KATEGORIAMI -->
+    <!-- MENU GŁÓWNE Z KATEGORIAMI -->
     <div class="container" id="menu-view">
       <div class="welcome-text">Co dzisiaj robimy?</div>
       
       <div class="category-grid">
-        <!-- Kategoria 1: Mowa -->
         <div class="category-card cat-mowa" onclick="pokazGlowna()">
           <div class="cat-icon">🗣️</div>
           <div class="cat-title">Mowa i wymowa</div>
           <div class="cat-desc">Ćwiczenia głosek</div>
         </div>
 
-        <!-- Kategoria 2: Kreatywność -->
         <div class="category-card cat-kreatywnosc" onclick="pokazKreatywnosc()">
           <div class="cat-icon">🎨</div>
           <div class="cat-title">Kreatywność</div>
           <div class="cat-desc">Rysowanie i historie</div>
         </div>
 
-        <!-- Kategoria 3: Pamięć i Logika -->
         <div class="category-card cat-pamiec" onclick="pokazPamiecLogika()">
           <div class="cat-icon">🧠</div>
           <div class="cat-title">Pamięć i logika</div>
           <div class="cat-desc">Memory i zagadki</div>
         </div>
 
-        <!-- Kategoria 4: Matematyka -->
         <div class="category-card cat-matma" onclick="pokazMatematyke()">
           <div class="cat-icon">➕</div>
           <div class="cat-title">Matematyka</div>
           <div class="cat-desc">Liczenie i działania</div>
         </div>
 
-        <!-- Kategoria 5: Czytanie -->
         <div class="category-card cat-czytanie" onclick="pokazWkrotce('Czytanie i pisanie')">
           <div class="cat-icon">📚</div>
           <div class="cat-title">Czytanie i pisanie</div>
           <div class="cat-desc">Litery i sylaby</div>
         </div>
 
-        <!-- Kategoria 6: Języki -->
         <div class="category-card cat-jezyki" onclick="pokazWkrotce('Języki obce')">
           <div class="cat-icon">🇬🇧</div>
           <div class="cat-title">Języki obce</div>
           <div class="cat-desc">Angielski</div>
         </div>
 
-        <!-- Kategoria 7: Puzzle -->
         <div class="category-card cat-puzzle" onclick="pokazWkrotce('Puzzle i zagadki')">
           <div class="cat-icon">🧩</div>
           <div class="cat-title">Puzzle i zagadki</div>
           <div class="cat-desc">Łamigłówki</div>
         </div>
 
-        <!-- Kategoria 8: Świat -->
         <div class="category-card cat-swiat" onclick="pokazWkrotce('Poznaj świat')">
           <div class="cat-icon">🌍</div>
           <div class="cat-title">Poznaj świat</div>
@@ -280,6 +240,38 @@
       </div>
 
       <button class="nav-btn" style="margin-top: 10px; margin-bottom: 20px; width: 100%; background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazLanding()">← Wróć na start</button>
+    </div>
+
+    <!-- NOWE POD-MENU: PAMIĘĆ I LOGIKA -->
+    <div class="container" id="pamiec-menu-view">
+      <button class="nav-btn" style="margin-top: 15px; margin-bottom: 15px; width: 100%; background: #f3f4f6; color: #4b5563;" onclick="pokazMenu()">← Wróć do menu</button>
+      <div class="welcome-text-small">Wybierz grę:</div>
+      
+      <div class="submenu-grid">
+        <div class="submenu-card" onclick="pokazMemory()" style="border-left-color: #f59e0b;">
+          <div class="sub-icon">🎮</div>
+          <div class="sub-text">
+            <h3>Memory</h3>
+            <p>Znajdź pary obrazków</p>
+          </div>
+        </div>
+
+        <div class="submenu-card" onclick="pokazZgadnij()" style="border-left-color: #8b5cf6;">
+          <div class="sub-icon">👂</div>
+          <div class="sub-text">
+            <h3>Zgadnij dźwięk</h3>
+            <p>Posłuchaj i wybierz obrazek</p>
+          </div>
+        </div>
+
+        <div class="submenu-card" onclick="pokazWkrotce('Puzzle')" style="border-left-color: #ea580c;">
+          <div class="sub-icon">🧩</div>
+          <div class="sub-text">
+            <h3>Puzzle</h3>
+            <p>Układaj obrazki</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- EKRAN WYBORU GŁOSKI (Mowa) -->
@@ -314,6 +306,15 @@
       <p style="color: #6b7280; font-weight: 600; margin-bottom: 15px;">Kliknij głośnik i wybierz obrazek.</p>
       <div id="zgadnij-answers" class="answers-grid"></div>
       <button id="zgadnij-next-btn" class="main-cta" style="background: #ec4899; display: none; margin-top: 25px;" onclick="nastepneZgadnij()">Następny →</button>
+    </div>
+
+    <!-- EKRAN MEMORY -->
+    <div class="container game-view" id="memory-view">
+      <div class="top-bar">
+        <button class="nav-btn" onclick="pokazPamiecLogika()">← Wróć</button>
+        <span style="font-weight:700; color:#db2777; font-size:18px;">Znajdź parę</span>
+      </div>
+      <div class="memory-grid" id="memory-grid"></div>
     </div>
 
     <!-- EKRAN ĆWICZENIA MOWY -->
@@ -439,7 +440,6 @@
 
   </div> <!-- KONIEC APP-CONTAINER -->
 
-  <!-- WERSJONOWANIE SKRYPTU -->
-  <script type="module" src="/src/main.js?v=3"></script>
+  <script type="module" src="/src/main.js?v=4"></script>
 </body>
 </html>
