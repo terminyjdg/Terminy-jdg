@@ -97,7 +97,11 @@
     .memory-card.flipped { background: white; color: #1f2937; border: 2px solid #ec4899; }
     .memory-card.matched { background: #10b981; color: white; cursor: default; }
 
-    /* POZOSTAŁE STYLE (Mowa, Matematyka, Historyjki, itp.) */
+    /* PUZZLE STYLE */
+    .puzzle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 300px; margin: 0 auto; aspect-ratio: 1; background: #f3f4f6; padding: 10px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .puzzle-tile { display: flex; justify-content: center; align-items: center; font-size: 40px; border-radius: 10px; cursor: pointer; transition: transform 0.1s; }
+
+    /* POZOSTAŁE STYLE */
     #main-view { display: none; }
     .welcome-text-small { text-align: center; font-size: 18px; color: #831843; margin-bottom: 15px; font-weight: 600; margin-top: 15px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 20px; }
@@ -242,7 +246,7 @@
       <button class="nav-btn" style="margin-top: 10px; margin-bottom: 20px; width: 100%; background: #f3f4f6; color: #4b5563; box-shadow: none;" onclick="pokazLanding()">← Wróć na start</button>
     </div>
 
-    <!-- NOWE POD-MENU: PAMIĘĆ I LOGIKA -->
+    <!-- POD-MENU: PAMIĘĆ I LOGIKA -->
     <div class="container" id="pamiec-menu-view">
       <button class="nav-btn" style="margin-top: 15px; margin-bottom: 15px; width: 100%; background: #f3f4f6; color: #4b5563;" onclick="pokazMenu()">← Wróć do menu</button>
       <div class="welcome-text-small">Wybierz grę:</div>
@@ -264,11 +268,11 @@
           </div>
         </div>
 
-        <div class="submenu-card" onclick="pokazWkrotce('Puzzle')" style="border-left-color: #ea580c;">
+        <div class="submenu-card" onclick="pokazPuzzle()" style="border-left-color: #ea580c;">
           <div class="sub-icon">🧩</div>
           <div class="sub-text">
             <h3>Puzzle</h3>
-            <p>Układaj obrazki</p>
+            <p>Ułóż obrazek z kawałków</p>
           </div>
         </div>
       </div>
@@ -315,6 +319,15 @@
         <span style="font-weight:700; color:#db2777; font-size:18px;">Znajdź parę</span>
       </div>
       <div class="memory-grid" id="memory-grid"></div>
+    </div>
+
+    <!-- NOWY EKRAN: PUZZLE -->
+    <div class="container game-view" id="puzzle-view">
+      <div class="top-bar">
+        <button class="nav-btn" onclick="wyjdzZPuzzli()">← Wróć</button>
+        <span style="font-weight:700; color:#ea580c; font-size:18px;">Ułóż puzzle</span>
+      </div>
+      <div id="puzzle-grid" class="puzzle-grid"></div>
     </div>
 
     <!-- EKRAN ĆWICZENIA MOWY -->
@@ -440,6 +453,6 @@
 
   </div> <!-- KONIEC APP-CONTAINER -->
 
-  <script type="module" src="/src/main.js?v=4"></script>
+  <script type="module" src="/src/main.js?v=5"></script>
 </body>
 </html>
