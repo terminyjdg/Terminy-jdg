@@ -53,26 +53,8 @@ const emailePro = ["harasimowiczmichal5@gmail.com"];
 function aktualizujStatusPro(user) {
   if (user && emailePro.includes(user.email)) {
     czyMaPro = true;
-    const proCards = ['card-zgadnij', 'card-dodawanie', 'card-odejmowanie', 'card-mnozenie', 'card-dzielenie'];
-    proCards.forEach(id => {
-      const card = document.getElementById(id);
-      if (card) {
-        const badge = card.querySelector('.pro-badge');
-        if (badge) badge.style.display = 'none'; 
-        card.style.opacity = '1'; 
-      }
-    });
   } else {
     czyMaPro = false;
-    const proCards = ['card-zgadnij', 'card-dodawanie', 'card-odejmowanie', 'card-mnozenie', 'card-dzielenie'];
-    proCards.forEach(id => {
-      const card = document.getElementById(id);
-      if (card) {
-        const badge = card.querySelector('.pro-badge');
-        if (badge) badge.style.display = 'block';
-        card.style.opacity = '0.8';
-      }
-    });
   }
 }
 
@@ -88,7 +70,7 @@ window.sprawdzDostepPro = function(akcja) {
   }
 };
 
-// --- GENEROWANIE KAFELKÓW ---
+// --- GENEROWANIE KAFELKÓW GŁOSEK ---
 function renderujKafelki() {
   const grid = document.getElementById('gloski-grid');
   if (!grid) return;
@@ -189,10 +171,7 @@ function pokazKonfetti() {
     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
     confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
     document.body.appendChild(confetti);
-    
-    setTimeout(() => {
-      confetti.remove();
-    }, 3000);
+    setTimeout(() => { confetti.remove(); }, 3000);
   }
 }
 
@@ -200,157 +179,80 @@ function odtworzDzwiek(sukces) {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
-  
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  
+  oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
   if (sukces) {
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+    oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
     oscillator.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); 
   } else {
-    oscillator.type = 'sawtooth';
-    oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+    oscillator.type = 'sawtooth'; oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
     oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
   }
-  
   gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
   gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-  
-  oscillator.start();
-  oscillator.stop(audioCtx.currentTime + 0.3);
+  oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.3);
 }
 
 // --- SYSTEM ODZNAK ---
 function sprawdzOdznaki() {
   let nowaOdznaka = false;
-
-  if (gwiazdki >= 1 && !odznaki['pierwszy_krok']) {
-    odznaki['pierwszy_krok'] = true;
-    nowaOdznaka = true;
-  }
-  if (streak >= 3 && !odznaki['konsekwencja']) {
-    odznaki['konsekwencja'] = true;
-    nowaOdznaka = true;
-  }
-  if (gwiazdki >= 50 && !odznaki['kolekcjoner']) {
-    odznaki['kolekcjoner'] = true;
-    nowaOdznaka = true;
-  }
-
-  if (nowaOdznaka) {
-    pokazKonfetti();
-    odtworzDzwiek(true);
-  }
+  if (gwiazdki >= 1 && !odznaki['pierwszy_krok']) { odznaki['pierwszy_krok'] = true; nowaOdznaka = true; }
+  if (streak >= 3 && !odznaki['konsekwencja']) { odznaki['konsekwencja'] = true; nowaOdznaka = true; }
+  if (gwiazdki >= 50 && !odznaki['kolekcjoner']) { odznaki['kolekcjoner'] = true; nowaOdznaka = true; }
+  if (nowaOdznaka) { pokazKonfetti(); odtworzDzwiek(true); }
 }
 
 function dodajGwiazdke(ilosc = 1) {
   if (czySlowoZaliczone) return;
   czySlowoZaliczone = true;
-  
-  gwiazdki += ilosc;
-  gwiazdkiWTygodniu += ilosc;
-  statystykiGier.mowa += ilosc; 
-  
+  gwiazdki += ilosc; gwiazdkiWTygodniu += ilosc; statystykiGier.mowa += ilosc; 
   const starDisplay = document.getElementById('stars-display');
-  if (starDisplay) {
-    starDisplay.classList.add('pop');
-    setTimeout(() => starDisplay.classList.remove('pop'), 300);
-  }
-  
+  if (starDisplay) { starDisplay.classList.add('pop'); setTimeout(() => starDisplay.classList.remove('pop'), 300); }
   document.getElementById('stars-count').textContent = gwiazdki;
-  
-  pokazKonfetti();
-  odtworzDzwiek(true);
-
-  if (!historiaCwiczen[aktualnaGloska]) {
-    historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
-  }
-  historiaCwiczen[aktualnaGloska].proby++;
-  historiaCwiczen[aktualnaGloska].sukcesy++;
-
+  pokazKonfetti(); odtworzDzwiek(true);
+  if (!historiaCwiczen[aktualnaGloska]) historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
+  historiaCwiczen[aktualnaGloska].proby++; historiaCwiczen[aktualnaGloska].sukcesy++;
   const dzisiaj = new Date().toISOString().split('T')[0];
-  
   if (ostatniaDataCwiczenia !== dzisiaj) {
-    const wczoraj = new Date();
-    wczoraj.setDate(wczoraj.getDate() - 1);
-    const wczorajStr = wczoraj.toISOString().split('T')[0];
-
-    if (ostatniaDataCwiczenia === wczorajStr) {
-      streak++; 
-    } else {
-      streak = 1; 
-    }
+    const wczoraj = new Date(); wczoraj.setDate(wczoraj.getDate() - 1);
+    if (ostatniaDataCwiczenia === wczoraj.toISOString().split('T')[0]) streak++; else streak = 1; 
     ostatniaDataCwiczenia = dzisiaj;
   }
-
-  sprawdzOdznaki(); 
-  zapiszDaneDoBazy();
+  sprawdzOdznaki(); zapiszDaneDoBazy();
 }
 
 function dodajGwiazdkeMatma(rodzajGry) {
-  gwiazdki += 1;
-  gwiazdkiWTygodniu += 1; 
-  
-  if (statystykiGier[rodzajGry] !== undefined) {
-    statystykiGier[rodzajGry] += 1;
-  }
-  
+  gwiazdki += 1; gwiazdkiWTygodniu += 1; 
+  if (statystykiGier[rodzajGry] !== undefined) statystykiGier[rodzajGry] += 1;
   document.getElementById('stars-count').textContent = gwiazdki;
-  
   const mathStarDisplay = document.getElementById('math-stars-count');
-  if (mathStarDisplay) {
-    mathStarDisplay.textContent = gwiazdki;
-  }
-
-  pokazKonfetti();
-  odtworzDzwiek(true);
-  sprawdzOdznaki();
-  zapiszDaneDoBazy();
+  if (mathStarDisplay) mathStarDisplay.textContent = gwiazdki;
+  pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
 }
 
 function odejmijGwiazdkeMatma() {
   if (gwiazdki > 0) {
-    gwiazdki -= 1;
-    if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
-    
+    gwiazdki -= 1; if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
     document.getElementById('stars-count').textContent = gwiazdki;
     const mathStarDisplay = document.getElementById('math-stars-count');
-    if (mathStarDisplay) {
-      mathStarDisplay.textContent = gwiazdki;
-    }
+    if (mathStarDisplay) mathStarDisplay.textContent = gwiazdki;
     zapiszDaneDoBazy();
   }
 }
 
 function dodajGwiazdkeZgadnij() {
-  gwiazdki += 1;
-  gwiazdkiWTygodniu += 1; 
-  statystykiGier.zgadnij += 1;
-  
+  gwiazdki += 1; gwiazdkiWTygodniu += 1; statystykiGier.zgadnij += 1;
   document.getElementById('stars-count').textContent = gwiazdki;
-  
   const zgadnijStarDisplay = document.getElementById('zgadnij-stars-count');
-  if (zgadnijStarDisplay) {
-    zgadnijStarDisplay.textContent = gwiazdki;
-  }
-
-  pokazKonfetti();
-  odtworzDzwiek(true);
-  sprawdzOdznaki();
-  zapiszDaneDoBazy();
+  if (zgadnijStarDisplay) zgadnijStarDisplay.textContent = gwiazdki;
+  pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
 }
 
 function odejmijGwiazdkeZgadnij() {
   if (gwiazdki > 0) {
-    gwiazdki -= 1;
-    if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
-    
+    gwiazdki -= 1; if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
     document.getElementById('stars-count').textContent = gwiazdki;
     const zgadnijStarDisplay = document.getElementById('zgadnij-stars-count');
-    if (zgadnijStarDisplay) {
-      zgadnijStarDisplay.textContent = gwiazdki;
-    }
+    if (zgadnijStarDisplay) zgadnijStarDisplay.textContent = gwiazdki;
     zapiszDaneDoBazy();
   }
 }
@@ -359,10 +261,7 @@ function odejmijGwiazdkeZgadnij() {
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
   recognition = new SpeechRecognition();
-  recognition.lang = 'pl-PL';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-
+  recognition.lang = 'pl-PL'; recognition.interimResults = false; recognition.maxAlternatives = 1;
   recognition.onstart = function() {
     document.getElementById('mic-button').classList.add('listening');
     document.getElementById('mic-hint').textContent = 'Słucham... Powiedz słowo!';
@@ -373,20 +272,16 @@ if (SpeechRecognition) {
       document.getElementById('mic-hint').className = 'mic-hint error';
     }, 4000); 
   };
-
   recognition.onresult = function(event) {
     clearTimeout(timeoutId);
-    const uslyszaneSlowo = event.results[0][0].transcript.toUpperCase();
-    sprawdzWymowe(uslyszaneSlowo);
+    sprawdzWymowe(event.results[0][0].transcript.toUpperCase());
   };
-
-  recognition.onerror = function(event) {
+  recognition.onerror = function() {
     clearTimeout(timeoutId);
     document.getElementById('mic-button').classList.remove('listening');
-    document.getElementById('mic-hint').textContent = 'Mikrofon nie usłyszał. Kliknij "Rodzic: Dobrze powiedziane", jeśli jest OK.';
+    document.getElementById('mic-hint').textContent = 'Mikrofon nie usłyszał. Kliknij "Rodzic: Dobrze powiedziane".';
     document.getElementById('mic-hint').className = 'mic-hint error';
   };
-
   recognition.onend = function() {
     clearTimeout(timeoutId);
     document.getElementById('mic-button').classList.remove('listening');
@@ -421,110 +316,100 @@ window.pokazGlowna = function() {
   renderujKafelki();
 };
 
-// NAPRAWIONE FUNKCJE LOGOWANIA (wymuszają display: flex zamiast block)
+// NOWE FUNKCJE NAWIGACYJNE DLA KATEGORII
+window.pokazKreatywnosc = function() {
+  // Na razie prowadzi do rysowania, w przyszłości do wyboru
+  pokazRysowanie();
+};
+
+window.pokazPamiecLogika = function() {
+  // Na razie prowadzi do zgadnij dźwięk, w przyszłości do wyboru (Memory, Puzzle)
+  // Sprawdzamy czy mamy PRO, jeśli tak -> zgadnij dzwiek
+  if (czyMaPro) {
+    uruchomZgadnij();
+  } else {
+    pokazPaywall();
+  }
+};
+
+window.pokazMatematyke = function() {
+  // Na razie prowadzi do dodawania, w przyszłości do wyboru działań
+  if (czyMaPro) {
+    uruchomMatme('dodawanie');
+  } else {
+    pokazPaywall();
+  }
+};
+
+window.pokazWkrotce = function(nazwaKategorii) {
+  const modal = document.getElementById('coming-soon-modal');
+  const title = document.getElementById('soon-title');
+  title.innerText = nazwaKategorii + " - Wkrótce!";
+  modal.style.display = 'flex';
+};
+
+// LOGOWANIE
 window.pokazLogowanie = function() {
   ukryjWszystkieWidoki();
-  const el = document.getElementById('auth-login-view');
-  el.style.display = 'flex'; 
+  document.getElementById('auth-login-view').style.display = 'flex'; 
   window.scrollTo(0, 0);
 };
 
 window.pokazRejestracje = function() {
   ukryjWszystkieWidoki();
-  const el = document.getElementById('auth-register-view');
-  el.style.display = 'flex';
+  document.getElementById('auth-register-view').style.display = 'flex';
   window.scrollTo(0, 0);
 };
 
 window.rozpocznijCwiczenie = function(gloska) {
-  aktualnaGloska = gloska;
-  aktualneSlowoIndex = 0;
-  ukryjWszystkieWidoki();
+  aktualnaGloska = gloska; aktualneSlowoIndex = 0; ukryjWszystkieWidoki();
   document.getElementById('exercise-view').style.display = 'block';
-  odswiezSlowo();
-  window.scrollTo(0, 0);
+  odswiezSlowo(); window.scrollTo(0, 0);
 };
 
-window.pokazCwiczenie = function() {
-  ukryjWszystkieWidoki();
-  document.getElementById('exercise-view').style.display = 'block';
-  window.scrollTo(0, 0);
-};
+window.pokazCwiczenie = function() { ukryjWszystkieWidoki(); document.getElementById('exercise-view').style.display = 'block'; window.scrollTo(0, 0); };
 
 window.pokazRysowanie = function() {
   ukryjWszystkieWidoki();
-  
   if (!slowa[aktualnaGloska] || !slowa[aktualnaGloska][aktualneSlowoIndex]) {
-    aktualnaGloska = 'A';
-    aktualneSlowoIndex = 0;
-    odswiezSlowo();
+    aktualnaGloska = 'A'; aktualneSlowoIndex = 0; odswiezSlowo();
   }
-
   document.getElementById('draw-view').style.display = 'block';
-  setTimeout(inicjujCanvas, 50);
-  window.scrollTo(0, 0);
+  setTimeout(inicjujCanvas, 50); window.scrollTo(0, 0);
 };
 
 window.wrocZRysowania = function() {
-  if (slowa[aktualnaGloska] && slowa[aktualnaGloska][aktualneSlowoIndex]) {
-    pokazCwiczenie();
-  } else {
-    pokazMenu();
-  }
+  if (slowa[aktualnaGloska] && slowa[aktualnaGloska][aktualneSlowoIndex]) pokazCwiczenie(); else pokazMenu();
 };
 
 window.pokazMemory = function() {
-  ukryjWszystkieWidoki();
-  document.getElementById('memory-view').style.display = 'block';
-  window.scrollTo(0, 0);
-  
+  ukryjWszystkieWidoki(); document.getElementById('memory-view').style.display = 'block'; window.scrollTo(0, 0);
   startMemory(bazaSlow, aktualnaGloska, () => {
-    gwiazdki += 5;
-    gwiazdkiWTygodniu += 5;
-    document.getElementById('stars-count').textContent = gwiazdki;
-    pokazKonfetti();
-    odtworzDzwiek(true);
-    sprawdzOdznaki();
-    zapiszDaneDoBazy();
+    gwiazdki += 5; gwiazdkiWTygodniu += 5; document.getElementById('stars-count').textContent = gwiazdki;
+    pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
   });
 };
 
 window.pokazHistoryjki = function() {
-  ukryjWszystkieWidoki();
-  document.getElementById('historyjki-view').style.display = 'block';
-  window.scrollTo(0, 0);
-  
-  startHistoryjki((daneHistoryjki) => {
-    historyjki.push(daneHistoryjki);
-    zapiszDaneDoBazy();
-  });
+  ukryjWszystkieWidoki(); document.getElementById('historyjki-view').style.display = 'block'; window.scrollTo(0, 0);
+  startHistoryjki((daneHistoryjki) => { historyjki.push(daneHistoryjki); zapiszDaneDoBazy(); });
 };
 
 window.uruchomMatme = function(dzialanie) {
   ukryjWszystkieWidoki();
-  startMatma(dzialanie, (rodzajGry) => {
-    dodajGwiazdkeMatma(rodzajGry); 
-  }, () => {
-    odejmijGwiazdkeMatma();
-  });
+  startMatma(dzialanie, (rodzajGry) => { dodajGwiazdkeMatma(rodzajGry); }, () => { odejmijGwiazdkeMatma(); });
 };
 
 window.uruchomZgadnij = function() {
   ukryjWszystkieWidoki();
-  startZgadnijDzwiek(() => {
-    dodajGwiazdkeZgadnij();
-  }, () => {
-    odejmijGwiazdkeZgadnij();
-  });
+  startZgadnijDzwiek(() => { dodajGwiazdkeZgadnij(); }, () => { odejmijGwiazdkeZgadnij(); });
 };
 
 window.wyjdzZMatmy = wyjdzZMatmy;
 window.nastepneZadanie = nastepneZadanie;
-
 window.wyjdzZZgadnij = wyjdzZZgadnij;
 window.nastepneZgadnij = nastepnePytanie;
 window.odtworzZgadnijDzwiek = odtworzDzwiekLektora; 
-
 window.wyjdzZHistoryjek = wyjdzZHistoryjek;
 window.wyczyscHistoryjke = wyczyscHistoryjke;
 window.zapiszHistoryjke = zapiszHistoryjke;
@@ -532,31 +417,18 @@ window.nagrajHistoryjke = nagrajHistoryjke;
 window.odtworzNagranie = odtworzNagranie;
 
 window.pokazPanelRodzica = function() {
-  ukryjWszystkieWidoki();
-  document.getElementById('parent-panel-view').style.display = 'block';
-  window.scrollTo(0, 0);
+  ukryjWszystkieWidoki(); document.getElementById('parent-panel-view').style.display = 'block'; window.scrollTo(0, 0);
   
-  let totalWords = 0;
-  let najczestszaGloska = '-';
-  let maxProb = 0;
-
-  let historyHTML = '';
+  let totalWords = 0; let najczestszaGloska = '-'; let maxProb = 0; let historyHTML = '';
   const gloskiKlucze = Object.keys(historiaCwiczen);
   
   if (gloskiKlucze.length === 0) {
     historyHTML = '<div style="text-align: center; color: #9ca3af; padding: 10px;">Brak danych. Zacznij ćwiczyć!</div>';
   } else {
     gloskiKlucze.forEach(gloska => {
-      const dane = historiaCwiczen[gloska];
-      const sukcesy = dane.sukcesy || 0;
-      const proby = dane.proby || 0;
+      const dane = historiaCwiczen[gloska]; const sukcesy = dane.sukcesy || 0; const proby = dane.proby || 0;
       totalWords += sukcesy;
-      
-      if (proby > maxProb) {
-        maxProb = proby;
-        najczestszaGloska = gloska;
-      }
-
+      if (proby > maxProb) { maxProb = proby; najczestszaGloska = gloska; }
       historyHTML += `<div class="history-item"><span>Głoska: <strong>${gloska}</strong></span> <span>${sukcesy}/${proby} udanych prób</span></div>`;
     });
   }
@@ -567,27 +439,15 @@ window.pokazPanelRodzica = function() {
   }
 
   renderujPanelRodzica({
-    gwiazdki: gwiazdki,
-    gwiazdkiWTygodniu: gwiazdkiWTygodniu,
-    statystykiGier: statystykiGier,
-    streak: streak,
-    dniCwiczen: streak,
-    celTygodniowy: celTygodniowy,
-    totalWords: totalWords,
-    historiaHTML: historyHTML,
-    raportTekst: raportTekst,
-    odznaki: odznaki
+    gwiazdki: gwiazdki, gwiazdkiWTygodniu: gwiazdkiWTygodniu, statystykiGier: statystykiGier,
+    streak: streak, dniCwiczen: streak, celTygodniowy: celTygodniowy, totalWords: totalWords,
+    historiaHTML: historyHTML, raportTekst: raportTekst, odznaki: odznaki
   });
 };
 
 window.zapiszCelWTle = function(targetValue) {
-  if (isNaN(targetValue) || targetValue <= 0) {
-    alert('Podaj poprawną liczbę gwiazdek (np. 50).');
-    return;
-  }
-  celTygodniowy = targetValue;
-  zapiszDaneDoBazy();
-  pokazPanelRodzica(); 
+  if (isNaN(targetValue) || targetValue <= 0) { alert('Podaj poprawną liczbę gwiazdek (np. 50).'); return; }
+  celTygodniowy = targetValue; zapiszDaneDoBazy(); pokazPanelRodzica(); 
 };
 
 function odswiezSlowo() {
@@ -596,143 +456,62 @@ function odswiezSlowo() {
   document.getElementById('ex-word').textContent = slowoObj.word;
   document.getElementById('draw-word').textContent = slowoObj.word;
   document.getElementById('mic-hint').textContent = 'Kliknij i powiedz słowo!';
-  document.getElementById('mic-hint').className = 'mic-hint';
-  czySlowoZaliczone = false;
+  document.getElementById('mic-hint').className = 'mic-hint'; czySlowoZaliczone = false;
 }
 
-window.nastepneSlowo = function() {
-  const tablica = slowa[aktualnaGloska];
-  aktualneSlowoIndex = (aktualneSlowoIndex + 1) % tablica.length;
-  odswiezSlowo();
-};
-
+window.nastepneSlowo = function() { aktualneSlowoIndex = (aktualneSlowoIndex + 1) % slowa[aktualnaGloska].length; odswiezSlowo(); };
 window.nagrajIWymow = function() {
-  if (!recognition) {
-    alert("Twoja przeglądarka nie wspiera rozpoznawania mowy.");
-    return;
-  }
+  if (!recognition) { alert("Twoja przeglądarka nie wspiera rozpoznawania mowy."); return; }
   try { recognition.stop(); } catch(e) {}
-  setTimeout(() => { 
-    try { recognition.start(); } catch(e) { 
-      alert("Błąd mikrofonu. Użyj przycisku dla rodzica.");
-    } 
-  }, 100);
+  setTimeout(() => { try { recognition.start(); } catch(e) { alert("Błąd mikrofonu."); } }, 100);
 };
 
 function sprawdzWymowe(uslyszaneSlowo) {
   const doceloweSlowo = slowa[aktualnaGloska][aktualneSlowoIndex].word;
   const hint = document.getElementById('mic-hint');
   if (uslyszaneSlowo.includes(doceloweSlowo)) {
-    hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐';
-    hint.className = 'mic-hint success';
-    dodajGwiazdke(1);
+    hint.textContent = 'Super! Bardzo dobrze powiedziane! ⭐'; hint.className = 'mic-hint success'; dodajGwiazdke(1);
   } else {
     hint.textContent = `Spróbuj jeszcze raz! Usłyszałem: "${uslyszaneSlowo}". Powiedz: ${doceloweSlowo}`;
-    hint.className = 'mic-hint error';
-    odtworzDzwiek(false);
-    
-    if (!historiaCwiczen[aktualnaGloska]) {
-      historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
-    }
-    historiaCwiczen[aktualnaGloska].proby++;
-    zapiszDaneDoBazy();
+    hint.className = 'mic-hint error'; odtworzDzwiek(false);
+    if (!historiaCwiczen[aktualnaGloska]) historiaCwiczen[aktualnaGloska] = { proby: 0, sukcesy: 0 };
+    historiaCwiczen[aktualnaGloska].proby++; zapiszDaneDoBazy();
   }
 }
 
 window.rodzicZaliczyl = function() {
-  if (czySlowoZaliczone) {
-    alert("To słowo zostało już zaliczone! Kliknij 'Następne słowo'.");
-    return;
-  }
-  const hint = document.getElementById('mic-hint');
-  hint.textContent = 'Zaliczone przez rodzica! ⭐';
-  hint.className = 'mic-hint success';
-  dodajGwiazdke(1);
+  if (czySlowoZaliczone) { alert("To słowo zostało już zaliczone! Kliknij 'Następne słowo'."); return; }
+  document.getElementById('mic-hint').textContent = 'Zaliczone przez rodzica! ⭐';
+  document.getElementById('mic-hint').className = 'mic-hint success'; dodajGwiazdke(1);
 };
 
 // --- RYSOWANIE ---
 let canvas, ctx, rysowanie = false, kolor = '#db2777';
-
 function inicjujCanvas() {
-  canvas = document.getElementById('drawCanvas');
-  if (!canvas) return;
+  canvas = document.getElementById('drawCanvas'); if (!canvas) return;
   ctx = canvas.getContext('2d');
-  
-  const container = canvas.parentElement;
-  canvas.width = container.clientWidth - 20;
-  canvas.height = container.clientHeight - 20; 
-
-  ctx.lineWidth = 4;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = kolor;
-  rysowanie = false;
-
-  const slowoObj = slowa[aktualnaGloska][aktualneSlowoIndex];
-  const svgContainer = document.getElementById('draw-guide');
-  if (slowoObj.svg) {
-    svgContainer.innerHTML = slowoObj.svg;
-  } else {
-    svgContainer.innerHTML = ''; 
-  }
-
-  canvas.onmousedown = (e) => { rysowanie = true; rysuj(e); };
-  canvas.onmousemove = (e) => { if(rysowanie) rysuj(e); };
-  canvas.onmouseup = () => { rysowanie = false; ctx.beginPath(); };
-  canvas.onmouseout = () => { rysowanie = false; ctx.beginPath(); };
-
+  const container = canvas.parentElement; canvas.width = container.clientWidth - 20; canvas.height = container.clientHeight - 20; 
+  ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.strokeStyle = kolor; rysowanie = false;
+  const slowoObj = slowa[aktualnaGloska][aktualneSlowoIndex]; const svgContainer = document.getElementById('draw-guide');
+  svgContainer.innerHTML = slowoObj.svg ? slowoObj.svg : ''; 
+  canvas.onmousedown = (e) => { rysowanie = true; rysuj(e); }; canvas.onmousemove = (e) => { if(rysowanie) rysuj(e); };
+  canvas.onmouseup = () => { rysowanie = false; ctx.beginPath(); }; canvas.onmouseout = () => { rysowanie = false; ctx.beginPath(); };
   canvas.ontouchstart = (e) => { e.preventDefault(); rysowanie = true; rysujDotyk(e); };
-  canvas.ontouchmove = (e) => { e.preventDefault(); if(rysowanie) rysujDotyk(e); };
-  canvas.ontouchend = () => { rysowanie = false; ctx.beginPath(); };
+  canvas.ontouchmove = (e) => { e.preventDefault(); if(rysowanie) rysujDotyk(e); }; canvas.ontouchend = () => { rysowanie = false; ctx.beginPath(); };
 }
-
-function rysuj(e) {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-}
-
-function rysujDotyk(e) {
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches[0];
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-}
-
-window.zmienKolor = function(nowyKolor) {
-  kolor = nowyKolor;
-  if(ctx) ctx.strokeStyle = kolor;
-};
-
-window.wyczyscCanvas = function() {
-  if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-};
+function rysuj(e) { const rect = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top); }
+function rysujDotyk(e) { const rect = canvas.getBoundingClientRect(); const touch = e.touches[0]; ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top); ctx.stroke(); ctx.beginPath(); ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top); }
+window.zmienKolor = function(nowyKolor) { kolor = nowyKolor; if(ctx) ctx.strokeStyle = kolor; };
+window.wyczyscCanvas = function() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); };
 
 // --- PAYWALL I AUTORYZACJA ---
-window.pokazPaywall = function() {
-  const el = document.getElementById('paywall-modal');
-  el.style.display = 'flex';
-};
-
-window.zamknijPaywall = function() {
-  document.getElementById('paywall-modal').style.display = 'none';
-};
+window.pokazPaywall = function() { document.getElementById('paywall-modal').style.display = 'flex'; };
+window.zamknijPaywall = function() { document.getElementById('paywall-modal').style.display = 'none'; };
+window.rozpocznijPlatnosc = function() { alert("Tu nastąpi przekierowanie do płatności..."); };
 
 window.zalogujPrzezGoogle = async function() {
   const provider = new GoogleAuthProvider();
-  try {
-    await signInWithPopup(auth, provider);
-    pokazMenu();
-  } catch (error) {
-    alert("Błąd logowania Google: " + error.message);
-  }
+  try { await signInWithPopup(auth, provider); pokazMenu(); } catch (error) { alert("Błąd logowania Google: " + error.message); }
 };
 
 window.obsluzRejestracje = async function() {
@@ -744,9 +523,7 @@ window.obsluzRejestracje = async function() {
     await createUserWithEmailAndPassword(auth, email, password);
     msg.textContent = 'Konto utworzone! Możesz się zalogować.'; msg.style.color = '#16a34a';
     setTimeout(() => pokazLogowanie(), 2000);
-  } catch (error) {
-    msg.textContent = error.message; msg.style.color = '#dc2626';
-  }
+  } catch (error) { msg.textContent = error.message; msg.style.color = '#dc2626'; }
 };
 
 window.obsluzLogowanie = async function() {
@@ -754,18 +531,10 @@ window.obsluzLogowanie = async function() {
   const password = document.getElementById('login-password').value;
   const msg = document.getElementById('login-msg');
   msg.textContent = 'Przetwarzanie...'; msg.style.color = '#6b7280';
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    pokazMenu();
-  } catch (error) {
-    msg.textContent = error.message; msg.style.color = '#dc2626';
-  }
+  try { await signInWithEmailAndPassword(auth, email, password); pokazMenu(); } catch (error) { msg.textContent = error.message; msg.style.color = '#dc2626'; }
 };
 
-window.wyloguj = async function() {
-  await signOut(auth);
-  pokazLanding();
-};
+window.wyloguj = async function() { await signOut(auth); pokazLanding(); };
 
 onAuthStateChanged(auth, async (user) => {
   const loginBtn = document.getElementById('nav-login-btn');
@@ -775,37 +544,19 @@ onAuthStateChanged(auth, async (user) => {
   
   if (user) {
     aktualnyUzytkownik = user;
-    loginBtn.style.display = 'none';
-    userInfo.style.display = 'flex';
-    panelBtn.style.display = 'block';
+    loginBtn.style.display = 'none'; userInfo.style.display = 'flex'; panelBtn.style.display = 'block';
     emailDisplay.textContent = user.email.split('@')[0];
-    
-    aktualizujStatusPro(user);
-
-    await wczytajDaneZbazy();
+    aktualizujStatusPro(user); await wczytajDaneZbazy();
   } else {
     aktualnyUzytkownik = null;
-    loginBtn.style.display = 'block';
-    userInfo.style.display = 'none';
-    panelBtn.style.display = 'none';
-    gwiazdki = 0;
-    gwiazdkiWTygodniu = 0;
-    statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
-    historiaCwiczen = {};
-    streak = 0;
-    ostatniaDataCwiczenia = null;
-    celTygodniowy = 0;
-    odznaki = {};
-    historyjki = [];
+    loginBtn.style.display = 'block'; userInfo.style.display = 'none'; panelBtn.style.display = 'none';
+    gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
+    historiaCwiczen = {}; streak = 0; ostatniaDataCwiczenia = null; celTygodniowy = 0; odznaki = {}; historyjki = [];
     document.getElementById('stars-count').textContent = '0';
-    
-    aktualizujStatusPro(null);
-    renderujKafelki();
+    aktualizujStatusPro(null); renderujKafelki();
   }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderujKafelki(); 
-  initNagrywanie(); 
-  pokazLanding();
+  renderujKafelki(); initNagrywanie(); pokazLanding();
 });
