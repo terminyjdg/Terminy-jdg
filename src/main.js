@@ -106,20 +106,11 @@ async function zapiszDaneDoBazy() {
   if (aktualnyUzytkownik) {
     try {
       await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-        gwiazdki: gwiazdki,
-        gwiazdkiWTygodniu: gwiazdkiWTygodniu,
-        statystykiGier: statystykiGier,
-        email: aktualnyUzytkownik.email,
-        historia: historiaCwiczen,
-        streak: streak,
-        ostatniaData: ostatniaDataCwiczenia,
-        celTygodniowy: celTygodniowy,
-        odznaki: odznaki,
-        historyjki: historyjki 
+        gwiazdki: gwiazdki, gwiazdkiWTygodniu: gwiazdkiWTygodniu, statystykiGier: statystykiGier,
+        email: aktualnyUzytkownik.email, historia: historiaCwiczen, streak: streak,
+        ostatniaData: ostatniaDataCwiczenia, celTygodniowy: celTygodniowy, odznaki: odznaki, historyjki: historyjki 
       }, { merge: true });
-    } catch (e) {
-      console.error("Błąd zapisu do bazy:", e);
-    }
+    } catch (e) { console.error("Błąd zapisu do bazy:", e); }
   }
 }
 
@@ -139,25 +130,15 @@ async function wczytajDaneZbazy() {
         odznaki = dane.odznaki || {};
         historyjki = dane.historyjki || []; 
       } else {
-        gwiazdki = 0;
-        gwiazdkiWTygodniu = 0;
-        statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
-        historiaCwiczen = {};
-        streak = 0;
-        ostatniaDataCwiczenia = null;
-        celTygodniowy = 0;
-        odznaki = {};
-        historyjki = [];
+        gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
+        historiaCwiczen = {}; streak = 0; ostatniaDataCwiczenia = null; celTygodniowy = 0; odznaki = {}; historyjki = [];
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-          gwiazdki: 0, gwiazdkiWTygodniu: 0,
-          statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 },
+          gwiazdki: 0, gwiazdkiWTygodniu: 0, statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 },
           email: aktualnyUzytkownik.email, historia: {}, streak: 0, ostatniaData: null, celTygodniowy: 0, odznaki: {}, historyjki: []
         });
       }
       document.getElementById('stars-count').textContent = gwiazdki;
-    } catch (e) {
-      console.error("Błąd odczytu z bazy:", e);
-    }
+    } catch (e) { console.error("Błąd odczytu z bazy:", e); }
   }
 }
 
@@ -290,7 +271,7 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
-  ['landing-view', 'menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
+  ['landing-view', 'menu-view', 'pamiec-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -316,15 +297,19 @@ window.pokazGlowna = function() {
   renderujKafelki();
 };
 
-// NOWE FUNKCJE NAWIGACYJNE DLA KATEGORII
+// FUNKCJE NAWIGACYJNE
 window.pokazKreatywnosc = function() {
-  // Na razie prowadzi do rysowania, w przyszłości do wyboru
+  // Prowadzi do rysowania
   pokazRysowanie();
 };
 
 window.pokazPamiecLogika = function() {
-  // Na razie prowadzi do zgadnij dźwięk, w przyszłości do wyboru (Memory, Puzzle)
-  // Sprawdzamy czy mamy PRO, jeśli tak -> zgadnij dzwiek
+  ukryjWszystkieWidoki();
+  document.getElementById('pamiec-menu-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+window.pokazZgadnij = function() {
   if (czyMaPro) {
     uruchomZgadnij();
   } else {
@@ -333,7 +318,6 @@ window.pokazPamiecLogika = function() {
 };
 
 window.pokazMatematyke = function() {
-  // Na razie prowadzi do dodawania, w przyszłości do wyboru działań
   if (czyMaPro) {
     uruchomMatme('dodawanie');
   } else {
@@ -383,9 +367,13 @@ window.wrocZRysowania = function() {
 };
 
 window.pokazMemory = function() {
-  ukryjWszystkieWidoki(); document.getElementById('memory-view').style.display = 'block'; window.scrollTo(0, 0);
+  ukryjWszystkieWidoki(); 
+  document.getElementById('memory-view').style.display = 'block'; 
+  window.scrollTo(0, 0);
+  
   startMemory(bazaSlow, aktualnaGloska, () => {
-    gwiazdki += 5; gwiazdkiWTygodniu += 5; document.getElementById('stars-count').textContent = gwiazdki;
+    gwiazdki += 5; gwiazdkiWTygodniu += 5; 
+    document.getElementById('stars-count').textContent = gwiazdki;
     pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
   });
 };
