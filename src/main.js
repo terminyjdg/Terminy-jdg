@@ -8,6 +8,8 @@ import { initNagrywanie } from './nagrywanie.js';
 import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke, nagrajHistoryjke, odtworzNagranie } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
+// NOWY IMPORT PUZZLI
+import { startPuzzle, wyjdzZPuzzli } from './puzzle.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -271,7 +273,7 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
-  ['landing-view', 'menu-view', 'pamiec-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
+  ['landing-view', 'menu-view', 'pamiec-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'puzzle-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -298,10 +300,7 @@ window.pokazGlowna = function() {
 };
 
 // FUNKCJE NAWIGACYJNE
-window.pokazKreatywnosc = function() {
-  // Prowadzi do rysowania
-  pokazRysowanie();
-};
+window.pokazKreatywnosc = function() { pokazRysowanie(); };
 
 window.pokazPamiecLogika = function() {
   ukryjWszystkieWidoki();
@@ -310,20 +309,27 @@ window.pokazPamiecLogika = function() {
 };
 
 window.pokazZgadnij = function() {
+  if (czyMaPro) { uruchomZgadnij(); } else { pokazPaywall(); }
+};
+
+window.pokazMatematyke = function() {
+  if (czyMaPro) { uruchomMatme('dodawanie'); } else { pokazPaywall(); }
+};
+
+window.pokazPuzzle = function() {
   if (czyMaPro) {
-    uruchomZgadnij();
+    ukryjWszystkieWidoki();
+    startPuzzle(() => {
+      gwiazdki += 1; gwiazdkiWTygodniu += 1;
+      document.getElementById('stars-count').textContent = gwiazdki;
+      zapiszDaneDoBazy();
+    });
   } else {
     pokazPaywall();
   }
 };
 
-window.pokazMatematyke = function() {
-  if (czyMaPro) {
-    uruchomMatme('dodawanie');
-  } else {
-    pokazPaywall();
-  }
-};
+window.wyjdzZPuzzli = wyjdzZPuzzli;
 
 window.pokazWkrotce = function(nazwaKategorii) {
   const modal = document.getElementById('coming-soon-modal');
@@ -332,18 +338,8 @@ window.pokazWkrotce = function(nazwaKategorii) {
   modal.style.display = 'flex';
 };
 
-// LOGOWANIE
-window.pokazLogowanie = function() {
-  ukryjWszystkieWidoki();
-  document.getElementById('auth-login-view').style.display = 'flex'; 
-  window.scrollTo(0, 0);
-};
-
-window.pokazRejestracje = function() {
-  ukryjWszystkieWidoki();
-  document.getElementById('auth-register-view').style.display = 'flex';
-  window.scrollTo(0, 0);
-};
+window.pokazLogowanie = function() { ukryjWszystkieWidoki(); document.getElementById('auth-login-view').style.display = 'flex'; window.scrollTo(0, 0); };
+window.pokazRejestracje = function() { ukryjWszystkieWidoki(); document.getElementById('auth-register-view').style.display = 'flex'; window.scrollTo(0, 0); };
 
 window.rozpocznijCwiczenie = function(gloska) {
   aktualnaGloska = gloska; aktualneSlowoIndex = 0; ukryjWszystkieWidoki();
@@ -367,13 +363,9 @@ window.wrocZRysowania = function() {
 };
 
 window.pokazMemory = function() {
-  ukryjWszystkieWidoki(); 
-  document.getElementById('memory-view').style.display = 'block'; 
-  window.scrollTo(0, 0);
-  
+  ukryjWszystkieWidoki(); document.getElementById('memory-view').style.display = 'block'; window.scrollTo(0, 0);
   startMemory(bazaSlow, aktualnaGloska, () => {
-    gwiazdki += 5; gwiazdkiWTygodniu += 5; 
-    document.getElementById('stars-count').textContent = gwiazdki;
+    gwiazdki += 5; gwiazdkiWTygodniu += 5; document.getElementById('stars-count').textContent = gwiazdki;
     pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
   });
 };
