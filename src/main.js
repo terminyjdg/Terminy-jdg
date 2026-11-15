@@ -9,7 +9,6 @@ import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke,
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
 import { startPuzzle, wyjdzZPuzzli } from './puzzle.js';
-// NOWY IMPORT CZYTANIA
 import { startCzytanie, wyjdzZCzytania } from './czytanie.js';
 
 const firebaseConfig = {
@@ -249,6 +248,17 @@ function dodajGwiazdkeCzytanie() {
   pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
 }
 
+// NOWA FUNKCJA DO ODEJMOWANIA GWIAZDEK ZA BŁĄD W CZYTANIU
+function odejmijGwiazdkeCzytanie() {
+  if (gwiazdki > 0) {
+    gwiazdki -= 1; if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
+    document.getElementById('stars-count').textContent = gwiazdki;
+    const czytanieStarDisplay = document.getElementById('czytanie-stars-count');
+    if (czytanieStarDisplay) czytanieStarDisplay.textContent = gwiazdki;
+    zapiszDaneDoBazy();
+  }
+}
+
 // --- ROZPOZNAWANIE MOWY ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
@@ -327,6 +337,8 @@ window.pokazZnajdzLitere = function() {
   ukryjWszystkieWidoki();
   startCzytanie(() => {
     dodajGwiazdkeCzytanie();
+  }, () => {
+    odejmijGwiazdkeCzytanie();
   });
 };
 
