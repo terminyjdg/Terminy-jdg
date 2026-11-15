@@ -114,6 +114,11 @@
     .czytanie-obrazek { font-size: 80px; margin-bottom: 10px; }
     .czytanie-slowo { font-size: 40px; font-weight: 700; color: #2563eb; letter-spacing: 5px; margin-bottom: 20px; }
 
+    /* ANGIELSKI STYLE */
+    #angielski-game-view .question-box { padding: 20px; }
+    .angielski-obrazek { font-size: 80px; margin-bottom: 10px; }
+    .angielski-slowo-pl { font-size: 18px; font-weight: 600; color: #6b7280; margin-bottom: 20px; }
+
     /* POZOSTAŁE STYLE */
     #main-view { display: none; }
     .welcome-text-small { text-align: center; font-size: 18px; color: #831843; margin-bottom: 15px; font-weight: 600; margin-top: 15px; }
@@ -230,7 +235,7 @@
           <div class="cat-desc">Litery i sylaby</div>
         </div>
 
-        <div class="category-card cat-jezyki" onclick="pokazWkrotce('Języki obce')">
+        <div class="category-card cat-jezyki" onclick="pokazJezyki()">
           <div class="cat-icon">🇬🇧</div>
           <div class="cat-title">Języki obce</div>
           <div class="cat-desc">Angielski</div>
@@ -307,6 +312,22 @@
       </div>
     </div>
 
+    <!-- POD-MENU: JĘZYKI OBCE -->
+    <div class="container" id="jezyki-menu-view">
+      <button class="nav-btn" style="margin-top: 15px; margin-bottom: 15px; width: 100%; background: #f3f4f6; color: #4b5563;" onclick="pokazMenu()">← Wróć do menu</button>
+      <div class="welcome-text-small">Wybierz grę:</div>
+      
+      <div class="submenu-grid">
+        <div class="submenu-card" onclick="pokazAngielski()" style="border-left-color: #be185d;">
+          <div class="sub-icon">🇬🇧</div>
+          <div class="sub-text">
+            <h3>Angielski dla dzieci</h3>
+            <p>Podstawowe słówka</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- EKRAN WYBORU GŁOSKI (Mowa) -->
     <div class="container" id="main-view">
       <button class="nav-btn" style="margin-top: 15px; margin-bottom: 15px; width: 100%; background: #f3f4f6; color: #4b5563;" onclick="pokazMenu()">← Wróć do menu</button>
@@ -367,7 +388,7 @@
       <div id="puzzle-baza"></div>
     </div>
 
-    <!-- NOWY EKRAN: ZNAJDŹ LITERĘ (Czytanie) -->
+    <!-- EKRAN: ZNAJDŹ LITERĘ (Czytanie) -->
     <div class="container game-view" id="czytanie-game-view">
       <div class="top-bar">
         <button class="nav-btn" onclick="wyjdzZCzytania()">← Wróć</button>
@@ -378,6 +399,19 @@
         <div id="czytanie-slowo" class="czytanie-slowo">_ N A N A S</div>
       </div>
       <div id="czytanie-opcje" class="answers-grid"></div>
+    </div>
+
+    <!-- NOWY EKRAN: ANGIELSKI -->
+    <div class="container game-view" id="angielski-game-view">
+      <div class="top-bar">
+        <button class="nav-btn" onclick="wyjdzZAngielskiego()">← Wróć</button>
+        <div class="stars-display">⭐ <span id="angielski-stars-count">0</span></div>
+      </div>
+      <div class="question-box">
+        <div id="angielski-obrazek" class="angielski-obrazek">🍎</div>
+        <div id="angielski-slowo-pl" class="angielski-slowo-pl">Co to jest? (Jabłko)</div>
+      </div>
+      <div id="angielski-opcje" class="answers-grid"></div>
     </div>
 
     <!-- EKRAN ĆWICZENIA MOWY -->
@@ -503,6 +537,6 @@
 
   </div> <!-- KONIEC APP-CONTAINER -->
 
-  <script type="module" src="/src/main.js?v=7"></script>
+  <script type="module" src="/src/main.js?v=8"></script>
 </body>
 </html>
