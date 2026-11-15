@@ -15,9 +15,11 @@ const bazaSlow = [
 
 let aktualnePytanie = null;
 let callbackSukces = null;
+let callbackBledna = null;
 
-export function startCzytanie(onSukces) {
+export function startCzytanie(onSukces, onBledna) {
     callbackSukces = onSukces;
+    callbackBledna = onBledna;
     
     document.getElementById('czytanie-menu-view').style.display = 'none';
     document.getElementById('czytanie-game-view').style.display = 'block';
@@ -51,7 +53,7 @@ function generujPytanie() {
     
     opcje.forEach(litera => {
         const btn = document.createElement('button');
-        btn.className = 'math-answer-btn'; // Używamy stylu z matematyki
+        btn.className = 'math-answer-btn';
         btn.innerText = litera;
         btn.onclick = () => sprawdzOdpowiedz(litera, btn);
         opcjeGrid.appendChild(btn);
@@ -103,6 +105,9 @@ function sprawdzOdpowiedz(litera, btn) {
                 b.style.color = 'white';
             }
         });
+
+        // WYWOŁUJEMY ODEJMOWANIE GWIAZDKI
+        if (callbackBledna) callbackBledna();
 
         setTimeout(() => {
             generujPytanie();
