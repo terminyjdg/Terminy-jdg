@@ -8,8 +8,9 @@ import { initNagrywanie } from './nagrywanie.js';
 import { startHistoryjki, wyjdzZHistoryjek, wyczyscHistoryjke, zapiszHistoryjke, nagrajHistoryjke, odtworzNagranie } from './historyjki.js';
 import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
-// NOWY IMPORT PUZZLI
 import { startPuzzle, wyjdzZPuzzli } from './puzzle.js';
+// NOWY IMPORT CZYTANIA
+import { startCzytanie, wyjdzZCzytania } from './czytanie.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -45,7 +46,7 @@ let odznaki = {};
 let historyjki = []; 
 
 let statystykiGier = {
-  mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0
+  mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0
 };
 
 // --- SYSTEM PRO (TEST) ---
@@ -124,7 +125,7 @@ async function wczytajDaneZbazy() {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
         gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0;
-        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
+        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 };
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
@@ -132,10 +133,10 @@ async function wczytajDaneZbazy() {
         odznaki = dane.odznaki || {};
         historyjki = dane.historyjki || []; 
       } else {
-        gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
+        gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 };
         historiaCwiczen = {}; streak = 0; ostatniaDataCwiczenia = null; celTygodniowy = 0; odznaki = {}; historyjki = [];
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-          gwiazdki: 0, gwiazdkiWTygodniu: 0, statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 },
+          gwiazdki: 0, gwiazdkiWTygodniu: 0, statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 },
           email: aktualnyUzytkownik.email, historia: {}, streak: 0, ostatniaData: null, celTygodniowy: 0, odznaki: {}, historyjki: []
         });
       }
@@ -240,6 +241,14 @@ function odejmijGwiazdkeZgadnij() {
   }
 }
 
+function dodajGwiazdkeCzytanie() {
+  gwiazdki += 1; gwiazdkiWTygodniu += 1; statystykiGier.czytanie += 1;
+  document.getElementById('stars-count').textContent = gwiazdki;
+  const czytanieStarDisplay = document.getElementById('czytanie-stars-count');
+  if (czytanieStarDisplay) czytanieStarDisplay.textContent = gwiazdki;
+  pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
+}
+
 // --- ROZPOZNAWANIE MOWY ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
@@ -273,7 +282,7 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
-  ['landing-view', 'menu-view', 'pamiec-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'puzzle-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
+  ['landing-view', 'menu-view', 'pamiec-menu-view', 'czytanie-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'puzzle-view', 'czytanie-game-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -308,6 +317,19 @@ window.pokazPamiecLogika = function() {
   window.scrollTo(0, 0);
 };
 
+window.pokazCzytanie = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('czytanie-menu-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+window.pokazZnajdzLitere = function() {
+  ukryjWszystkieWidoki();
+  startCzytanie(() => {
+    dodajGwiazdkeCzytanie();
+  });
+};
+
 window.pokazZgadnij = function() {
   if (czyMaPro) { uruchomZgadnij(); } else { pokazPaywall(); }
 };
@@ -330,6 +352,7 @@ window.pokazPuzzle = function() {
 };
 
 window.wyjdzZPuzzli = wyjdzZPuzzli;
+window.wyjdzZCzytania = wyjdzZCzytania;
 
 window.pokazWkrotce = function(nazwaKategorii) {
   const modal = document.getElementById('coming-soon-modal');
@@ -530,7 +553,7 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     aktualnyUzytkownik = null;
     loginBtn.style.display = 'block'; userInfo.style.display = 'none'; panelBtn.style.display = 'none';
-    gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0 };
+    gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 };
     historiaCwiczen = {}; streak = 0; ostatniaDataCwiczenia = null; celTygodniowy = 0; odznaki = {}; historyjki = [];
     document.getElementById('stars-count').textContent = '0';
     aktualizujStatusPro(null); renderujKafelki();
