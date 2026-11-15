@@ -10,6 +10,8 @@ import { startMatma, wyjdzZMatmy, nastepneZadanie } from './matma.js';
 import { startZgadnijDzwiek, wyjdzZZgadnij, nastepnePytanie, odtworzDzwiek as odtworzDzwiekLektora } from './zgadnij-dzwiek.js';
 import { startPuzzle, wyjdzZPuzzli } from './puzzle.js';
 import { startCzytanie, wyjdzZCzytania } from './czytanie.js';
+// NOWY IMPORT ANGIELSKIEGO
+import { startAngielski, wyjdzZAngielskiego } from './angielski.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBOImxllmaeFdgRnVNZz2eelwQtnYqJIdc",
@@ -45,7 +47,7 @@ let odznaki = {};
 let historyjki = []; 
 
 let statystykiGier = {
-  mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0
+  mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0, angielski: 0
 };
 
 // --- SYSTEM PRO (TEST) ---
@@ -124,7 +126,7 @@ async function wczytajDaneZbazy() {
         const dane = docSnap.data();
         gwiazdki = dane.gwiazdki || 0;
         gwiazdkiWTygodniu = dane.gwiazdkiWTygodniu || 0;
-        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 };
+        statystykiGier = dane.statystykiGier || { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0, angielski: 0 };
         historiaCwiczen = dane.historia || {};
         streak = dane.streak || 0;
         ostatniaDataCwiczenia = dane.ostatniaData || null;
@@ -132,10 +134,10 @@ async function wczytajDaneZbazy() {
         odznaki = dane.odznaki || {};
         historyjki = dane.historyjki || []; 
       } else {
-        gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 };
+        gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0, angielski: 0 };
         historiaCwiczen = {}; streak = 0; ostatniaDataCwiczenia = null; celTygodniowy = 0; odznaki = {}; historyjki = [];
         await setDoc(doc(db, "users", aktualnyUzytkownik.uid), {
-          gwiazdki: 0, gwiazdkiWTygodniu: 0, statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 },
+          gwiazdki: 0, gwiazdkiWTygodniu: 0, statystykiGier: { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0, angielski: 0 },
           email: aktualnyUzytkownik.email, historia: {}, streak: 0, ostatniaData: null, celTygodniowy: 0, odznaki: {}, historyjki: []
         });
       }
@@ -248,13 +250,31 @@ function dodajGwiazdkeCzytanie() {
   pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
 }
 
-// NOWA FUNKCJA DO ODEJMOWANIA GWIAZDEK ZA BŁĄD W CZYTANIU
 function odejmijGwiazdkeCzytanie() {
   if (gwiazdki > 0) {
     gwiazdki -= 1; if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
     document.getElementById('stars-count').textContent = gwiazdki;
     const czytanieStarDisplay = document.getElementById('czytanie-stars-count');
     if (czytanieStarDisplay) czytanieStarDisplay.textContent = gwiazdki;
+    zapiszDaneDoBazy();
+  }
+}
+
+// NOWE FUNKCJE ANGIELSKI
+function dodajGwiazdkeAngielski() {
+  gwiazdki += 1; gwiazdkiWTygodniu += 1; statystykiGier.angielski += 1;
+  document.getElementById('stars-count').textContent = gwiazdki;
+  const angielskiStarDisplay = document.getElementById('angielski-stars-count');
+  if (angielskiStarDisplay) angielskiStarDisplay.textContent = gwiazdki;
+  pokazKonfetti(); odtworzDzwiek(true); sprawdzOdznaki(); zapiszDaneDoBazy();
+}
+
+function odejmijGwiazdkeAngielski() {
+  if (gwiazdki > 0) {
+    gwiazdki -= 1; if (gwiazdkiWTygodniu > 0) gwiazdkiWTygodniu -= 1;
+    document.getElementById('stars-count').textContent = gwiazdki;
+    const angielskiStarDisplay = document.getElementById('angielski-stars-count');
+    if (angielskiStarDisplay) angielskiStarDisplay.textContent = gwiazdki;
     zapiszDaneDoBazy();
   }
 }
@@ -292,7 +312,7 @@ if (SpeechRecognition) {
 
 // --- NAWIGACJA ---
 function ukryjWszystkieWidoki() {
-  ['landing-view', 'menu-view', 'pamiec-menu-view', 'czytanie-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'puzzle-view', 'czytanie-game-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
+  ['landing-view', 'menu-view', 'pamiec-menu-view', 'czytanie-menu-view', 'jezyki-menu-view', 'main-view', 'exercise-view', 'draw-view', 'memory-view', 'parent-panel-view', 'historyjki-view', 'math-view', 'zgadnij-view', 'puzzle-view', 'czytanie-game-view', 'angielski-game-view', 'auth-login-view', 'auth-register-view'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -333,6 +353,21 @@ window.pokazCzytanie = function() {
   window.scrollTo(0, 0);
 };
 
+window.pokazJezyki = function() {
+  ukryjWszystkieWidoki();
+  document.getElementById('jezyki-menu-view').style.display = 'block';
+  window.scrollTo(0, 0);
+};
+
+window.pokazAngielski = function() {
+  ukryjWszystkieWidoki();
+  startAngielski(() => {
+    dodajGwiazdkeAngielski();
+  }, () => {
+    odejmijGwiazdkeAngielski();
+  });
+};
+
 window.pokazZnajdzLitere = function() {
   ukryjWszystkieWidoki();
   startCzytanie(() => {
@@ -365,6 +400,7 @@ window.pokazPuzzle = function() {
 
 window.wyjdzZPuzzli = wyjdzZPuzzli;
 window.wyjdzZCzytania = wyjdzZCzytania;
+window.wyjdzZAngielskiego = wyjdzZAngielskiego;
 
 window.pokazWkrotce = function(nazwaKategorii) {
   const modal = document.getElementById('coming-soon-modal');
@@ -565,7 +601,7 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     aktualnyUzytkownik = null;
     loginBtn.style.display = 'block'; userInfo.style.display = 'none'; panelBtn.style.display = 'none';
-    gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0 };
+    gwiazdki = 0; gwiazdkiWTygodniu = 0; statystykiGier = { mowa: 0, dodawanie: 0, odejmowanie: 0, mnozenie: 0, dzielenie: 0, zgadnij: 0, czytanie: 0, angielski: 0 };
     historiaCwiczen = {}; streak = 0; ostatniaDataCwiczenia = null; celTygodniowy = 0; odznaki = {}; historyjki = [];
     document.getElementById('stars-count').textContent = '0';
     aktualizujStatusPro(null); renderujKafelki();
