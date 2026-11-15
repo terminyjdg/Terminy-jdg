@@ -109,6 +109,11 @@
     .puzzle-tile { width: 60px; height: 60px; font-size: 35px; border-radius: 10px; border: 2px solid #db2777; background: #fce7f3; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 0 #db2777; transition: transform 0.1s; }
     .puzzle-tile:active { transform: translateY(4px); box-shadow: 0 1px 0 #db2777; }
 
+    /* CZYTANIE STYLE */
+    #czytanie-game-view .question-box { padding: 20px; }
+    .czytanie-obrazek { font-size: 80px; margin-bottom: 10px; }
+    .czytanie-slowo { font-size: 40px; font-weight: 700; color: #2563eb; letter-spacing: 5px; margin-bottom: 20px; }
+
     /* POZOSTAŁE STYLE */
     #main-view { display: none; }
     .welcome-text-small { text-align: center; font-size: 18px; color: #831843; margin-bottom: 15px; font-weight: 600; margin-top: 15px; }
@@ -219,7 +224,7 @@
           <div class="cat-desc">Liczenie i działania</div>
         </div>
 
-        <div class="category-card cat-czytanie" onclick="pokazWkrotce('Czytanie i pisanie')">
+        <div class="category-card cat-czytanie" onclick="pokazCzytanie()">
           <div class="cat-icon">📚</div>
           <div class="cat-title">Czytanie i pisanie</div>
           <div class="cat-desc">Litery i sylaby</div>
@@ -286,6 +291,22 @@
       </div>
     </div>
 
+    <!-- POD-MENU: CZYTANIE I PISANIE -->
+    <div class="container" id="czytanie-menu-view">
+      <button class="nav-btn" style="margin-top: 15px; margin-bottom: 15px; width: 100%; background: #f3f4f6; color: #4b5563;" onclick="pokazMenu()">← Wróć do menu</button>
+      <div class="welcome-text-small">Wybierz grę:</div>
+      
+      <div class="submenu-grid">
+        <div class="submenu-card" onclick="pokazZnajdzLitere()" style="border-left-color: #2563eb;">
+          <div class="sub-icon">🔤</div>
+          <div class="sub-text">
+            <h3>Znajdź literę</h3>
+            <p>Uzupełnij brakującą literę w słowie</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- EKRAN WYBORU GŁOSKI (Mowa) -->
     <div class="container" id="main-view">
       <button class="nav-btn" style="margin-top: 15px; margin-bottom: 15px; width: 100%; background: #f3f4f6; color: #4b5563;" onclick="pokazMenu()">← Wróć do menu</button>
@@ -336,14 +357,27 @@
         <span style="font-weight:700; color:#ea580c; font-size:18px;">Ułóż puzzle</span>
       </div>
 
-      <p style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Podpowiedź (co masz ułożyć):</p>
+      <p style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Podpowiedź:</p>
       <div id="puzzle-podglad" class="puzzle-preview-container"></div>
       
       <p style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Miejsce docelowe:</p>
       <div id="puzzle-grid" class="puzzle-grid"></div>
 
-      <p style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Kliknij kafelek, aby wybrać, a potem kliknij miejsce:</p>
+      <p style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Wybierz kafelek:</p>
       <div id="puzzle-baza"></div>
+    </div>
+
+    <!-- NOWY EKRAN: ZNAJDŹ LITERĘ (Czytanie) -->
+    <div class="container game-view" id="czytanie-game-view">
+      <div class="top-bar">
+        <button class="nav-btn" onclick="wyjdzZCzytania()">← Wróć</button>
+        <div class="stars-display">⭐ <span id="czytanie-stars-count">0</span></div>
+      </div>
+      <div class="question-box">
+        <div id="czytanie-obrazek" class="czytanie-obrazek">🍍</div>
+        <div id="czytanie-slowo" class="czytanie-slowo">_ N A N A S</div>
+      </div>
+      <div id="czytanie-opcje" class="answers-grid"></div>
     </div>
 
     <!-- EKRAN ĆWICZENIA MOWY -->
@@ -469,6 +503,6 @@
 
   </div> <!-- KONIEC APP-CONTAINER -->
 
-  <script type="module" src="/src/main.js?v=6"></script>
+  <script type="module" src="/src/main.js?v=7"></script>
 </body>
 </html>
