@@ -4,12 +4,16 @@
 const kategorie = [
     ['🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🐼', '🐨'], // Zwierzęta
     ['🍎', '🍌', '🍇', '🍓', '🍉', '🍒', '🍑', '🍍'], // Owoce
-    ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑']  // Pojazdy
+    ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑'], // Pojazdy
+    ['🦸‍♂️', '🦸‍♀️', '🦹‍♂️', '🦹‍♀️', '🧙‍♂️', '🧚‍♀️', '🧜‍♂️', '🧞‍♂️'], // Postacie
+    ['🌻', '🌹', '🌷', '🌵', '🌲', '🌳', '🌴', '🍄'], // Przyroda
+    ['🍕', '🍔', '🍟', '🌭', '🍿', '🥗', '🍩', '🍪']  // Jedzenie
 ];
 
 let aktualnaKategoria = [];
-let aktualnyStanPlanszy = []; // Wartości w slotach (null = puste)
+let aktualnyStanPlanszy = [];
 let callbackSukces = null;
+let wybranyKafelek = null;
 
 export function startPuzzle(onSukces) {
     callbackSukces = onSukces;
@@ -33,17 +37,17 @@ function generujNowaPlansze() {
     // 2. Zresetuj stan planszy (8 slotów)
     aktualnyStanPlanszy = Array(8).fill(null);
     
-    // 3. Renderuj podgląd na górze (szary)
+    // 3. Renderuj podgląd na górze
     const podglad = document.getElementById('puzzle-podglad');
     podglad.innerHTML = '';
-    aktualnaKategoria.forEach(zwierze => {
+    aktualnaKategoria.forEach(element => {
         const slot = document.createElement('div');
         slot.className = 'puzzle-slot-preview';
-        slot.innerText = zwierze;
+        slot.innerText = element;
         podglad.appendChild(slot);
     });
 
-    // 4. Renderuj planszę docelową (interaktywną)
+    // 4. Renderuj planszę docelową
     const grid = document.getElementById('puzzle-grid');
     grid.innerHTML = '';
     
@@ -51,15 +55,13 @@ function generujNowaPlansze() {
         const slot = document.createElement('div');
         slot.className = 'puzzle-slot';
         slot.dataset.index = i;
-        slot.dataset.target = aktualnaKategoria[i];
         
         // Obsługa Drag & Drop
         slot.ondragover = (e) => e.preventDefault(); 
         slot.ondrop = (e) => upuscElement(e, i);
         
-        // Obsługa kliknięcia (dla urządzeń mobilnych)
+        // Obsługa kliknięcia (mobile)
         slot.onclick = () => {
-            // Jeśli pole jest puste i mamy zapamiętany kliknięty kafelek
             if (aktualnyStanPlanszy[i] === null && wybranyKafelek !== null) {
                 umiescElement(wybranyKafelek, i);
             }
@@ -68,7 +70,7 @@ function generujNowaPlansze() {
         grid.appendChild(slot);
     }
     
-    // 5. Renderuj kafelki do przeciągnięcia na dole
+    // 5. Renderuj kafelki na dole
     const baza = document.getElementById('puzzle-baza');
     baza.innerHTML = '';
     
@@ -90,23 +92,17 @@ function generujNowaPlansze() {
         
         // Kliknięcie (mobile)
         tile.onclick = () => {
-            // Zaznacz kafelek
             const wszystkieKafelki = baza.querySelectorAll('.puzzle-tile');
             wszystkieKafelki.forEach(t => t.style.border = '2px solid #db2777');
-            
-            tile.style.border = '4px solid #10b981'; // Kolor zaznaczenia
+            tile.style.border = '4px solid #10b981';
             wybranyKafelek = element;
         };
         
         baza.appendChild(tile);
     });
     
-    // Resetujemy zaznaczenie
     wybranyKafelek = null;
 }
-
-// Zmienna do przechowywania klikniętego kafelka na mobile
-let wybranyKafelek = null;
 
 function upuscElement(e, index) {
     e.preventDefault();
@@ -119,7 +115,6 @@ function upuscElement(e, index) {
 function umiescElement(zwierze, index) {
     // Sprawdź, czy kafelek pasuje do docelowego miejsca
     if (zwierze !== aktualnaKategoria[index]) {
-        // Zły kafelek - odrzucamy
         odtworzDzwiekBledu();
         return;
     }
@@ -127,12 +122,10 @@ function umiescElement(zwierze, index) {
     // Dobry kafelek!
     aktualnyStanPlanszy[index] = zwierze;
     
-    // Aktualizuj wygląd slotu
     const slot = document.querySelector(`.puzzle-slot[data-index="${index}"]`);
     slot.innerText = zwierze;
     slot.style.background = '#fce7f3';
     slot.style.border = '2px solid #db2777';
-    slot.style.cursor = 'default';
     slot.onclick = null; 
     
     // Usuń kafelek z bazy
@@ -145,10 +138,7 @@ function umiescElement(zwierze, index) {
         }
     }
     
-    // Dźwięk sukcesu
     odtworzDzwiekPstrykniecia();
-    
-    // Sprawdź, czy wygraliśmy
     sprawdzWygrana();
 }
 
